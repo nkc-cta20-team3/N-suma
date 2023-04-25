@@ -1,12 +1,36 @@
 version: '3'
 services:
-    web:
-        build: ./build/web/
-        container_name: "sssr-php-apache-webserver"
+    flask:
+        build: ./build/flask/
+        container_name: "sssr-flask-webserver"
         volumes:
-            - "./web/html/:/var/www/html/"
+            - "./flask/app/:/app/"
         ports:
             - "80:80"
+        depends_on:
+            - db
+        tty: true
+        init: true
+    go:
+        build: ./build/go/
+        container_name: "sssr-go-webserver"
+        volumes:
+            - "./go/src/:/go/src/"
+        env_file:
+            - ./build/go/.go_env
+        ports:
+            - "8080:8080"
+        depends_on:
+            - db
+        tty: true
+        init: true
+    php:
+        build: ./build/php/
+        container_name: "sssr-php-apache-webserver"
+        volumes:
+            - "./php/html/:/var/www/html/"
+        ports:
+            - "8000:80"
         depends_on:
             - db
         init: true
@@ -26,5 +50,5 @@ services:
         links:
             - db
         ports:
-            - 8080:80
+            - 4000:80
         
