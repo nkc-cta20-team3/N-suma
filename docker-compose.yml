@@ -7,8 +7,6 @@ services:
             - "./flask/app/:/app/"
         ports:
             - "80:80"
-        depends_on:
-            - db
         tty: true
         init: true
     go:
