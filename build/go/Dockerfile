@@ -4,5 +4,4 @@ RUN apk update
 
 WORKDIR /go/src/
 
-RUN go mod init main && \
-    go get github.com/gin-gonic/gin
+CMD ["go", "run", "main/main.go"]
