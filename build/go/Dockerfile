@@ -4,4 +4,4 @@ RUN apk update
 
 WORKDIR /go/src/
 
-CMD ["go", "run", "main/main.go"]
+# CMD ["go", "run", "main/main.go"]
