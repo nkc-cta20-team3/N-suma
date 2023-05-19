@@ -1,0 +1,9 @@
+th {
+    width: 150px;
+}
+
+.container{
+    display: flex;
+    justify-content: center;
+}
+

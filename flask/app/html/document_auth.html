@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+    
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+</head>
+<body>
+
+    <div id="navber"></div>
+    
+    <div class="title has-text-centered">
+        各種書類認可
+    </div>
+
+    <div class="columns">
+        
+        <div class="column has-text-right">
+            <div>未認可リスト</div>
+        </div>
+        
+        <div class="column"></div>
+
+        <div class="column">
+            <div>ソート</div>
+            <select class="select">
+                <option>クラス略称</option>
+                <option>名前</option>
+                <option>分類</option>
+            </select>
+        </div>
+
+    </div>
+
+    <div class="container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>クラス略称</th>
+                    <th>氏名</th>
+                    <th>分類</th>
+                    <th>    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th>CT4A</th>
+                    <th>田中 太郎</th>
+                    <th>資格</th>
+                    <th><button>詳細</button></th>
+                </tr>
+                <tr>
+                    <th>CT4B</th>
+                    <th>田中 花子</th>
+                    <th>就活</th>
+                    <th><button>詳細</button></th>
+                </tr>
+                <tr>
+                    <th>CT3A</th>
+                    <th>鈴木 一郎</th>
+                    <th>通常</th>
+                    <th><button>詳細</button></th>
+                </tr>
+                <tr>
+                    <th>CT3B</th>
+                    <th>鈴木 次郎</th>
+                    <th>通常</th>
+                    <th><button>詳細</button></th>
+                </tr>
+                <tr>
+                    <th>CT2A</th>
+                    <th>パブロ・ディエゴ・ホセ・フランシスコ・デ・パウラ・ホアン・ネポムセーノ･マリーア・デ・ロス・レメディオス・クリスピン・クリスピアーノ・デ・ラ・サンディシマ・トリニダード･ルイス・イ・ピカソ</th>
+                    <th>通常</th>
+                    <th><button>詳細</button></th>
+                </tr>
+                <tr>
+                    <th>CT2A</th>
+                    <th>パブロ・ディエゴ・ホセ・フランシスコ・デ・パウラ・ホアン・ネポムセーノ･マリーア・デ・ロス・レメディオス・クリスピン・クリスピアーノ・デ・ラ・サンディシマ・トリニダード･ルイス・イ・ピカソ</th>
+                    <th>通常</th>
+                    <th><a href="document_accept.html">詳細(aタグにしてます)</a></th>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script src="js/index.js"></script>
+</body>
+</html>
