@@ -6,7 +6,7 @@ services:
         volumes:
             - "./flask/app/:/app/"
         ports:
-            - "80:80"
+            - "8000:8000"
         tty: true
         init: true
     go:
@@ -21,16 +21,6 @@ services:
         depends_on:
             - db
         tty: true
-        init: true
-    php:
-        build: ./build/php/
-        container_name: "sssr-php-apache-webserver"
-        volumes:
-            - "./php/html/:/var/www/html/"
-        ports:
-            - "8000:80"
-        depends_on:
-            - db
         init: true
     db:
         build: ./build/db/
