@@ -1,6 +1,6 @@
 db/mysql/
 !db/mysql/.gitkeep
 
-
+__pycache__/
 
 *.secret
