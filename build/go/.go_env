@@ -1,2 +1,3 @@
 GOPATH=/go
 TZ=Asia/Tokyo
+GO111MODULE=on
