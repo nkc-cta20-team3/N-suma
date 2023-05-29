@@ -4,19 +4,35 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"main/infra"
+	"main/model"
 )
 
 func RegisterAbsence(c *gin.Context) {
 
-	aaa := c.Param("absence_list")
+	// text := c.Param("absence_list")
+	
+	//データベース接続
+	engine:= infra.DBInit()
 
-	// JSONに変えるときに使う
-	// payload := gin.H{
-	// 	"message": aaa,
-	// }
+	//エラー出力
+	if engine == nil {
+		errMsg := "データベース接続の初期化に失敗しました"
+		c.JSON(http.StatusInternalServerError, gin.H{"error": errMsg})
+		return
+	}
 
-	// ステータス200と、payloadを返します
-	//c.JSON(http.StatusOK, payload)
-	c.JSON(http.StatusOK, aaa)
+	//select文test 構造体をimportしてそのリストに全ての情報を入れる
+	var users []model.Users
+	err := engine.Table("users").Find(&users)
+	if err != nil {
+		errMsg := "データの取得に失敗しました"
+		c.JSON(http.StatusInternalServerError, gin.H{"error": errMsg})
+		return
+	}
 
+	c.JSON(http.StatusOK, users)
+
+	//データベース切断
+	defer engine.Close()
 }
