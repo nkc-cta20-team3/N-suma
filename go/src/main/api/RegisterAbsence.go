@@ -2,36 +2,54 @@ package api
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"main/infra"
 	"main/model"
 )
 
-func RegisterAbsence(c *gin.Context) {
+func RegisterAbsence(w http.ResponseWriter, r *http.Request, c *gin.Context) {
+	//HTTPリクエストのメソッドがPOSTメゾットあるかチェック
+	if r.Method != http.MethodPost {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
 
-	// text := c.Param("absence_list")
-	
 	//データベース接続
 	engine:= infra.DBInit()
-
-	//エラー出力
 	if engine == nil {
 		errMsg := "データベース接続の初期化に失敗しました"
 		c.JSON(http.StatusInternalServerError, gin.H{"error": errMsg})
 		return
 	}
 
-	//select文test 構造体をimportしてそのリストに全ての情報を入れる
-	var users []model.Users
-	err := engine.Table("users").Find(&users)
-	if err != nil {
-		errMsg := "データの取得に失敗しました"
-		c.JSON(http.StatusInternalServerError, gin.H{"error": errMsg})
-		return
+	//データの受け取り
+
+	//挿入時の時間を取得
+	createdAt := time.Now()
+	
+	newDate := model.AbsenceDocument{
+		StudentID            int
+		CompanyID            int
+		ReasonID             int
+		RequestDate          time.Time
+		AbsenceStartDate     time.Time
+		AbsenceStartFlame    int
+		AbsenceEndDate       time.Time
+		AbsenceEndFlame      int
+		Location             string
+		ReadFlag             bool
+		Status               int
+		StudentInputComment  sql.NullString
+		TeacherInputComment  sql.NullString
 	}
 
-	c.JSON(http.StatusOK, users)
+	_, err = engine.Table("absence_document").Insert(&newDate)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "データの挿入に失敗しました"})
+		return
+	}
 
 	//データベース切断
 	defer engine.Close()
