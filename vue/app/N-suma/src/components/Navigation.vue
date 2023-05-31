@@ -47,7 +47,7 @@
                         <router-link class="button is-primary" to="/login">
                             <strong>Log in</strong>
                         </router-link>
-                        <router-link class="button is-light">
+                        <router-link class="button is-light" to="#">
                             <strong>Sign out</strong>
                         </router-link>
 

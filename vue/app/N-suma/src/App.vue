@@ -10,13 +10,15 @@
 
 <style>
     @import 'bulma/css/bulma.css';
-    th {
-    width: 150px;
-}
+    @import 'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200';
 
-.container{
-    display: flex;
-    justify-content: center;
-}
+    th {
+        width: 150px;
+    }
+
+    .container{
+        display: flex;
+        justify-content: center;
+    }
 
 </style>
