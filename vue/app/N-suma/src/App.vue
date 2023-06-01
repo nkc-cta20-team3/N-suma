@@ -5,6 +5,7 @@
 
 <script setup>
     import Navigation from './components/Navigation.vue'
+    import { app } from './firebase/index.js'
 
 </script>
 

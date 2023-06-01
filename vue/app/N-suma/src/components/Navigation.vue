@@ -22,19 +22,23 @@
             
             <div class="navbar-start">
             
-                <router-link class="navbar-item" to="/document_form">
+                <router-link class="navbar-item" to="/" v-if="!isLoggedIn">
+                    Home
+                </router-link>
+
+                <router-link class="navbar-item" to="/document_form" v-if="isLoggedIn">
                     各種書類提出
                 </router-link>
             
-                <router-link class="navbar-item" to="/document_list">
+                <router-link class="navbar-item" to="/document_list" v-if="isLoggedIn">
                     各種書類閲覧
                 </router-link>
     
-                <router-link class="navbar-item" to="#">
+                <router-link class="navbar-item" to="#" v-if="isLoggedIn">
                     個人データ
                 </router-link>
                 
-                <router-link class="navbar-item" to="/document_auth">
+                <router-link class="navbar-item" to="/document_auth" v-if="isLoggedIn">
                     書類認可
                 </router-link>
 
@@ -44,17 +48,17 @@
                 <div class="navbar-item">
                     <div class="buttons">
                         
-                        <router-link class="button is-primary" to="/login">
+                        <a @click="signInWithGoogle" v-if="!isLoggedIn" class="button is-primary">    
                             <strong>Log in</strong>
-                        </router-link>
-                        <router-link class="button is-light" to="#">
-                            <strong>Sign out</strong>
-                        </router-link>
+                        </a>
+                        <a @click="handleSignOut" v-if="isLoggedIn" class="button is-light">
+                            <strong>Sign Out</strong>
+                        </a>
 
-                        <span class="material-symbols-outlined">
+                        <span class="material-symbols-outlined" v-if="isLoggedIn">
                             notifications
                         </span>
-                        <span class="material-symbols-outlined">
+                        <span class="material-symbols-outlined" v-if="isLoggedIn">
                             account_circle
                         </span>
                     </div>
@@ -67,7 +71,43 @@
 </template>
 
 <script setup>
+    import { onMounted, ref } from 'vue'
+    import { getAuth, onAuthStateChanged, signOut , GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
     import router from '../router';
+
+    const isLoggedIn = ref(false)
+
+    let auth
+    onMounted(() => {
+        auth = getAuth()
+        onAuthStateChanged(auth, (user) => {
+            isLoggedIn.value = !!user
+        })
+    })
+
+    const handleSignOut = () => {
+        signOut(auth).then(() => {
+            router.push('/')
+            isLoggedIn.value = false
+        }).catch((error) => {
+            console.log(error)
+        })
+    }
+
+    const signInWithGoogle = () => {
+
+        const provider = new GoogleAuthProvider()
+        signInWithPopup(getAuth(), provider)
+            .then((result) => {
+                //console.log(result.user)
+                router.push('/document_form')
+            }).catch((error) => {
+                console.log(error)
+            })
+
+    }
+
+
 
     document.addEventListener('DOMContentLoaded', () => {
         // Get all "navbar-burger" elements
