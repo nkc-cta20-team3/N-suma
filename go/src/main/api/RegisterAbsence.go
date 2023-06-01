@@ -58,6 +58,9 @@ func RegisterAbsence(w http.ResponseWriter, r *http.Request, c *gin.Context) {
 		return
 	}
 
+	//成功ステータス
+	c.JSON(http.StatusOK, "成功しました")
+
 	//データベース切断
 	defer engine.Close()
 }
