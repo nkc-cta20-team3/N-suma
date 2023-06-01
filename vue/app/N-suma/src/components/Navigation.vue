@@ -83,6 +83,8 @@
         onAuthStateChanged(auth, (user) => {
             isLoggedIn.value = !!user
         })
+
+
     })
 
     const handleSignOut = () => {
@@ -107,21 +109,31 @@
 
     }
 
-
-
+    //ハンバーガーメニューの実装
     document.addEventListener('DOMContentLoaded', () => {
-        // Get all "navbar-burger" elements
-        const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0)
-        
-        $navbarBurgers.forEach( el => {
-            el.addEventListener('click', () => {
-                const target = el.dataset.target
-                const $target = document.getElementById(target)
-                el.classList.toggle('is-active')
-                $target.classList.toggle('is-active')
-            })
-        })
-    })
 
+        // トグルボタンを取得
+        const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+
+        // トグルボタンが存在する場合
+        if ($navbarBurgers.length > 0) {
+
+            // トグルボタンにクリックイベントを設定
+            $navbarBurgers.forEach( el => {
+                el.addEventListener('click', () => {
+
+                    // data-targetの属性値からナビゲーションメニューを取得
+                    const target = el.dataset.target;
+                    const $target = document.getElementById(target);
+
+                    // トグルボタンとナビゲーションメニューにis-activeクラスを設定
+                    el.classList.toggle('is-active');
+                    $target.classList.toggle('is-active');
+
+                });
+            });
+        }
+    });
+   
 </script>
 
