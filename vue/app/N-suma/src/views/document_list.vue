@@ -1,23 +1,9 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <title>Home</title>
-    
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-</head>
-<body>
-
-    <div id="navber"></div>
-    
+<template>
     <div class="title has-text-centered">
         各種書類閲覧
     </div>
 
     <div class="container mb-5">
-
         <div class="field is-grouped">
             <div class="ml-5">
                 <div>企業名</div>
@@ -44,15 +30,13 @@
         </div>
 
     </div>
-    
+
     <div class="has-text-centered">
         <iframe src="https://www.denpa.ac.jp/school_guide/pdf/02_CT3A.pdf" width="640" height="565" frameborder="0" marginheight="0" marginwidth="0">読み込んでいます…</iframe>
     </div>
-    
+
     <div class="has-text-centered">
         <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdl-IyitnZ-RhpV_s_rKIBCIy03w_mppX_y3gAAtg0MqPcpiA/viewform?embedded=true" width="640" height="565" frameborder="0" marginheight="0" marginwidth="0">読み込んでいます…</iframe>
     </div>
+</template>
     
-    <script src="js/index.js"></script>
-</body>
-</html>

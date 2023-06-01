@@ -1,17 +1,4 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <title>Home</title>
-    
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-</head>
-<body>
-
-    <div id="navber"></div>
-    
+<template>
     <div class="title has-text-centered">
         書類受理
     </div>
@@ -41,9 +28,4 @@
         </div>
 
     </div>
-    
-    
-    
-    <script src="js/index.js"></script>
-</body>
-</html>
+</template>

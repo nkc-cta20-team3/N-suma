@@ -1,17 +1,4 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <title>Home</title>
-    
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-</head>
-<body>
-
-    <div id="navber"></div>
-    
+<template>
     <div class="title has-text-centered">
         各種書類認可
     </div>
@@ -80,12 +67,9 @@
                     <th>CT2A</th>
                     <th>パブロ・ディエゴ・ホセ・フランシスコ・デ・パウラ・ホアン・ネポムセーノ･マリーア・デ・ロス・レメディオス・クリスピン・クリスピアーノ・デ・ラ・サンディシマ・トリニダード･ルイス・イ・ピカソ</th>
                     <th>通常</th>
-                    <th><a href="document_accept.html">詳細(aタグにしてます)</a></th>
+                    <th><router-link to="/document_accept">詳細(aタグにしてます)</router-link></th>
                 </tr>
             </tbody>
         </table>
     </div>
-
-    <script src="js/index.js"></script>
-</body>
-</html>
+</template>
