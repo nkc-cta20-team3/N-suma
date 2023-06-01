@@ -25,27 +25,34 @@ func RegisterAbsence(w http.ResponseWriter, r *http.Request, c *gin.Context) {
 	}
 
 	//データの受け取り
-
-	//挿入時の時間を取得
-	createdAt := time.Now()
-	
-	newDate := model.AbsenceDocument{
-		StudentID            int
-		CompanyID            int
-		ReasonID             int
-		RequestDate          time.Time
-		AbsenceStartDate     time.Time
-		AbsenceStartFlame    int
-		AbsenceEndDate       time.Time
-		AbsenceEndFlame      int
-		Location             string
-		ReadFlag             bool
-		Status               int
-		StudentInputComment  sql.NullString
-		TeacherInputComment  sql.NullString
+	var doc model.AbsenceDocument
+	err := json.NewDecoder(r.Body).Decode(&doc)
+	if err != nil {
+		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		return
 	}
 
-	_, err = engine.Table("absence_document").Insert(&newDate)
+	// 挿入時の時間を取得
+	// createdAt := time.Now()
+	
+	// //構造体にそのまま打ち込む場合
+	// newDate := model.AbsenceDocument{
+	// 	StudentID:           int
+	// 	CompanyID:           int
+	// 	ReasonID:            int
+	// 	RequestDate:         time.Time
+	// 	AbsenceStartDate:    time.Time
+	// 	AbsenceStartFlame:   int
+	// 	AbsenceEndDate:      time.Time
+	// 	AbsenceEndFlame:     int
+	// 	Location:            string
+	// 	ReadFlag:            bool
+	// 	Status:              int
+	// 	StudentInputComment: sql.NullString
+	// 	TeacherInputComment: sql.NullString
+	// }
+
+	_, err = engine.Table("absence document").Insert(&doc)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "データの挿入に失敗しました"})
 		return
