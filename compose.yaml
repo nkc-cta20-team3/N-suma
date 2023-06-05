@@ -1,14 +1,14 @@
 version: '3'
 services:
-    flask:
-        build: ./build/flask/
-        container_name: "sssr-flask-webserver"
-        volumes:
-            - "./flask/app/:/app/"
+    vue:
+        build: ./build/vue/
+        container_name: "sssr-vue-webserver"
         ports:
-            - "8000:8000"
+            - "5173:5173"
+        volumes:
+            - "./vue/app:/app"
         tty: true
-        init: true
+        stdin_open: true
     go:
         build: ./build/go/
         container_name: "sssr-go-webserver"
