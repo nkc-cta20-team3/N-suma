@@ -20,5 +20,3 @@ func AuthorizeAbsence(c *gin.Context) {
 	c.JSON(http.StatusOK, aaa)
 
 }
-
-}
