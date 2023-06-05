@@ -1,17 +1,59 @@
-package main 
+package main
 
 import (
-    "github.com/gin-gonic/gin"
+	"log"
+
+	"github.com/gin-gonic/gin"
+
+	// ローカルモジュールのインポート
+	"main/api"
+	"main/handler"
+	"main/infra"
+	"main/service"
 )
 
 func main() {
-    router := gin.Default()
 
-    router.GET("/", func(c *gin.Context) {
-        c.JSON(200, gin.H{
-            "message": "Hello World",
-        })
-    })
+	//
+	engine := infra.DBInit()
+	factory := service.NewService(engine)
+	defer func() {
+		log.Println("engine closed")
+		engine.Close()
+	}()
 
-    router.Run(":8080")
+	//
+	g := gin.Default()
+	g.Use(service.ServiceFactoryMiddleware(factory))
+
+	//
+	routes := g.Group("/v1")
+	{
+		// user
+		routes.POST("/users", handler.Create)
+		routes.GET("/users", handler.GetAll)
+		routes.GET("/users/:user-id", handler.GetOne)
+		routes.PUT("/users/:user-id", handler.Update)
+		routes.DELETE("/users/:user-id", handler.Delete)
+
+	}
+
+	routes2 := g.Group("/v2")
+	{
+		// hello world
+		routes2.GET("/hello", handler.Hello)
+	}
+
+	routeapi := g.Group("/api")
+	{
+		//apiフォルダ内のapiをルーティング
+
+		routeapi.GET("/ad/:document_id", api.AbsenceDocument)
+		routeapi.GET("/aa/:absence_data", api.AuthorizeAbsence)
+		routeapi.GET("/da/:absence_list", api.DeleteAbsence)
+		routeapi.GET("/ra/:absence_list", api.RegisterAbsence)
+		routeapi.GET("/ual/:teacher_data", api.UnAuthorizationList)
+	}
+
+	g.Run(":8080")
 }
