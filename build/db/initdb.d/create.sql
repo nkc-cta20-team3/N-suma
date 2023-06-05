@@ -1,6 +1,6 @@
-DROP SCHEMA IF EXISTS database;
-CREATE SCHEMA database;
-USE database;
+DROP SCHEMA IF EXISTS cta20gr3;
+CREATE SCHEMA cta20gr3;
+USE cta20gr3;
 
 DROP TABLE IF EXISTS `class`;
 CREATE TABLE `class`(
@@ -18,7 +18,7 @@ COMMENT='クラス表';
 DROP TABLE IF EXISTS `position`;
 CREATE TABLE `position`(
     `position_id` int,
-    `position_name` varchar(6) NOT NULL,
+    `position_name` varchar(12) NOT NULL,
     PRIMARY KEY (`position_id`)
 )
 ENGINE=InnoDB
@@ -32,7 +32,7 @@ DROP TABLE IF EXISTS `company`;
 CREATE TABLE `company`(
     company_id int AUTO_INCREMENT,
     company_name varchar(64) NOT NULL,
-    offer_number int,
+    offer_number int UNIQUE ,
     PRIMARY KEY (`company_id`)
 )
 ENGINE=InnoDB
