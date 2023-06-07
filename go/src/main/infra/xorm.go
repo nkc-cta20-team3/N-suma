@@ -3,10 +3,10 @@ package infra
 import (
 	"log"
 
-	"github.com/go-xorm/xorm"
-	_ "github.com/go-sql-driver/mysql"
-
 	"main/model"
+
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/go-xorm/xorm"
 )
 
 func DBInit() *xorm.Engine {
