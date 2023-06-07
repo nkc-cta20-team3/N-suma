@@ -47,7 +47,7 @@ CREATE TABLE `absence_reason`(
     reason_id int,
     absence_category varchar(16) NOT NULL,
     absence_reason varchar(32)  NOT NULL,
-    detail text,
+    detail varchar(16383),
     PRIMARY KEY (`reason_id`)
 )
 ENGINE=InnoDB
@@ -107,8 +107,8 @@ CREATE TABLE `absence_document`(
     location varchar(16) NOT NULL,
     read_flag boolean NOT NULL,
     status int NOT NULL,
-    student_comment text NOT NULL,
-    teacher_comment text,
+    student_comment varchar(16383) NOT NULL,
+    teacher_comment varchar(16383),
     PRIMARY KEY (`document_id`),
     FOREIGN KEY(student_id) REFERENCES `students`(student_id),
     FOREIGN KEY(company_id) REFERENCES `company`(company_id),
