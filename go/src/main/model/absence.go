@@ -18,6 +18,6 @@ type AbsenceDocument struct {
 	Location            string			`json:"location"` 				// 場所
 	ReadFlag            bool			`json:"read_flag"` 				// 既読フラグ
 	Status              int				`json:"status"` 				// ステータス
-	StudentInputComment sql.NullByte	`json:"student_input_comment"` 	// 学生入力コメント
-	TeacherInputComment sql.NullByte	`json:"teacher_input_comment"` 	// 教員入力コメント
+	StudentComment 		sql.NullString	`json:"student_comment"` 	// 学生コメント
+	TeacherComment 		sql.NullString	`json:"teacher_comment"` 	// 教員コメント
 }
