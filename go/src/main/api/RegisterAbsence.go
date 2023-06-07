@@ -2,7 +2,6 @@ package api
 
 import (
 	"net/http"
-	"encoding/json"
 
 	"github.com/gin-gonic/gin"
 )
