@@ -3,14 +3,14 @@ package infra
 import (
 	"log"
 
-	"github.com/go-xorm/xorm"
-	_ "github.com/go-sql-driver/mysql"
-
 	"main/model"
+
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/go-xorm/xorm"
 )
 
 func DBInit() *xorm.Engine {
-	engine, err := xorm.NewEngine("mysql", "root:password@tcp(db:3306)/database?charset=utf8mb4&parseTime=true")
+	engine, err := xorm.NewEngine("mysql", "root:password@tcp(db:3306)/cta20gr3?charset=utf8mb4&parseTime=true")
 	if err != nil {
 		log.Fatal(err)
 	}
