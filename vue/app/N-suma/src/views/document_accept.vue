@@ -14,16 +14,17 @@
     <div class="container">
 
         <div class="is-grouped">
+            
+            <form method="post" action="" class="form-horizontal">
+                <div class="form-group">
 
-            <div class="is-flex mb-5">
-                <input type="text" class="input" style="font-size: 1.25em" placeholder="学生コメント">
-                <div class="ml-4 button is-medium is-">受理</div>
-            </div>
-
-            <div class="is-flex mb-5">
-                <input type="text" class="input" style="font-size: 1.25em" placeholder="教員用コメント">
-                <div class="ml-4 button is-medium is-">却下</div>
-            </div>
+                    <div class="col-sm-4">
+                        <input type="text" id="name" name="id" class="form-control" required="required" placeholder="教員用コメント">
+                    </div>
+                </div>
+                <input type="submit" class="button" value="受理">
+                <input type="submit" class="button" value="却下">
+            </form>
 
         </div>
 
