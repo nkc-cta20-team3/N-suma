@@ -48,10 +48,10 @@ func main() {
 	{
 		//apiフォルダ内のapiをルーティング
 
-		routeapi.GET("/ad/:document_id", api.AbsenceDocument)
+		routeapi.GET("/ad/:document_id", api.GetAbsenceDocuments)
 		routeapi.GET("/aa/:absence_data", api.AuthorizeAbsence)
 		routeapi.GET("/da/:absence_list", api.DeleteAbsence)
-		routeapi.GET("/ra/:absence_list", api.RegisterAbsence)
+		// routeapi.GET("/ra/:absence_list", api.RegisterAbsence)
 		routeapi.GET("/ual/:teacher_data", api.UnAuthorizationList)
 	}
 
