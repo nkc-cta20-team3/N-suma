@@ -24,8 +24,8 @@
             </div>
             
             <div class="is-flex mb-5">
-                <input type="submit" class="ml-4 button is-medium" value="却下">
                 <input type="submit" class="ml-4 button is-medium" value="受理">
+                <input type="submit" class="ml-4 button is-medium" value="却下">
             </div>
 
         </form>
