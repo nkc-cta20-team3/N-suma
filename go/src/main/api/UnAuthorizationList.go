@@ -32,21 +32,32 @@ type UnAuthorizeList struct {
 
 func UnAuthorizationList(c *gin.Context) {
 
-	//document_id := c.Param("teacher_data")
+	//引数を取得する
+	document_id := c.Param("teacher_data")
+
 	// input := model.UserInput{}
 
-	var document = Document2{}
+	var document = UnAuthorizeList{}
 	db := infra.DBInitGorm()
 
-	db.Table("absence_document").Select(
-		"document_id",
-		"student_id",
-		"location").Where("document_id > ?", document_id).First(&document)
+	db.Table("absence_document AS ad").
+		Select(
+			"st.class_name",
+			"st.student_name",
+			"ar.absence_category",
+			"ad.document_id").
+		Joins("JOIN students AS st ON ad.student_id = st.student_id").
+		Joins("JOIN absence_reason AS ar ON ad.reason_id = ar.reason_id").
+		//Where("ad.document_id = 1").
+		Where("ad.document_id = ?", document_id).
+		Scan(&document)
 	if db.Error != nil {
 		fmt.Print("ERROR!")
 	}
 
-	fmt.Printf("document_id: %d, student_id: %d, location: %s\n", document.DocumentID, document.StudentID, document.Location)
+	//確認用出力
+	fmt.Printf("class_name: %s, student_name: %s, absence_category: %s,document_id: %d\n",
+		document.ClassName, document.StudentName, document.AbsenceCategory, document.DocumentID)
 
 	// ヘッダーのJSONをinputにバインドします
 	// err := c.ShouldBindWith(&input, binding.JSON)
