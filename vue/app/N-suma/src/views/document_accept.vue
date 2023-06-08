@@ -30,4 +30,31 @@
 
         </form>
     </div>
+
 </template>
+
+<script setup>
+    
+    import { onMounted,ref } from 'vue'
+
+    const APIURL = new URL("https://db:8080/api/ad/1")
+
+    onMounted(() => {
+        GetAPIDate() 
+    })
+
+    const GetAPIDate = () => {
+        fetch("http://localhost:8080/api/ad/1")
+        .then((response) => {
+            console.log(response.status)
+            console.log(response.json())
+        })
+        .then((data) => {
+            console.log(data)
+        })
+        .catch((error) => {
+            console.log(error)
+        })
+    }
+
+</script>
