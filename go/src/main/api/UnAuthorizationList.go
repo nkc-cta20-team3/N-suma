@@ -49,7 +49,6 @@ func UnAuthorizationList(c *gin.Context) {
 			"ad.document_id").
 		Joins("JOIN students AS st ON ad.student_id = st.student_id").
 		Joins("JOIN absence_reason AS ar ON ad.reason_id = ar.reason_id").
-		//Where("ad.document_id = 1").
 		Where("ad.status = ?", status).
 		Scan(&document)
 	if db.Error != nil {
