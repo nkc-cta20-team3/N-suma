@@ -37,7 +37,8 @@ func UnAuthorizationList(c *gin.Context) {
 
 	// input := model.UserInput{}
 
-	var document = UnAuthorizeList{}
+	document := []UnAuthorizeList{}
+	//document := UnAuthorizeList{}
 	db := infra.DBInitGorm()
 
 	db.Table("absence_document AS ad").
@@ -56,8 +57,10 @@ func UnAuthorizationList(c *gin.Context) {
 	}
 
 	//確認用出力
-	fmt.Printf("class_name: %s, student_name: %s, absence_category: %s,document_id: %d\n",
-		document.ClassName, document.StudentName, document.AbsenceCategory, document.DocumentID)
+	/*
+		fmt.Printf("class_name: %s, student_name: %s, absence_category: %s,document_id: %d\n",
+			document.ClassName, document.StudentName, document.AbsenceCategory, document.DocumentID)
+	*/
 
 	// ヘッダーのJSONをinputにバインドします
 	// err := c.ShouldBindWith(&input, binding.JSON)
