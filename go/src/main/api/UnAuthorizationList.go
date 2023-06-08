@@ -15,9 +15,24 @@ type Document2 struct {
 	Location   string `json:"location"`    // 場所
 }
 
+// 引数の構造体
+type TeacherData struct {
+	TeacherID int    `json:"teacher_id"`
+	Position  int    `json:"position"`
+	ClassName string `json:"class_name"`
+}
+
+// 戻り値の構造体
+type UnAuthorizeList struct {
+	ClassName       string `json:"class_name"`       //クラス名称
+	StudentName     string `json:"student_name"`     //学生氏名
+	AbsenceCategory string `json:"absence_category"` //種別
+	DocumentID      int    `json:"document_id"`      //書類ID
+}
+
 func UnAuthorizationList(c *gin.Context) {
 
-	document_id := c.Param("teacher_data")
+	//document_id := c.Param("teacher_data")
 	// input := model.UserInput{}
 
 	var document = Document2{}
