@@ -33,7 +33,7 @@ type UnAuthorizeList struct {
 func UnAuthorizationList(c *gin.Context) {
 
 	//引数を取得する
-	document_id := c.Param("teacher_data")
+	status := c.Param("teacher_data")
 
 	// input := model.UserInput{}
 
@@ -49,7 +49,7 @@ func UnAuthorizationList(c *gin.Context) {
 		Joins("JOIN students AS st ON ad.student_id = st.student_id").
 		Joins("JOIN absence_reason AS ar ON ad.reason_id = ar.reason_id").
 		//Where("ad.document_id = 1").
-		Where("ad.document_id = ?", document_id).
+		Where("ad.status = ?", status).
 		Scan(&document)
 	if db.Error != nil {
 		fmt.Print("ERROR!")
