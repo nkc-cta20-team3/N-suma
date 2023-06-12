@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"main/infra"
+	"main/model"
 
 	"github.com/gin-gonic/gin"
 )
@@ -15,20 +16,20 @@ type Document2 struct {
 	Location   string `json:"location"`    // 場所
 }
 
-// 引数の構造体
-type TeacherData struct {
-	TeacherID int    `json:"teacher_id"`
-	Position  int    `json:"position"`
-	ClassName string `json:"class_name"`
-}
+// // 引数の構造体
+// type TeacherData struct {
+// 	TeacherID int    `json:"teacher_id"`
+// 	Position  int    `json:"position"`
+// 	ClassName string `json:"class_name"`
+// }
 
-// 戻り値の構造体
-type UnAuthorizeList struct {
-	ClassName       string `json:"class_name"`       //クラス名称
-	StudentName     string `json:"student_name"`     //学生氏名
-	AbsenceCategory string `json:"absence_category"` //種別
-	DocumentID      int    `json:"document_id"`      //書類ID
-}
+// // 戻り値の構造体
+// type UnAuthorizeList struct {
+// 	ClassName       string `json:"class_name"`       //クラス名称
+// 	StudentName     string `json:"student_name"`     //学生氏名
+// 	AbsenceCategory string `json:"absence_category"` //種別
+// 	DocumentID      int    `json:"document_id"`      //書類ID
+// }
 
 func UnAuthorizationList(c *gin.Context) {
 
@@ -37,7 +38,7 @@ func UnAuthorizationList(c *gin.Context) {
 
 	// input := model.UserInput{}
 
-	document := []UnAuthorizeList{}
+	document := []model.UnAuthorizeList{}
 	//document := UnAuthorizeList{}
 	db := infra.DBInitGorm()
 
