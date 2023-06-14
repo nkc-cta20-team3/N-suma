@@ -48,6 +48,7 @@ func main() {
 			"Content-Length",
 			"Accept-Encoding",
 			"Authorization",
+			"x-requested-with",
 		},
 
 		// cookieなどの情報を必要とするかどうか
