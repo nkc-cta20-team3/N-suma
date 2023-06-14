@@ -35,37 +35,5 @@
 
 <script setup>
     
-    import { onMounted,ref } from 'vue'
-
-    const APIURL = new URL("ad/1", import.meta.env.VITE_API_URL)
-
-    onMounted(() => {
-        GetAPIDate() 
-    })
-
-    const GetAPIDate = () => {
-        fetch(APIURL, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Requested-With': 'XMLHttpRequest',
-            },
-        })
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error(`${response.status} ${response.statusText}`)
-            } else {
-                response.json().then((data) => {
-                    console.log(data)
-                })
-            }
-        })
-        .then((data) => {
-            console.log(data)
-        })
-        .catch((error) => {
-            console.log(error)
-        })
-    }
-
+    
 </script>
