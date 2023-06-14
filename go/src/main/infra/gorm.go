@@ -3,8 +3,8 @@ package infra
 import (
 	"log"
 
-	"gorm.io/gorm"
 	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 )
 
 func DBInitGorm() *gorm.DB {
