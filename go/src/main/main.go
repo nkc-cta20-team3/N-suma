@@ -2,8 +2,10 @@ package main
 
 import (
 	"log"
+	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/gin-contrib/cors"
 
 	// ローカルモジュールのインポート
 	"main/api"
@@ -25,6 +27,36 @@ func main() {
 	//
 	g := gin.Default()
 	g.Use(service.ServiceFactoryMiddleware(factory))
+	g.Use(cors.New(cors.Config{
+		
+		// アクセスを許可したいアクセス元
+		AllowOrigins: []string{
+			"http://localhost:5173",
+		},
+
+		// アクセスを許可したいHTTPメソッド(以下の例だとPUTやDELETEはアクセスできません)
+		AllowMethods: []string{
+			"POST",
+			"GET",
+		},
+
+		// 許可したいHTTPリクエストヘッダ
+		AllowHeaders: []string{
+			"Access-Control-Allow-Credentials",
+			"Access-Control-Allow-Headers",
+			"Content-Type",
+			"Content-Length",
+			"Accept-Encoding",
+			"Authorization",
+			"x-requested-with",
+		},
+
+		// cookieなどの情報を必要とするかどうか
+		AllowCredentials: false,
+		
+		// preflightリクエストの結果をキャッシュする時間
+		MaxAge: 24 * time.Hour,
+	}))
 
 	//
 	routes := g.Group("/v1")
