@@ -32,44 +32,55 @@
                     <th>    </th>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <th>CT4A</th>
-                    <th>田中 太郎</th>
-                    <th>資格</th>
-                    <th><button>詳細</button></th>
+            <thead>
+                <tr v-for="user in users" :key="user.id">
+                    <th>{{ user.class }}</th>
+                    <th>{{ user.name }}</th>
+                    <th>{{ user.type }}</th>
+                    <th><router-link to="/document_accept">詳細</router-link></th>
                 </tr>
-                <tr>
-                    <th>CT4B</th>
-                    <th>田中 花子</th>
-                    <th>就活</th>
-                    <th><button>詳細</button></th>
-                </tr>
-                <tr>
-                    <th>CT3A</th>
-                    <th>鈴木 一郎</th>
-                    <th>通常</th>
-                    <th><button>詳細</button></th>
-                </tr>
-                <tr>
-                    <th>CT3B</th>
-                    <th>鈴木 次郎</th>
-                    <th>通常</th>
-                    <th><button>詳細</button></th>
-                </tr>
-                <tr>
-                    <th>CT2A</th>
-                    <th>パブロ・ディエゴ・ホセ・フランシスコ・デ・パウラ・ホアン・ネポムセーノ･マリーア・デ・ロス・レメディオス・クリスピン・クリスピアーノ・デ・ラ・サンディシマ・トリニダード･ルイス・イ・ピカソ</th>
-                    <th>通常</th>
-                    <th><button>詳細</button></th>
-                </tr>
-                <tr>
-                    <th>CT2A</th>
-                    <th>パブロ・ディエゴ・ホセ・フランシスコ・デ・パウラ・ホアン・ネポムセーノ･マリーア・デ・ロス・レメディオス・クリスピン・クリスピアーノ・デ・ラ・サンディシマ・トリニダード･ルイス・イ・ピカソ</th>
-                    <th>通常</th>
-                    <th><router-link to="/document_accept">詳細(aタグにしてます)</router-link></th>
-                </tr>
-            </tbody>
+            </thead>
         </table>
     </div>
 </template>
+
+<script setup>
+
+    import { onMounted,ref } from 'vue'
+    const users = ref(
+        [
+            {
+                id: 1,
+                class: 'CS2',
+                name: '石井 大介',
+                type: '就活',
+            },
+                {
+                id: 2,
+                class: 'CT4B',
+                name: '鈴木 孝明',
+                type: '就活',
+            },
+                {
+                id: 3,
+                class: 'CT2A',
+                name: '遠藤 雄一',
+                type: '資格',
+            },
+        ]
+    )
+
+    onMounted(() => {
+        if(users.value.length < 1){
+            alert('未認可の書類はありません。');
+        }
+        else{
+            lists()
+        }    
+    })
+
+    const lists = () => {
+        users.value.list((a, b) => { return b.id - a.id });
+    }
+    
+</script>

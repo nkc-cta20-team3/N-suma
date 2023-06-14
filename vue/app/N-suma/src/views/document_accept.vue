@@ -13,19 +13,59 @@
 
     <div class="container">
 
-        <div class="is-grouped">
+        <form class="is-grouped">
 
             <div class="is-flex mb-5">
-                <input type="text" class="input" style="font-size: 1.25em" placeholder="学生コメント">
-                <div class="ml-4 button is-medium is-">受理</div>
+                <input type="text" disabled class="input disable" style="font-size: 1.25em" placeholder="学生コメント" >
             </div>
 
             <div class="is-flex mb-5">
-                <input type="text" class="input" style="font-size: 1.25em" placeholder="教員用コメント">
-                <div class="ml-4 button is-medium is-">却下</div>
+                <input type="text" required class="input" style="font-size: 1.25em" placeholder="教員用コメント" >
+            </div>
+            
+            <div class="is-flex mb-5">
+                <input type="submit" class="ml-4 button is-medium" value="受理">
+                <input type="submit" class="ml-4 button is-medium" value="却下">
             </div>
 
-        </div>
-
+        </form>
     </div>
+
 </template>
+
+<script setup>
+    
+    import { onMounted,ref } from 'vue'
+
+    const APIURL = new URL("ad/1", import.meta.env.VITE_API_URL)
+
+    onMounted(() => {
+        GetAPIDate() 
+    })
+
+    const GetAPIDate = () => {
+        fetch(APIURL, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+        })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error(`${response.status} ${response.statusText}`)
+            } else {
+                response.json().then((data) => {
+                    console.log(data)
+                })
+            }
+        })
+        .then((data) => {
+            console.log(data)
+        })
+        .catch((error) => {
+            console.log(error)
+        })
+    }
+
+</script>
