@@ -12,22 +12,52 @@
     </div>
 
     <div class="container">
-
-        <form class="is-grouped">
-
+        <div class="is-grouped">
             <div class="is-flex mb-5">
                 <input type="text" disabled class="input disable" style="font-size: 1.25em" placeholder="学生コメント" >
             </div>
-
             <div class="is-flex mb-5">
-                <input type="text" required class="input" style="font-size: 1.25em" placeholder="教員用コメント" >
+                <input type="text" v-model="inputValue" class="input" style="font-size: 1.25em" placeholder="教員用コメント">
             </div>
-            
             <div class="is-flex mb-5">
-                <input type="submit" class="ml-4 button is-medium" value="受理">
-                <input type="submit" class="ml-4 button is-medium" value="却下">
+                <div class="ml-4 button is-medium" @click="AcceptanceAlert">受理</div>
+                <div class="ml-4 button is-medium" @click="RejectedAlert">却下</div>
             </div>
-
-        </form>
+        </div>
     </div>
+
 </template>
+  
+<script>
+export default {
+    data() {
+        return {
+            inputValue:""
+        };
+    },
+    methods: {
+        AcceptanceAlert() {
+            if (this.inputValue){
+                alert("受理されました");
+            } else {
+                alert("コメントを入力してください。");
+            }      
+        },
+        RejectedAlert() {
+            if (this.inputValue){
+                alert("却下されました");
+            } else {
+                alert("コメントを入力してください。");
+            }
+        }
+    }
+};
+</script>
+
+
+
+
+
+
+
+
