@@ -16,7 +16,7 @@ func UnAuthorizationListGet(c *gin.Context) {
 	//構造体定義
 
 	//POST用
-	//teacher_data := []model.TeacherData{}
+	//teacher_data := model.TeacherData{}
 	document := []model.UnAuthorizeList{}
 
 	//引数を取得する

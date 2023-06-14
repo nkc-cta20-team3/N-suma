@@ -13,10 +13,13 @@ import (
 
 func UnAuthorizationList(c *gin.Context) {
 
+	// 確認用
+	log.Println("UnAuthorizationList")
+
 	//構造体定義
 
 	//POST用
-	teacher_data := []model.TeacherData{}
+	teacher_data := model.TeacherData{}
 	document := []model.UnAuthorizeList{}
 
 	//引数を取得する(GET)
@@ -26,13 +29,16 @@ func UnAuthorizationList(c *gin.Context) {
 	// 	return
 	// }
 
-	//POST用
+	//POST用、値を格納する
 	if err := c.ShouldBindJSON(&teacher_data); err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
 
-	teacher_data[0].Position -= 1
+	// 確認用
+	log.Println("Post Data")
+
+	teacher_data.Position -= 1
 	log.Println(teacher_data)
 
 	//DB接続(共通)
@@ -47,7 +53,7 @@ func UnAuthorizationList(c *gin.Context) {
 			"ad.document_id").
 		Joins("JOIN students AS st ON ad.student_id = st.student_id").
 		Joins("JOIN absence_reason AS ar ON ad.reason_id = ar.reason_id").
-		Where("ad.status = ?", &teacher_data[0].Position).
+		Where("ad.status = ?", &teacher_data.Position).
 		Scan(&document)
 	// db.Table("absence_document AS ad").
 	// 	Select(
