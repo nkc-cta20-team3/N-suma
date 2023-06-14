@@ -37,17 +37,28 @@
     
     import { onMounted,ref } from 'vue'
 
-    const APIURL = new URL("https://db:8080/api/ad/1")
+    const APIURL = new URL("ad/1", import.meta.env.VITE_API_URL)
 
     onMounted(() => {
         GetAPIDate() 
     })
 
     const GetAPIDate = () => {
-        fetch("http://localhost:8080/api/ad/1")
+        fetch(APIURL, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+        })
         .then((response) => {
-            console.log(response.status)
-            console.log(response.json())
+            if (!response.ok) {
+                throw new Error(`${response.status} ${response.statusText}`)
+            } else {
+                response.json().then((data) => {
+                    console.log(data)
+                })
+            }
         })
         .then((data) => {
             console.log(data)
