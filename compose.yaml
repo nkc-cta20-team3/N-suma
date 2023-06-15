@@ -3,12 +3,15 @@ services:
     vue:
         build: ./build/vue/
         container_name: "sssr-vue-webserver"
+        links:
+            - go
         ports:
             - "5173:5173"
         volumes:
             - "./vue/app:/app"
         tty: true
         stdin_open: true
+        
     go:
         build: ./build/go/
         container_name: "sssr-go-webserver"

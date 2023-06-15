@@ -1,55 +1,67 @@
 package api
 
 import (
+	"fmt"
 	"net/http"
+	"strconv"
 
-	// "main/model/???"
-	// "main/infra"
+	"main/infra"
+	"main/model"
 
 	"github.com/gin-gonic/gin"
 )
 
-type Teacher_data struct {
-	teacher_id int    `json:"teacher_id"`
-	position   int    `json:"position"`
-	class_name string `json:"class_name"`
-}
-
 func UnAuthorizationList(c *gin.Context) {
 
-	aaa := c.Param("teacher_data")
+	//構造体定義
 
-	// input := model.UserInput{}
+	//POST用
+	//teacher_data := []model.TeacherData{}
+	document := []model.UnAuthorizeList{}
 
-	// ヘッダーのJSONをinputにバインドします
-	// err := c.ShouldBindWith(&input, binding.JSON)
-	// if err != nil {
-	// 	c.String(http.StatusBadRequest, "Bad request")
+	//引数を取得する
+	status, err := strconv.Atoi(c.Param("teacher_data"))
+	if err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+
+	//POST用
+	// if err := c.ShouldBindJSON(&teacher_data); err != nil {
+	// 	c.JSON(400, gin.H{"error": err.Error()})
 	// 	return
 	// }
 
-	// var data Teacher_data
+	//DB接続
+	db := infra.DBInitGorm()
 
-	// err := json.Unmarshal("teacher_data", &data)
-
-	// if err != nil {
-	// 	//エラー
-	// }
-
-	// fmt.Println(data.teacher_id)
-	// fmt.Println(data.position)
-	// fmt.Println(data.class_name)
-
-	// JSONに変えるときに使う
-	payload := gin.H{
-		"message": aaa,
+	//POST用
+	// db.Table("absence_document AS ad").
+	// 	Select(
+	// 		"st.class_name",
+	// 		"st.student_name",
+	// 		"ar.absence_category",
+	// 		"ad.document_id").
+	// 	Joins("JOIN students AS st ON ad.student_id = st.student_id").
+	// 	Joins("JOIN absence_reason AS ar ON ad.reason_id = ar.reason_id").
+	// 	Where("ad.status = ?", teacher_data.Position-1).
+	// 	Scan(&document)
+	db.Table("absence_document AS ad").
+		Select(
+			"st.class_name",
+			"st.student_name",
+			"ar.absence_category",
+			"ad.document_id").
+		Joins("JOIN students AS st ON ad.student_id = st.student_id").
+		Joins("JOIN absence_reason AS ar ON ad.reason_id = ar.reason_id").
+		Where("ad.status = ?", status-1).
+		Scan(&document)
+	if db.Error != nil {
+		fmt.Print("ERROR!")
 	}
 
-	//DB接続
-	// db = infra.DBInit()
-
 	// ステータス200と、payloadを返します
-	c.JSON(http.StatusOK, payload)
+	c.JSON(http.StatusOK, document)
 	// c.JSON(http.StatusOK, aaa)
 
 }
