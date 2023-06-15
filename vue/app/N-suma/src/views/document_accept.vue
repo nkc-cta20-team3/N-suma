@@ -12,20 +12,35 @@
     </div>
 
     <div class="container">
-
         <div class="is-grouped">
-
             <div class="is-flex mb-5">
-                <input type="text" class="input" style="font-size: 1.25em" placeholder="学生コメント">
-                <div class="ml-4 button is-medium is-">受理</div>
+                <input type="text" disabled class="input disable" style="font-size: 1.25em" placeholder="学生コメント" >
             </div>
-
             <div class="is-flex mb-5">
-                <input type="text" class="input" style="font-size: 1.25em" placeholder="教員用コメント">
-                <div class="ml-4 button is-medium is-">却下</div>
+                <input type="text" v-model="inputValue" class="input" style="font-size: 1.25em" placeholder="教員用コメント">
             </div>
-
+            <div class="is-flex mb-5">
+                <div class="ml-4 button is-medium" @click="ClickAlert(true)">受理</div>
+                <div class="ml-4 button is-medium" @click="ClickAlert(false)">却下</div>
+            </div>
         </div>
-
     </div>
+
 </template>
+
+<script setup>
+
+import { ref } from 'vue';
+
+const inputValue = ref('')
+
+const ClickAlert = (isAcceptance) => {
+
+    if (inputValue.value){
+        alert( (isAcceptance ? "受理" : "却下") + "されました");
+    } else {
+        alert("コメントを入力してください。");
+    }      
+}
+
+</script>

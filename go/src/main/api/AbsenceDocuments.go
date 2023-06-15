@@ -1,17 +1,18 @@
 package api
 
 import (
+	"encoding/json"
 	"log"
 	"net/http"
-	"encoding/json"
 
-	"github.com/gin-gonic/gin"
 	"main/infra"
 	"main/model"
+
+	"github.com/gin-gonic/gin"
 )
 
 func GetAbsenceDocuments(c *gin.Context) {
-	
+
 	// パラメータ取得
 	document_id := c.Param("document_id")
 	if document_id == "" {
@@ -21,7 +22,7 @@ func GetAbsenceDocuments(c *gin.Context) {
 	}
 
 	//データベース接続
-	db:= infra.DBInitGorm()
+	db := infra.DBInitGorm()
 	if db.Error != nil {
 		errMsg := "データベース接続エラー"
 		c.JSON(http.StatusInternalServerError, gin.H{"error": errMsg})
@@ -51,7 +52,6 @@ func GetAbsenceDocuments(c *gin.Context) {
 		return
 	}
 
-
 	log.Println(document)
 
 	// JSONに変換
@@ -59,11 +59,11 @@ func GetAbsenceDocuments(c *gin.Context) {
 	if err != nil {
 		errMsg := "JSONに変換できませんでした"
 		c.JSON(http.StatusInternalServerError, gin.H{"error": errMsg})
-		return 
+		return
 	}
 	log.Println(string(json))
 
 	// JSONで返す
 	c.JSON(http.StatusOK, document)
-	
+
 }
