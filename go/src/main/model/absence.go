@@ -34,3 +34,9 @@ type UnAuthorizeList struct {
 	AbsenceCategory string `json:"absence_category"` //種別
 	DocumentID      int    `json:"document_id"`      //書類ID
 }
+
+// UnAuthorization,UnAuthorizationGET 作業用構造体
+type TakeClassName struct {
+	PositionID int    `json:"position_id"`
+	ClassName  string `json:"class_name"`
+}

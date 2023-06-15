@@ -11,11 +11,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type TakeClassName struct {
-	PositionID int    `json:"position_id"`
-	ClassName  string `json:"class_name"`
-}
-
 func UnAuthorizationList(c *gin.Context) {
 
 	// 確認用
@@ -26,7 +21,7 @@ func UnAuthorizationList(c *gin.Context) {
 	//使用する構造体
 	teacher_data := model.TeacherData{}
 	document := []model.UnAuthorizeList{}
-	take_class_name := TakeClassName{}
+	take_class_name := model.TakeClassName{}
 
 	//POSTで受け取った値を格納する
 	if err := c.ShouldBindJSON(&teacher_data); err != nil {
