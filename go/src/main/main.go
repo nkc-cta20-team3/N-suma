@@ -79,13 +79,14 @@ func main() {
 	routeapi := g.Group("/api")
 	{
 		//apiフォルダ内のapiをルーティング
+		routeapi.POST("/ral/", api.ReadAuthList)
+		routeapi.POST("/rd/", api.ReadDocument)
+		routeapi.POST("/ua", api.UpdateAuth)
 
-		routeapi.GET("/ad/:document_id", api.GetAbsenceDocuments)
-		routeapi.GET("/aa/:absence_data", api.AuthorizeAbsence)
-		routeapi.GET("/da/:absence_list", api.DeleteAbsence)
-		// routeapi.GET("/ra/:absence_list", api.RegisterAbsence)
-		routeapi.POST("/ual", api.UnAuthorizationList)
-		routeapi.GET("/ual/:teacher_data", api.UnAuthorizationListGet)
+		//実装予定の管理者向けのAPI
+		//routeapi.POST("/cd", api.CreateDocument)
+		//routeapi.POST("/dd", api.DeleteDocument)
+
 	}
 
 	g.Run(":8080")
