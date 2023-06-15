@@ -22,6 +22,15 @@ type AbsenceDocument struct {
 	TeacherComment    sql.NullString `json:"teacher_comment"`     // 教員コメント
 }
 
+// AuthorizeAbsence 引数の構造体
+type AuthorizeAbsence struct {
+	DocumentID     int    `json:"document_id"`
+	TeacherID      int    `json:"teacher_id"`
+	TeacherComment string `json:"teacher_comment"`
+}
+
+// AuthorizeAbsence 戻り値の構造体
+
 // UnAuthorization 引数の構造体
 type TeacherData struct {
 	TeacherID int `json:"teacher_id"` //教員ID
