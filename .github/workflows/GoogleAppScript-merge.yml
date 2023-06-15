@@ -5,6 +5,11 @@ on:
     branches:
       - main
   workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: gas
+
 jobs:
   deploy:
     runs-on: ubuntu-20.04
