@@ -12,60 +12,35 @@
     </div>
 
     <div class="container">
-
-        <form class="is-grouped">
-
+        <div class="is-grouped">
             <div class="is-flex mb-5">
                 <input type="text" disabled class="input disable" style="font-size: 1.25em" placeholder="学生コメント" >
             </div>
-
             <div class="is-flex mb-5">
-                <input type="text" required class="input" style="font-size: 1.25em" placeholder="教員用コメント" >
+                <input type="text" v-model="inputValue" class="input" style="font-size: 1.25em" placeholder="教員用コメント">
             </div>
-            
             <div class="is-flex mb-5">
-                <input type="submit" class="ml-4 button is-medium" value="受理">
-                <input type="submit" class="ml-4 button is-medium" value="却下">
+                <div class="ml-4 button is-medium" @click="ClickAlert(true)">受理</div>
+                <div class="ml-4 button is-medium" @click="ClickAlert(false)">却下</div>
             </div>
-
-        </form>
+        </div>
     </div>
 
 </template>
 
 <script setup>
-    
-    import { onMounted,ref } from 'vue'
 
-    const APIURL = new URL("ad/1", import.meta.env.VITE_API_URL)
+import { ref } from 'vue';
 
-    onMounted(() => {
-        GetAPIDate() 
-    })
+const inputValue = ref('')
 
-    const GetAPIDate = () => {
-        fetch(APIURL, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Requested-With': 'XMLHttpRequest',
-            },
-        })
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error(`${response.status} ${response.statusText}`)
-            } else {
-                response.json().then((data) => {
-                    console.log(data)
-                })
-            }
-        })
-        .then((data) => {
-            console.log(data)
-        })
-        .catch((error) => {
-            console.log(error)
-        })
-    }
+const ClickAlert = (isAcceptance) => {
+
+    if (inputValue.value){
+        alert( (isAcceptance ? "受理" : "却下") + "されました");
+    } else {
+        alert("コメントを入力してください。");
+    }      
+}
 
 </script>
