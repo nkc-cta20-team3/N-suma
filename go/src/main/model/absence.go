@@ -24,9 +24,8 @@ type AbsenceDocument struct {
 
 // UnAuthorization 引数の構造体
 type TeacherData struct {
-	TeacherID int    `json:"teacher_id"` //教員ID
-	Position  int    `json:"position"`   //役職
-	ClassName string `json:"class_name"` //担任クラス名
+	TeacherID int `json:"teacher_id"` //教員ID
+	Position  int `json:"position"`   //役職
 }
 
 // UnAuthorization 戻り値の構造体

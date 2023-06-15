@@ -24,18 +24,13 @@ func UnAuthorizationListGet(c *gin.Context) {
 	}
 
 	//担任の有無によって処理を変える準備
-	text := ""
-
-	if 1 == 1 {
-		text = "st.class_name = ?"
-	}
 	class_name := "CTA20"
-
-	//ここに副問い合わせを入れる
-	//subquery := db.Table("")
 
 	//DB接続
 	db := infra.DBInitGorm()
+
+	//ここに副問い合わせを入れる
+	subquery := db.Table("class").Select("class_name").Where("class_name = ?", class_name)
 	//SQLの発行
 	db.Table("absence_document AS ad").
 		Select(
@@ -46,7 +41,7 @@ func UnAuthorizationListGet(c *gin.Context) {
 		Joins("JOIN students AS st ON ad.student_id = st.student_id").
 		Joins("JOIN absence_reason AS ar ON ad.reason_id = ar.reason_id").
 		Where("ad.status = ?", status-1).
-		Where(text, class_name).
+		Where("st.class_name IN (?)", subquery).
 		Scan(&document)
 	if db.Error != nil {
 		fmt.Print("ERROR!")
@@ -56,7 +51,7 @@ func UnAuthorizationListGet(c *gin.Context) {
 		"document": document,
 	}
 
-	//ステータスと
+	// ステータス200と、payloadを返します
 	c.JSON(http.StatusOK, payload)
 
 }
