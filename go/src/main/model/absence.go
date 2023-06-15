@@ -6,6 +6,10 @@ import (
 )
 
 // ReadAuthListで使用する構造体
+type ReadAuthListRequest struct {
+	TeacherID int `json:"teacher_id"`
+}
+
 type ReadAuthListResponse struct {
 	ClassName  string `json:"class_name"`
 	StudentName string `json:"student_name"`
@@ -13,7 +17,18 @@ type ReadAuthListResponse struct {
 	DocumentID int `json:"document_id"`
 }
 
+type TakeClassName struct {
+	PositionID int    `json:"position_id"`
+	ClassName  string `json:"class_name"`
+}
+
+
+
 // ReadDocumentで使用する構造体
+type ReadDocumentRequest struct {
+	DocumentID int `json:"document_id"`
+}
+
 type ReadDocumentResponse struct {
 	RequestDate string `json:"request_date"`
 	StudentID int `json:"student_id"`
@@ -51,4 +66,9 @@ type CreateDocumentRequest struct {
 	Status            int            `json:"status"`              // ステータス
 	StudentComment    sql.NullString `json:"student_comment"`     // 学生コメント
 	TeacherComment    sql.NullString `json:"teacher_comment"`     // 教員コメント
+}
+
+// DeleteDocumentで使用する構造体
+type DeleteDocumentRequest struct {
+	DocumentID int `json:"document_id"`
 }
