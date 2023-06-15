@@ -44,15 +44,11 @@ func UnAuthorizationList(c *gin.Context) {
 
 	//所属クラス名を取得
 	db.Table("teachers").Select("position_id, class_name").Where("teacher_id = ?", teacher_data.TeacherID).First(&take_class_name)
-
-	log.Println(take_class_name)
 	position := take_class_name.PositionID - 1
-	log.Println(teacher_data)
 
 	if take_class_name.PositionID == 1 {
 		//担任教員であるとき
-
-		log.Println("aaa")
+		//担任クラスのみ出力する
 
 		db.Table("absence_document AS ad").
 			Select(
@@ -68,10 +64,10 @@ func UnAuthorizationList(c *gin.Context) {
 		if db.Error != nil {
 			fmt.Print("ERROR!")
 		}
-	} else {
+	} else if take_class_name.PositionID >= 2 && take_class_name.PositionID <= 5 {
 
 		//主任以上の場合
-		log.Println("bbb")
+		//すべてのクラスを出力する
 
 		db.Table("absence_document AS ad").
 			Select(
@@ -86,24 +82,10 @@ func UnAuthorizationList(c *gin.Context) {
 		if db.Error != nil {
 			fmt.Print("ERROR!")
 		}
+	} else {
+		//例外のとき
+		//なにもしない
 	}
-
-	//subquery := db.Table("class").Select("class_name").Where("class_name = ?", class_name)
-
-	//POST用
-	// db.Table("absence_document AS ad").
-	// 	Select(
-	// 		"st.class_name",
-	// 		"st.student_name",
-	// 		"ar.absence_category",
-	// 		"ad.document_id").
-	// 	Joins("JOIN students AS st ON ad.student_id = st.student_id").
-	// 	Joins("JOIN absence_reason AS ar ON ad.reason_id = ar.reason_id").
-	// 	Where("ad.status = ?", &teacher_data.Position).
-	// 	Scan(&document)
-	// if db.Error != nil {
-	// 	fmt.Print("ERROR!")
-	// }
 
 	payload := gin.H{
 		"document": document,
