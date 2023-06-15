@@ -1,5 +1,5 @@
 function sendDataToLambda() {
-  // 変更しました
+  // mainマージ時更新
   // スプレッドシートを取得
   //現在1番アクティブなスプレットシートを取得するため
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
