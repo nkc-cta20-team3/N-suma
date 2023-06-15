@@ -12,7 +12,8 @@ import (
 )
 
 type TakeClassName struct {
-	ClassName string `json:"class_name"`
+	PositionID int    `json:"position_id"`
+	ClassName  string `json:"class_name"`
 }
 
 func UnAuthorizationList(c *gin.Context) {
@@ -22,12 +23,12 @@ func UnAuthorizationList(c *gin.Context) {
 
 	//構造体定義
 
-	//POST用
+	//使用する構造体
 	teacher_data := model.TeacherData{}
 	document := []model.UnAuthorizeList{}
 	take_class_name := TakeClassName{}
 
-	//POST用、値を格納する
+	//POSTで受け取った値を格納する
 	if err := c.ShouldBindJSON(&teacher_data); err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
@@ -36,19 +37,19 @@ func UnAuthorizationList(c *gin.Context) {
 	// 確認用
 	log.Println("Post Data")
 
-	//DB接続(共通)
+	//DB接続
 	db := infra.DBInitGorm()
 
 	//サブクエリ(副問い合わせ)の作成
 
 	//所属クラス名を取得
-	db.Table("teachers").Select("class_name").Where("teacher_id = ?", teacher_data.TeacherID).First(&take_class_name)
+	db.Table("teachers").Select("position_id, class_name").Where("teacher_id = ?", teacher_data.TeacherID).First(&take_class_name)
 
 	log.Println(take_class_name)
-	position := teacher_data.Position - 1
+	position := take_class_name.PositionID - 1
 	log.Println(teacher_data)
 
-	if teacher_data.Position == 1 {
+	if take_class_name.PositionID == 1 {
 		//担任教員であるとき
 
 		log.Println("aaa")
@@ -80,7 +81,7 @@ func UnAuthorizationList(c *gin.Context) {
 				"ad.document_id").
 			Joins("JOIN students AS st ON ad.student_id = st.student_id").
 			Joins("JOIN absence_reason AS ar ON ad.reason_id = ar.reason_id").
-			Where("ad.status = ?", &teacher_data.Position).
+			Where("ad.status = ?", position).
 			Scan(&document)
 		if db.Error != nil {
 			fmt.Print("ERROR!")
