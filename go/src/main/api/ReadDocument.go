@@ -1,9 +1,8 @@
 package api
 
 import (
-	"encoding/json"
-	"log"
 	"net/http"
+	"log"
 
 	"main/infra"
 	"main/model"
@@ -13,19 +12,17 @@ import (
 
 func ReadDocument(c *gin.Context) {
 
-	/*
+	
 	request := model.ReadDocumentRequest{}
 	response := model.ReadDocumentResponse{}
 
-	// パラメータ取得
-	document_id := c.Param("document_id")
-	if document_id == "" {
-		errMsg := "document_idが空です"
-		c.JSON(http.StatusBadRequest, gin.H{"error": errMsg})
+	//POSTで受け取った値を格納する
+	if err := c.ShouldBindJSON(&request); err != nil {
+		// エラーな場合、ステータス400と、エラー情報を返す
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	
 
 	//データベース接続
 	db := infra.DBInitGorm()
@@ -36,53 +33,52 @@ func ReadDocument(c *gin.Context) {
 	}
 
 
-	RequestDate string `json:"request_date"`
-	StudentID int `json:"student_id"`
-	ClassName string `json:"class_name"`
-	StudentName string `json:"student_name"`
-	StartDate string `json:"start_date"`
-	StartFlame int `json:"start_flame"`
-	EndDate string `json:"end_date"`
-	EndFlame int `json:"end_flame"`
-	Location string `json:"location"`
-	StudentComment string `json:"student_comment"`
-	TeacherComment string `json:"teacher_comment"`
+	/*
+	
+	type ReadDocumentResponse struct {
+		DocumentID int `json:"document_id"`
+		RequestDate time.Time `json:"request_date"`
+		StudentID int `json:"student_id"`
+		ClassName string `json:"class_name"`
+		StudentName string `json:"student_name"`
+		StartDate time.Time `json:"absence_start_date"`
+		StartFlame int `json:"start_flame"`
+		EndDate time.Time `json:"end_date"`
+		EndFlame int `json:"end_flame"`
+		Location string `json:"location"`
+		StudentComment string `json:"student_comment"`
+		TeacherComment string `json:"teacher_comment"`
+	}
+	*/
 
-	// データベースからデータを取得
-	db.Table("absence_document").Select(
-		"request_date",
-		"student_id",
-		"company_id",
-		"reason_id",
-		"absence_start_date",
-		"absence_start_flame",
-		"absence_end_date",
-		"absence_end_flame",
-		"location",
-		"read_flag",
-		"status",
-		"student_comment",
-		"teacher_comment").Where("document_id = ?", document_id).First(&document)
+	// データベースからデータを取得する
+	db.Debug().Table("absence_document AS ab").
+		Select(
+			"ab.document_id",
+			"ab.request_date",
+			"ab.student_id",
+			"st.class_name",
+			"st.student_name",
+			"ab.absence_start_date",
+			"ab.absence_start_flame",
+			"ab.absence_end_date",
+			"ab.absence_end_flame",
+			"ab.location",
+			"ab.read_flag",
+			"ab.status",
+			"ab.student_comment",
+			"ab.teacher_comment").
+		Joins("JOIN students AS st ON ab.student_id = st.student_id").
+		Where("document_id = ?", request.DocumentID).
+		First(&response)
 	if db.Error != nil {
 		errMsg := "データベースからデータを取得できませんでした"
 		c.JSON(http.StatusInternalServerError, gin.H{"error": errMsg})
 		return
 	}
 
-	log.Println(document)
-
-	// JSONに変換
-	json, err := json.Marshal(document)
-	if err != nil {
-		errMsg := "JSONに変換できませんでした"
-		c.JSON(http.StatusInternalServerError, gin.H{"error": errMsg})
-		return
-	}
-	log.Println(string(json))
-	*/
-
-	// JSONで返す
-	// c.JSON(http.StatusOK, document)
-	c.JSON(http.StatusOK, "OK")
+	log.Println(response)
+	
+	c.JSON(http.StatusOK, gin.H{"document": response})
 	
 }

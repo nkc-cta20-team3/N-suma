@@ -30,11 +30,12 @@ type ReadDocumentRequest struct {
 }
 
 type ReadDocumentResponse struct {
-	RequestDate string `json:"request_date"`
+	DocumentID int `json:"document_id"`
+	RequestDate time.Time `json:"request_date"`
 	StudentID int `json:"student_id"`
 	ClassName string `json:"class_name"`
 	StudentName string `json:"student_name"`
-	StartDate string `json:"start_date"`
+	StartDate string `json:"absence_start_date"`
 	StartFlame int `json:"start_flame"`
 	EndDate string `json:"end_date"`
 	EndFlame int `json:"end_flame"`
@@ -44,7 +45,7 @@ type ReadDocumentResponse struct {
 }
 
 // UpdateAuthで使用する構造体
-type UpdateAuthDataRequest struct {
+type UpdateAuthRequest struct {
 	DocumentID int `json:"document_id"`
 	TeacherID int `json:"teacher_id"`
 	TeacherComment string `json:"teacher_comment"`
