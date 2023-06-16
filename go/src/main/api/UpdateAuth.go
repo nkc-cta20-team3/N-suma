@@ -3,6 +3,9 @@ package api
 import (
 	"net/http"
 
+	// "main/infra"
+	"main/model"
+
 	"github.com/gin-gonic/gin"
 )
 
