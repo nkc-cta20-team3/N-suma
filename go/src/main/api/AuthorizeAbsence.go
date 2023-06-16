@@ -66,12 +66,16 @@ func AuthorizeAbsence(c *gin.Context) {
 	if teacherPosition == documentStatus+1 {
 		//認可できる状態
 
-		db.Model(&AbsenceDocument{}).
+		db.Table("absence_document").
 			Where("document_id = ?", document.DocumentID).
-			Update("status", documentStatus).
-			Update("teacher_comment", document.TeacherComment)
+			Updates(AbsenceDocument{Status: teacherPosition, TeacherComment: document.TeacherComment})
+			// 	Update("status", documentStatus).
+			// 	Update("teacher_comment", document.TeacherComment)
 
-		//Updates(absence_document{Status: documentStatus, TeacherComment: document.TeacherComment})
+			// db.Model(&AbsenceDocument{}).
+			// 	Where("document_id = ?", document.DocumentID).
+			// 	Update("status", documentStatus).
+			// 	Update("teacher_comment", document.TeacherComment)
 
 		// db.Table("absence_document").Select("status,teacher_comment").Where("document_id = ?", document.DocumentID).First(&updateAbsence)
 		// updateAbsence.Status = documentStatus
