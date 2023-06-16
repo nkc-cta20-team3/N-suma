@@ -9,12 +9,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// 更新用構造体
-// type UpdateAbsence struct {
-// 	Status         int    `json:"status"`
-// 	TeacherComment string `json:"teacher_comment"`
-// }
-
 // 更新前表
 type AbsenceDocument struct {
 	DocumentID        int
@@ -50,13 +44,12 @@ func AuthorizeAbsence(c *gin.Context) {
 	//必要な変数を定義
 	var documentStatus int
 	var teacherPosition int
-	//var updateAbsence UpdateAbsence
-	var message string = ""
+	var message string = "ERROR"
 
-	//認可ステータスの取得(導通未確認)
+	//認可ステータスの取得
 	db.Table("absence_document").Select("status").Where("document_id = ?", document.DocumentID).Scan(&documentStatus)
 
-	//役職IDの取得(導通未確認)
+	//役職IDの取得
 	db.Table("teachers").Select("position_id").Where("teacher_id = ?", document.TeacherID).Scan(&teacherPosition)
 
 	log.Println(document)
@@ -69,24 +62,13 @@ func AuthorizeAbsence(c *gin.Context) {
 		db.Table("absence_document").
 			Where("document_id = ?", document.DocumentID).
 			Updates(AbsenceDocument{Status: teacherPosition, TeacherComment: document.TeacherComment})
-			// 	Update("status", documentStatus).
-			// 	Update("teacher_comment", document.TeacherComment)
 
-			// db.Model(&AbsenceDocument{}).
-			// 	Where("document_id = ?", document.DocumentID).
-			// 	Update("status", documentStatus).
-			// 	Update("teacher_comment", document.TeacherComment)
-
-		// db.Table("absence_document").Select("status,teacher_comment").Where("document_id = ?", document.DocumentID).First(&updateAbsence)
-		// updateAbsence.Status = documentStatus
-		// updateAbsence.TeacherComment = document.TeacherComment
-
-		//db.Save(&updateAbsence)
-		//err := db.Save(&updateAbsence)
-		// if err.Error != nil {
-		// 	c.JSON(400, gin.H{"error": err.Error()})
-		// 	return
-		// }
+		//エラーハンドリング
+		if db.Error != nil {
+			errMsg := "UPDATE ERROR"
+			c.JSON(http.StatusInternalServerError, gin.H{"error": errMsg})
+			return
+		}
 
 		message = "SUCCESS!"
 
