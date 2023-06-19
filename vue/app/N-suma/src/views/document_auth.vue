@@ -37,31 +37,31 @@
                     <th>CT4A</th>
                     <th>田中 太郎</th>
                     <th>資格</th>
-                    <th><button>詳細</button></th>
+                    <th><button @click="saveInfo('CT4A')">詳細</button></th>
                 </tr>
                 <tr>
                     <th>CT4B</th>
                     <th>田中 花子</th>
                     <th>就活</th>
-                    <th><button>詳細</button></th>
+                    <th><button @click="saveInfo('CT4B')">詳細</button></th>
                 </tr>
                 <tr>
                     <th>CT3A</th>
                     <th>鈴木 一郎</th>
                     <th>通常</th>
-                    <th><button>詳細</button></th>
+                    <th><button @click="saveInfo('CT3A')">詳細</button></th>
                 </tr>
                 <tr>
                     <th>CT3B</th>
                     <th>鈴木 次郎</th>
                     <th>通常</th>
-                    <th><button>詳細</button></th>
+                    <th><button @click="saveInfo('CT3B')">詳細</button></th>
                 </tr>
                 <tr>
                     <th>CT2A</th>
                     <th>パブロ・ディエゴ・ホセ・フランシスコ・デ・パウラ・ホアン・ネポムセーノ･マリーア・デ・ロス・レメディオス・クリスピン・クリスピアーノ・デ・ラ・サンディシマ・トリニダード･ルイス・イ・ピカソ</th>
                     <th>通常</th>
-                    <th><button>詳細</button></th>
+                    <th><button @click="saveInfo('CT2A')">詳細</button></th>
                 </tr>
                 <tr>
                     <th>CT2A</th>
@@ -73,3 +73,19 @@
         </table>
     </div>
 </template>
+
+
+<script>
+
+import { useStore } from 'vuex'
+
+export default {
+    methods: {
+        saveInfo(info) {
+            console.log(info)
+            const store = useStore()
+            store.commit('setClassId', info)
+        }
+    }
+}
+</script>
