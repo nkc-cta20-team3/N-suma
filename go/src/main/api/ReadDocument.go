@@ -35,21 +35,24 @@ func ReadDocument(c *gin.Context) {
 
 	/*
 	
-	type ReadDocumentResponse struct {
-		DocumentID int `json:"document_id"`
-		RequestDate time.Time `json:"request_date"`
-		StudentID int `json:"student_id"`
-		ClassName string `json:"class_name"`
-		StudentName string `json:"student_name"`
-		StartDate time.Time `json:"absence_start_date"`
-		StartFlame int `json:"start_flame"`
-		EndDate time.Time `json:"end_date"`
-		EndFlame int `json:"end_flame"`
-		Location string `json:"location"`
-		StudentComment string `json:"student_comment"`
-		TeacherComment string `json:"teacher_comment"`
-	}
+
+type ReadDocumentResponse struct {
+	DocumentID int `json:"document_id"`
+	RequestDate time.Time `json:"request_date"`
+	StudentID int `json:"student_id"`
+	ClassName string `json:"class_name"`
+	StudentName string `json:"student_name"`
+	StartDate time.Time `json:"absence_start_date"`
+	StartFlame int `json:"start_flame"`
+	EndDate time.Time `json:"end_date"`
+	EndFlame int `json:"end_flame"`
+	Location string `json:"location"`
+	StudentComment string `json:"student_comment"`
+	TeacherComment string `json:"teacher_comment"`
+}
 	*/
+
+	
 
 	// データベースからデータを取得する
 	db.Debug().Table("absence_document AS ab").
@@ -64,8 +67,6 @@ func ReadDocument(c *gin.Context) {
 			"ab.absence_end_date",
 			"ab.absence_end_flame",
 			"ab.location",
-			"ab.read_flag",
-			"ab.status",
 			"ab.student_comment",
 			"ab.teacher_comment").
 		Joins("JOIN students AS st ON ab.student_id = st.student_id").

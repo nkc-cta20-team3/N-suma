@@ -35,9 +35,9 @@ type ReadDocumentResponse struct {
 	StudentID int `json:"student_id"`
 	ClassName string `json:"class_name"`
 	StudentName string `json:"student_name"`
-	StartDate string `json:"absence_start_date"`
+	StartDate time.Time `json:"absence_start_date"`
 	StartFlame int `json:"start_flame"`
-	EndDate string `json:"end_date"`
+	EndDate time.Time `json:"end_date"`
 	EndFlame int `json:"end_flame"`
 	Location string `json:"location"`
 	StudentComment string `json:"student_comment"`
