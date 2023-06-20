@@ -20,7 +20,7 @@ INSERT INTO `division`(division_id,division_name,division_detail,division_remark
 VALUES
 (100,'国家試験','FE','基本情報'),
 (101,'国家試験','AP','応用情報'),
-(101,'国家試験','SG','情報セキュリティマネジメント');
+(102,'国家試験','SG','情報セキュリティマネジメント');
 
 INSERT INTO `user`(user_uid,user_name,user_number,post_id,class_id)
 VALUES
