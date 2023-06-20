@@ -5,7 +5,7 @@ USE cta20gr3;
 
 DROP TABLE IF EXISTS `classification`;
 CREATE TABLE `classification`(
-    `class_id` int,
+    `class_id` int AUTO_INCREMENT,
     `class_abbr` varchar(16) NOT NULL,
     `class_name` varchar(32) NOT NULL,
     PRIMARY KEY (`class_id`)
@@ -19,7 +19,7 @@ COMMENT='クラス表/マスターデータ';
 
 DROP TABLE IF EXISTS `post`;
 CREATE TABLE `post`(
-    `post_id` int,
+    `post_id` int AUTO_INCREMENT,
     `post_name` varchar(16) NOT NULL,
     PRIMARY KEY (`post_id`)
 )
@@ -32,7 +32,7 @@ COMMENT='役職表/マスターデータ';
 
 DROP TABLE IF EXISTS `division`;
 CREATE TABLE `division`(
-    `division_id` int,
+    `division_id` int AUTO_INCREMENT,
     `division_name` varchar(16) NOT NULL,
     `division_detail` varchar(32) NOT NULL,
     `division_remark` varchar(8000),
