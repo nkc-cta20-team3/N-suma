@@ -11,9 +11,11 @@ This repository is for nkc students to develop a student support system as their
 ### How do I build a local development environment?
 
 ```terminal
-git clone https://github.com/nkc-cta20-team3/Student-Support-System-reserve.git
-cd Student-Support-System-reserve
-docker-compose up -d --build
+git clone https://github.com/nkc-cta20-team3/N-suma.git
+cd N-suma
+docker compose build --no-cache
+docker compose run --rm vue yarn 
+docker compose up -d
 ```
 
 ### Required Environment
