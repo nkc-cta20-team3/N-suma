@@ -66,7 +66,7 @@
         // 認可待ちの書類一覧を取得
         // 本来はログインユーザーのIDを取得し、そのユーザーの認可待ちの書類一覧を取得する
         // 現在は、ユーザーIDをハードコーディングしているため、修正する必要があります
-        fetch(new URL("ual" , import.meta.env.VITE_API_URL), {
+        fetch(new URL("ral" , import.meta.env.VITE_API_URL), {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
