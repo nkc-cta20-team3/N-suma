@@ -48,7 +48,7 @@ type ReadDocumentResponse struct {
 type UpdateAuthRequest struct {
 	DocumentID int `json:"document_id"`
 	TeacherID int `json:"teacher_id"`
-	TeacherComment string `json:"teacher_comment"`
+	TeacherComment sql.NullString `json:"teacher_comment"`
 }
 
 // CreateDocumentで使用する構造体
