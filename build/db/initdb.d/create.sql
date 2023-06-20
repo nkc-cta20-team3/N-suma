@@ -2,120 +2,88 @@ DROP SCHEMA IF EXISTS cta20gr3;
 CREATE SCHEMA cta20gr3;
 USE cta20gr3;
 
-DROP TABLE IF EXISTS `class`;
-CREATE TABLE `class`(
-    `class_name` varchar(6),
-    `formal_name` varchar(32),
-    PRIMARY KEY (`class_name`)
+
+DROP TABLE IF EXISTS `classification`;
+CREATE TABLE `classification`(
+    `class_id` int,
+    `class_abbr` varchar(16) NOT NULL,
+    `class_name` varchar(32) NOT NULL,
+    PRIMARY KEY (`class_id`)
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8mb4
 COLLATE=utf8mb4_0900_as_cs
-COMMENT='クラス表';
+COMMENT='クラス表/マスターデータ';
 # show create table `class` ;
 
 
-DROP TABLE IF EXISTS `position`;
-CREATE TABLE `position`(
-    `position_id` int,
-    `position_name` varchar(12) NOT NULL,
-    PRIMARY KEY (`position_id`)
+DROP TABLE IF EXISTS `post`;
+CREATE TABLE `post`(
+    `post_id` int,
+    `post_name` varchar(16) NOT NULL,
+    PRIMARY KEY (`post_id`)
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8mb4
 COLLATE=utf8mb4_0900_as_cs
-COMMENT='役職表';
-# show create table `position` ;
+COMMENT='役職表/マスターデータ';
+# show create table `post` ;
 
 
-DROP TABLE IF EXISTS `company`;
-CREATE TABLE `company`(
-    company_id int AUTO_INCREMENT,
-    company_name varchar(64) NOT NULL,
-    offer_number int UNIQUE ,
-    PRIMARY KEY (`company_id`)
+DROP TABLE IF EXISTS `division`;
+CREATE TABLE `division`(
+    `division_id` int,
+    `division_name` varchar(16) NOT NULL,
+    `division_detail` varchar(32) NOT NULL,
+    `division_remark` varchar(8000),
+    PRIMARY KEY (`division_id`)
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8mb4
 COLLATE=utf8mb4_0900_as_cs
-COMMENT='企業表';
-# show create table `company` ;
+COMMENT='区分表/マスターデータ';
+# show create table `division` ;
 
 
-DROP TABLE IF EXISTS `absence_reason`;
-CREATE TABLE `absence_reason`(
-    reason_id int,
-    absence_category varchar(16) NOT NULL,
-    absence_reason varchar(32)  NOT NULL,
-    detail varchar(8000),
-    PRIMARY KEY (`reason_id`)
+DROP TABLE IF EXISTS `user`;
+CREATE TABLE `user`(
+    `user_uid` varchar(255),
+    `user_name` varchar(80),
+    `user_number` int,
+    `post_id` int,
+    `class_id` int,
+    PRIMARY KEY (`user_uid`),
+    FOREIGN KEY (`post_id`) REFERENCES `post`(`post_id`),
+    FOREIGN KEY (`class_id`) REFERENCES `classification`(`class_id`)
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8mb4
 COLLATE=utf8mb4_0900_as_cs
-COMMENT='公欠理由表';
-# show create table `absence_reason` ;
+COMMENT='ユーザー表';
+# show create table `user` ;
 
 
-DROP TABLE IF EXISTS `students`;
-CREATE TABLE `students`(
-    student_id int,
-    student_name varchar(20) NOT NULL,
-    mail_address varchar(64) NOT NULL,
-    password varchar(20) NOT NULL,
-    class_name varchar(6) NOT NULL,
-    PRIMARY KEY (`student_id`),
-    FOREIGN KEY (class_name) REFERENCES `class`(class_name)
-)
-ENGINE=InnoDB
-DEFAULT CHARSET=utf8mb4
-COLLATE=utf8mb4_0900_as_cs
-COMMENT='学生表';
-# show create table `students` ;
-
-
-DROP TABLE IF EXISTS `teachers`;
-CREATE TABLE `teachers`(
-    teacher_id int AUTO_INCREMENT,
-    teacher_name varchar(20) NOT NULL,
-    mail_address varchar(64) NOT NULL,
-    password varchar(20) NOT NULL,
-    class_name varchar(6),
-    position_id int,
-    PRIMARY KEY (`teacher_id`),
-    FOREIGN KEY (class_name) REFERENCES `class`(class_name),
-    FOREIGN KEY (position_id) REFERENCES `position`(position_id)
-)
-ENGINE=InnoDB
-DEFAULT CHARSET=utf8mb4
-COLLATE=utf8mb4_0900_as_cs
-COMMENT='教員表';
-# show create table `teachers` ;
-
-
-DROP TABLE IF EXISTS `absence_document`;
-CREATE TABLE `absence_document`(
-    document_id int AUTO_INCREMENT,
-    student_id int NOT NULL,
-    company_id int,
-    reason_id int NOT NULL,
-    request_date date NOT NULL,
-    absence_start_date date NOT NULL,
-    absence_start_flame int NOT NULL,
-    absence_end_date date NOT NULL,
-    absence_end_flame int NOT NULL,
-    location varchar(16) NOT NULL,
-    read_flag boolean NOT NULL,
-    status int NOT NULL,
-    student_comment varchar(8000) NOT NULL,
-    teacher_comment varchar(8000),
+DROP TABLE IF EXISTS `oa`;
+CREATE TABLE `oa`(
+    `document_id` int AUTO_INCREMENT,
+    `request_at` date NOT NULL,
+    `start_date` date NOT NULL,
+    `start_flame` int NOT NULL,
+    `end_date` date NOT NULL,
+    `end_flame` int NOT NULL,
+    `location` varchar(16) NOT NULL,
+    `status` int NOT NULL,
+    `read_flag` boolean NOT NULL,
+    `student_comment` varchar(8000) NOT NULL,
+    `teacher_comment` varchar(8000),
+    `user_uid` varchar(255) NOT NULL,
+    `division_id` int NOT NULL,
     PRIMARY KEY (`document_id`),
-    FOREIGN KEY(student_id) REFERENCES `students`(student_id),
-    FOREIGN KEY(company_id) REFERENCES `company`(company_id),
-    FOREIGN KEY(reason_id) REFERENCES `absence_reason`(reason_id)
+    FOREIGN KEY (`user_uid`) REFERENCES `user`(`user_uid`),
+    FOREIGN KEY (`division_id`) REFERENCES `division`(`division_id`)
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8mb4
 COLLATE=utf8mb4_0900_as_cs
-COMMENT='公欠届表';
-# show create table `absence_document` ;
+COMMENT='公欠表';
+# show create table `oa` ;
