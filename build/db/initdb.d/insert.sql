@@ -1,51 +1,45 @@
 USE cta20gr3;
 
-INSERT INTO `class`(class_name,formal_name)
+INSERT INTO `classification`(class_abbr,class_name)
 VALUES
 ('CTA20','情報総合学科4年A組'),
 ('CTB20','情報総合学科4年B組'),
 ('CTA21','情報総合学科3年A組'),
 ('CTB21','情報総合学科3年B組');
 
-
-INSERT INTO `position`(position_id,position_name)
+INSERT INTO `post`(post_id,post_name)
 VALUES
+(0,'学生'),
 (1,'担任'),
 (2,'主任'),
 (3,'学科長'),
 (4,'学部長'),
 (5,'所属長');
 
-INSERT INTO `company`(company_name,offer_number)
+INSERT INTO `division`(division_id,division_name,division_detail,division_remark)
 VALUES
-('株式会社AAA',1001),
-('株式会社BBB',1002),
-('株式会社CCC',1003),
-('株式会社DDD',1004);
+(100,'国家試験','FE','基本情報'),
+(101,'国家試験','AP','応用情報'),
+(101,'国家試験','SG','情報セキュリティマネジメント');
 
-INSERT INTO `absence_reason`(reason_id,absence_category,absence_reason,detail)
+INSERT INTO `user`(user_uid,user_name,user_number,post_id,class_id)
 VALUES
-(1,'国家試験','FE','詳細'),
-(2,'国家試験','AP','詳細'),
-(3,'国家試験','SG','詳細');
+('1waffa4r','田中太郎',20206000,0,1),
+('ff3ru6dg ','高橋啓太',null,1,1),
+('ohigw923','藤井雄太',null,2,null),
+('foqihnfl','斎藤勇',null,3,null),
+('o32tgbkl','小澤直樹',null,4,null),
+('4hpivesw','大橋健一',null,5,null),
+('9vacugh2','櫻井健一',20206100,0,3),
+('36gew305','鈴木秀昭',20206200,0,4);
 
-INSERT INTO `students`(student_id,student_name,mail_address,password,class_name)
+INSERT INTO `oa`(request_at,start_date,start_flame,end_date,end_flame,location,status,read_flag,student_comment,teacher_comment,user_uid,division_id)
 VALUES
-(20206001,'斎藤勇','nkc20206001@denpa.jp','20206001','CTA20'),
-(20206100,'小澤直樹','nkc20206100@denpa.jp','20206100','CTA20'),
-(20206200,'大橋健一','nkc20206200@denpa.jp','20206200','CTA20');
-
-INSERT INTO `teachers`(teacher_name,mail_address,password,class_name,position_id)
-VALUES
-('田中太郎','00000001@denpa.jp','00000001','CTA20',1),
-('高橋啓太','00000002@denpa.jp','00000002',NULL,2),
-('藤井雄太','00000003@denpa.jp','00000003',NULL,3),
-('櫻井健一','00000004@denpa.jp','00000004',NULL,4),
-('鈴木秀昭','00000005@denpa.jp','00000005',NULL,5);
-
-INSERT INTO `absence_document`(student_id,company_id,reason_id,request_date,absence_start_date,absence_start_flame,absence_end_date,absence_end_flame,location,read_flag,status,student_comment,teacher_comment)
-VALUES
-(20206001,null,1,'2020-10-01','2020-10-02',1,'2020-10-02',2,'A棟',false,0,'学生コメント',null),
-(20206001,null,2,'2020-10-01','2020-10-03',1,'2020-10-03',2,'A棟',false,0,'学生コメント',null),
-(20206001,null,3,'2020-10-01','2020-10-04',1,'2020-10-04',2,'A棟',false,0,'学生コメント',null);
-
+('2020-10-01','2020-10-01',1,'2020-10-01',2,'A棟',0,false,'テスト','テスト','1waffa4r',100),
+('2020-10-01','2020-10-01',1,'2020-10-01',2,'A棟',0,false,'テスト','テスト','1waffa4r',100),
+('2020-10-01','2020-10-01',1,'2020-10-01',2,'A棟',0,false,'テスト','テスト','1waffa4r',100),
+('2020-10-01','2020-10-01',1,'2020-10-01',2,'A棟',0,false,'テスト','テスト','1waffa4r',100),
+('2020-10-01','2020-10-01',1,'2020-10-01',2,'A棟',0,false,'テスト','テスト','1waffa4r',100),
+('2020-10-01','2020-10-01',1,'2020-10-01',2,'A棟',0,false,'テスト','テスト','1waffa4r',100),
+('2020-10-01','2020-10-01',1,'2020-10-01',2,'A棟',0,false,'テスト','テスト','1waffa4r',100),
+('2020-10-01','2020-10-01',1,'2020-10-01',2,'A棟',0,false,'テスト','テスト','1waffa4r',100);
