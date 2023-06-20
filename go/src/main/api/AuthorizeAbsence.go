@@ -57,11 +57,20 @@ func AuthorizeAbsence(c *gin.Context) {
 	log.Println(teacherPosition)
 
 	if teacherPosition == documentStatus+1 {
-		//認可できる状態
+		
+		//担任だけが変更する
+		if teacherPosition == 1 {
+			db.Table("absence_document").
+				Where("document_id = ?", document.DocumentID).
+				Updates(AbsenceDocument{Status: teacherPosition, TeacherComment: document.TeacherComment})
+		}
 
-		db.Table("absence_document").
-			Where("document_id = ?", document.DocumentID).
-			Updates(AbsenceDocument{Status: teacherPosition, TeacherComment: document.TeacherComment})
+		//教員が認可する
+		else if teacherPosition >= 2 {
+			db.Table("absence_document").
+				Where("document_id = ?", document.DocumentID).
+				Updates(AbsenceDocument{Status: teacherPosition})
+		}
 
 		//エラーハンドリング
 		if db.Error != nil {
@@ -73,6 +82,7 @@ func AuthorizeAbsence(c *gin.Context) {
 		message = "SUCCESS!"
 
 	}
+
 
 	//JSONに変えるときに使う
 	payload := gin.H{
