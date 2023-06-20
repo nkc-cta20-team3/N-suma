@@ -4,7 +4,8 @@ const store = createStore({
   state() {
     return {
       userId: null,
-      ClassId: null
+      ClassId: null,
+      DocId: null
     }
   },
   mutations: {
@@ -13,12 +14,21 @@ const store = createStore({
     },
     setClassId(state, ClassId) {
       state.ClassId = ClassId
+    },
+    setDocId(state, DocId) {
+      state.DocId = DocId
     }
   },
   actions: {
     updateUserId({ commit }, userId) {
       // ユーザIDをVuexのstateに保存する
       commit('setUserId', userId)
+    },
+    updateClassId({ commit }, ClassId) {
+      commit('setClassId', ClassId)
+    },
+    updateDocId({ commit }, DocId) {
+      commit('setDocId', DocId)
     }
   },
   getters: {
@@ -27,6 +37,9 @@ const store = createStore({
     },
     getClassId(state) {
       return state.ClassId
+    },
+    getDocId(state) {
+      return state.DocId
     }
   }
 })
