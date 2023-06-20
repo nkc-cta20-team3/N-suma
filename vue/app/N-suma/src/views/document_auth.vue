@@ -23,7 +23,8 @@
     </div>
 
     <div class="container">
-        <table class="table">
+        
+        <table class="table" v-if="users.value.length < 1">
             <thead>
                 <tr>
                     <th>クラス略称</th>
@@ -41,12 +42,20 @@
                 </tr>
             </thead>
         </table>
+        <div v-else>
+            <div class="has-text-centered">
+                <div class="title mb-5">
+                    認可待ちの書類はありません
+                </div>
+            </div> 
+        </div>
     </div>
 </template>
 
 <script setup>
 
     import { onMounted,ref } from 'vue'
+    
     const users = ref(
         [
             {
@@ -71,16 +80,10 @@
     )
 
     onMounted(() => {
-        if(users.value.length < 1){
-            alert('未認可の書類はありません。');
-        }
-        else{
-            lists()
-        }    
+        // ここにデータ読み込み処理を書く    
+
     })
 
-    const lists = () => {
-        users.value.list((a, b) => { return b.id - a.id });
-    }
+    
     
 </script>
