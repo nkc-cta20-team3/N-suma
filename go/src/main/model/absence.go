@@ -5,7 +5,54 @@ import (
 	"time"
 )
 
-type AbsenceDocument struct {
+// ReadAuthListで使用する構造体
+type ReadAuthListRequest struct {
+	TeacherID int `json:"teacher_id"`
+}
+
+type ReadAuthListResponse struct {
+	ClassName  string `json:"class_name"`
+	StudentName string `json:"student_name"`
+	AbsenceCategory string `json:"absence_category"`
+	DocumentID int `json:"document_id"`
+}
+
+type TakeClassName struct {
+	PositionID int    `json:"position_id"`
+	ClassName  string `json:"class_name"`
+}
+
+
+
+// ReadDocumentで使用する構造体
+type ReadDocumentRequest struct {
+	DocumentID int `json:"document_id"`
+}
+
+type ReadDocumentResponse struct {
+	DocumentID int `json:"document_id"`
+	RequestDate time.Time `json:"request_date"`
+	StudentID int `json:"student_id"`
+	ClassName string `json:"class_name"`
+	StudentName string `json:"student_name"`
+	StartDate time.Time `json:"absence_start_date"`
+	StartFlame int `json:"start_flame"`
+	EndDate time.Time `json:"end_date"`
+	EndFlame int `json:"end_flame"`
+	Location string `json:"location"`
+	StudentComment string `json:"student_comment"`
+	TeacherComment string `json:"teacher_comment"`
+}
+
+// UpdateAuthで使用する構造体
+type UpdateAuthRequest struct {
+	DocumentID int `json:"document_id"`
+	TeacherID int `json:"teacher_id"`
+	TeacherComment sql.NullString `json:"teacher_comment"`
+}
+
+// CreateDocumentで使用する構造体
+type CreateDocumentRequest struct {
 	DocumentID        int            `json:"document_id"`         // ドキュメントID
 	StudentID         int            `json:"student_id"`          // 学籍番号
 	CompanyID         int            `json:"company_id"`          // 会社ID
@@ -22,21 +69,7 @@ type AbsenceDocument struct {
 	TeacherComment    sql.NullString `json:"teacher_comment"`     // 教員コメント
 }
 
-// UnAuthorization 引数の構造体
-type TeacherData struct {
-	TeacherID int `json:"teacher_id"` //教員ID
-}
-
-// UnAuthorization 戻り値の構造体
-type UnAuthorizeList struct {
-	ClassName       string `json:"class_name"`       //クラス名称
-	StudentName     string `json:"student_name"`     //学生氏名
-	AbsenceCategory string `json:"absence_category"` //種別
-	DocumentID      int    `json:"document_id"`      //書類ID
-}
-
-// UnAuthorization,UnAuthorizationGET 作業用構造体
-type TakeClassName struct {
-	PositionID int    `json:"position_id"`
-	ClassName  string `json:"class_name"`
+// DeleteDocumentで使用する構造体
+type DeleteDocumentRequest struct {
+	DocumentID int `json:"document_id"`
 }
