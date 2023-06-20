@@ -102,9 +102,9 @@
         })
     })
 
-    // ユーザーIDをStoreに格納し、認可画面に遷移
+    // ドキュメントIDをStoreに格納し、認可画面に遷移
     const showAccept = (id) => {
-        store.commit('setUserId', id)
+        store.commit('setDocId', id)
         router.push('/document_accept')
     }
     
