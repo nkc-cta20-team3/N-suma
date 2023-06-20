@@ -19,7 +19,7 @@ COMMENT='クラス表/マスターデータ';
 
 DROP TABLE IF EXISTS `post`;
 CREATE TABLE `post`(
-    `post_id` int AUTO_INCREMENT,
+    `post_id` int,
     `post_name` varchar(16) NOT NULL,
     PRIMARY KEY (`post_id`)
 )
@@ -32,7 +32,7 @@ COMMENT='役職表/マスターデータ';
 
 DROP TABLE IF EXISTS `division`;
 CREATE TABLE `division`(
-    `division_id` int AUTO_INCREMENT,
+    `division_id` int,
     `division_name` varchar(16) NOT NULL,
     `division_detail` varchar(32) NOT NULL,
     `division_remark` varchar(8000),
