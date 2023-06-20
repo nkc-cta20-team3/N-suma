@@ -1,7 +1,6 @@
 package main
 
 import (
-	"log"
 	"time"
 
 	"github.com/gin-contrib/cors"
@@ -9,24 +8,12 @@ import (
 
 	// ローカルモジュールのインポート
 	"main/api"
-	"main/handler"
-	"main/infra"
-	"main/service"
 )
 
 func main() {
 
-	//
-	engine := infra.DBInit()
-	factory := service.NewService(engine)
-	defer func() {
-		log.Println("engine closed")
-		engine.Close()
-	}()
-
-	//
+	// 
 	g := gin.Default()
-	g.Use(service.ServiceFactoryMiddleware(factory))
 	g.Use(cors.New(cors.Config{
 
 		// アクセスを許可したいアクセス元
@@ -58,34 +45,17 @@ func main() {
 		MaxAge: 24 * time.Hour,
 	}))
 
-	//
-	routes := g.Group("/v1")
-	{
-		// user
-		routes.POST("/users", handler.Create)
-		routes.GET("/users", handler.GetAll)
-		routes.GET("/users/:user-id", handler.GetOne)
-		routes.PUT("/users/:user-id", handler.Update)
-		routes.DELETE("/users/:user-id", handler.Delete)
-
-	}
-
-	routes2 := g.Group("/v2")
-	{
-		// hello world
-		routes2.GET("/hello", handler.Hello)
-	}
-
-	routeapi := g.Group("/api")
+	// ルーティング
+	routes := g.Group("/api")
 	{
 		//apiフォルダ内のapiをルーティング
-		routeapi.POST("/ral", api.ReadAuthList)
-		routeapi.POST("/rd", api.ReadDocument)
-		routeapi.POST("/ua", api.UpdateAuth)
+		routes.POST("/ral", api.ReadAuthList)
+		routes.POST("/rd", api.ReadDocument)
+		routes.POST("/ua", api.UpdateAuth)
 
 		//実装予定の管理者向けのAPI
-		//routeapi.POST("/cd", api.CreateDocument)
-		//routeapi.POST("/dd", api.DeleteDocument)
+		//routes.POST("/cd", api.CreateDocument)
+		//routes.POST("/dd", api.DeleteDocument)
 	}
 
 	g.Run(":8080")
