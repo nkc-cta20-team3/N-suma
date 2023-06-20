@@ -85,8 +85,8 @@
             </div>
 
             <div class="is-flex mb-5">
-                <div class="ml-4 button is-medium" @click="ClickAlert(true)">受理</div>
-                <div class="ml-4 button is-medium" @click="ClickAlert(false)">却下</div>
+                <div class="ml-4 button is-medium" @click="OnClickAccept(true)">受理</div>
+                <div class="ml-4 button is-medium" @click="OnClickAccept(false)">却下</div>
             </div>
         </div>
     </div>
@@ -107,12 +107,53 @@
     const DocId = store.state.DocId
     const document = ref()
 
-    const ClickAlert = (isAcceptance) => {
-        if (inputValue.value){
-            alert( (isAcceptance ? "受理" : "却下") + "されました");
-        } else {
-            alert("コメントを入力してください。");
-        }      
+    // 認可用のAPIを叩く
+    const OnClickAccept = (isAcceptance) => {
+
+        if (!inputValue.value){
+            alert("コメントを入力してください。")
+            return
+        }     
+
+        if(!isAcceptance){
+            // 却下された時のAPI側の仕様が定まっていないため保留
+            alert("却下されました")
+            return;
+        }
+
+
+        fetch(new URL("ua" , import.meta.env.VITE_API_URL), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+            body: JSON.stringify({
+                "document_id": DocId,
+	            "teacher_id": 1,
+                "teacher_comment": inputValue.value,
+            })
+        })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error(`${response.status} ${response.statusText}`)
+            }
+            return response.json()
+        })
+        .then((data) => {
+
+            if(data.message != "200"){
+                throw new Error(`${data.message}`)
+            }
+
+            alert("受理されました")
+            router.push('/document_auth')
+
+        })
+        .catch((error) => {
+            alert(error)
+        })
+
     }
 
     onMounted(() => {
