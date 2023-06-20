@@ -37,7 +37,7 @@
                     <th>{{ user.class }}</th>
                     <th>{{ user.name }}</th>
                     <th>{{ user.type }}</th>
-                    <th><router-link to="/document_accept">詳細</router-link></th>
+                    <th><button @click ="showUserDetail(user)">詳細</button></th>
                 </tr>
             </thead>
         </table>
@@ -46,7 +46,12 @@
 
 <script setup>
 
+    import store from '../store'
+    import { useRouter } from 'vue-router'
     import { onMounted,ref } from 'vue'
+
+    const router = useRouter();
+
     const users = ref(
         [
             {
@@ -70,17 +75,19 @@
         ]
     )
 
+    const showUserDetail = (user) => {
+        router.push({ name: 'document_accept', params: {userId: user.class}});
+        store.commit('setClassId',)
+    }
+
     onMounted(() => {
         if(users.value.length < 1){
             alert('未認可の書類はありません。');
         }
         else{
-            lists()
+            
         }    
     })
 
-    const lists = () => {
-        users.value.list((a, b) => { return b.id - a.id });
-    }
-    
+
 </script>
