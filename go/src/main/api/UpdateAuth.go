@@ -27,7 +27,7 @@ func UpdateAuth(c *gin.Context) {
 	//必要な変数を定義
 	var documentStatus int
 	var teacherPosition int
-	var response := http.StatusBadRequest
+	response := http.StatusBadRequest
 
 	//認可ステータスの取得
 	db.Table("absence_document").Select("status").Where("document_id = ?", request.DocumentID).Scan(&documentStatus)
