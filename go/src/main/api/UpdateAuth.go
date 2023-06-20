@@ -9,32 +9,14 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// 更新前表
-type AbsenceDocument struct {
-	DocumentID        int
-	StudentID         int
-	CompanyID         int
-	ReasonID          int
-	RequestDate       string
-	AbsenceStartDate  string
-	AbsenceStartFlame int
-	AbsenceEndDate    string
-	AbsenceEndFlame   int
-	Location          string
-	ReadFlag          bool
-	Status            int
-	StudentComment    string
-	TeacherComment    string
-}
+func UpdateAuth(c *gin.Context) {
 
-func AuthorizeAbsence(c *gin.Context) {
-
-	//引数取得
-	document := model.AuthorizeAbsence{}
+	request := model.UpdateAuthRequest{}
 
 	//POSTで受け取った値を格納する
-	if err := c.ShouldBindJSON(&document); err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
+	if err := c.ShouldBindJSON(&request); err != nil {
+		// エラーな場合、ステータス400と、エラー情報を返す
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -44,15 +26,15 @@ func AuthorizeAbsence(c *gin.Context) {
 	//必要な変数を定義
 	var documentStatus int
 	var teacherPosition int
-	var message string = "ERROR"
+	var response string = "ERROR"
 
 	//認可ステータスの取得
-	db.Table("absence_document").Select("status").Where("document_id = ?", document.DocumentID).Scan(&documentStatus)
+	db.Table("absence_document").Select("status").Where("document_id = ?", request.DocumentID).Scan(&documentStatus)
 
 	//役職IDの取得
-	db.Table("teachers").Select("position_id").Where("teacher_id = ?", document.TeacherID).Scan(&teacherPosition)
+	db.Table("teachers").Select("position_id").Where("teacher_id = ?", request.TeacherID).Scan(&teacherPosition)
 
-	log.Println(document)
+	log.Println(request)
 	log.Println(documentStatus)
 	log.Println(teacherPosition)
 
@@ -79,17 +61,11 @@ func AuthorizeAbsence(c *gin.Context) {
 			return
 		}
 
-		message = "SUCCESS!"
+		response = "SUCCESS!"
 
 	}
 
-
-	//JSONに変えるときに使う
-	payload := gin.H{
-		"message": message,
-	}
-
-	// ステータス200と、payloadを返します
-	c.JSON(http.StatusOK, payload)
-
+	c.JSON(http.StatusOK, gin.H{
+		"message": response,
+	})
 }
