@@ -2,9 +2,10 @@ package api
 
 import (
 	"log"
+	"net/http"
+
 	"main/infra"
 	"main/model"
-	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
@@ -26,7 +27,7 @@ func UpdateAuth(c *gin.Context) {
 	//必要な変数を定義
 	var documentStatus int
 	var teacherPosition int
-	var response string = "ERROR"
+	response := http.StatusBadRequest
 
 	//認可ステータスの取得
 	db.Table("absence_document").Select("status").Where("document_id = ?", request.DocumentID).Scan(&documentStatus)
@@ -43,14 +44,14 @@ func UpdateAuth(c *gin.Context) {
 		//担任だけが変更する
 		if teacherPosition == 1 {
 			db.Table("absence_document").
-				Where("document_id = ?", document.DocumentID).
-				Updates(AbsenceDocument{Status: teacherPosition, TeacherComment: document.TeacherComment})
+				Where("document_id = ?", request.DocumentID).
+				Updates(AbsenceDocument{Status: teacherPosition, TeacherComment: request.TeacherComment})
 		}
 
 		//教員が認可する
 		else if teacherPosition >= 2 {
 			db.Table("absence_document").
-				Where("document_id = ?", document.DocumentID).
+				Where("document_id = ?", request.DocumentID).
 				Updates(AbsenceDocument{Status: teacherPosition})
 		}
 
@@ -61,7 +62,7 @@ func UpdateAuth(c *gin.Context) {
 			return
 		}
 
-		response = "SUCCESS!"
+		response = http.StatusOK
 
 	}
 

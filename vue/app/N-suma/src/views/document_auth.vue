@@ -23,7 +23,8 @@
     </div>
 
     <div class="container">
-        <table class="table">
+        
+        <table class="table" v-if="documents.length > 0">
             <thead>
                 <tr>
                     <th>クラス略称</th>
@@ -33,54 +34,78 @@
                 </tr>
             </thead>
             <thead>
-                <tr v-for="user in users" :key="user.id">
-                    <th>{{ user.class }}</th>
-                    <th>{{ user.name }}</th>
-                    <th>{{ user.type }}</th>
-                    <th><router-link to="/document_accept">詳細</router-link></th>
+                <tr v-for="document in documents" :key="document.id">
+                    <th>{{ document.class }}</th>
+                    <th>{{ document.name }}</th>
+                    <th>{{ document.type }}</th>
+                    <th><button @click="showAccept(document.id)">詳細</button></th>
                 </tr>
             </thead>
         </table>
+        <div v-else>
+            <div class="has-text-centered">
+                <div class="title mb-5">
+                    認可待ちの書類はありません
+                </div>
+            </div> 
+        </div>
     </div>
 </template>
 
 <script setup>
 
+    import store from '../store'
+    import { useRouter } from 'vue-router'
     import { onMounted,ref } from 'vue'
-    const users = ref(
-        [
-            {
-                id: 1,
-                class: 'CS2',
-                name: '石井 大介',
-                type: '就活',
-            },
-                {
-                id: 2,
-                class: 'CT4B',
-                name: '鈴木 孝明',
-                type: '就活',
-            },
-                {
-                id: 3,
-                class: 'CT2A',
-                name: '遠藤 雄一',
-                type: '資格',
-            },
-        ]
-    )
+
+    const router = useRouter();    
+    const documents = ref([])
 
     onMounted(() => {
-        if(users.value.length < 1){
-            alert('未認可の書類はありません。');
-        }
-        else{
-            lists()
-        }    
+
+        // 認可待ちの書類一覧を取得
+        // 本来はログインユーザーのIDを取得し、そのユーザーの認可待ちの書類一覧を取得する
+        // 現在は、ユーザーIDをハードコーディングしているため、修正する必要があります
+        fetch(new URL("ral" , import.meta.env.VITE_API_URL), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+            body: JSON.stringify({
+                "teacher_id": 1,
+                "position": 1,
+                "class_name": "CTA20"
+            })
+        })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error(`${response.status} ${response.statusText}`)
+            }
+            return response.json()
+        })
+        .then((data) => {
+            
+            // 取得したデータをusersに格納
+            data.document.forEach((document) => {
+                documents.value.push({
+                    id: document.document_id,
+                    class: document.class_name,
+                    name: document.student_name,
+                    type: document.absence_category,
+                })
+            })
+
+        })
+        .catch((error) => {
+            console.log(error)
+        })
     })
 
-    const lists = () => {
-        users.value.list((a, b) => { return b.id - a.id });
+    // ドキュメントIDをStoreに格納し、認可画面に遷移
+    const showAccept = (id) => {
+        store.commit('setDocId', id)
+        router.push('/document_accept')
     }
     
 </script>
