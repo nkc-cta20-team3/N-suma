@@ -41,18 +41,16 @@ func UpdateAuth(c *gin.Context) {
 
 	if teacherPosition == documentStatus+1 {
 		
-		//担任だけが変更する
 		if teacherPosition == 1 {
+			//担任だけが変更する
 			db.Table("absence_document").
 				Where("document_id = ?", request.DocumentID).
-				Updates(AbsenceDocument{Status: teacherPosition, TeacherComment: request.TeacherComment})
-		}
-
-		//教員が認可する
-		else if teacherPosition >= 2 {
+				Updates(model.UpdateDocument{Status: teacherPosition, TeacherComment: request.TeacherComment})
+		}else if teacherPosition >= 2 {
+			//教員が認可する
 			db.Table("absence_document").
 				Where("document_id = ?", request.DocumentID).
-				Updates(AbsenceDocument{Status: teacherPosition})
+				Updates(model.UpdateDocument{Status: teacherPosition})
 		}
 
 		//エラーハンドリング
