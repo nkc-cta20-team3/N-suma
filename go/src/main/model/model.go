@@ -7,7 +7,7 @@ import (
 
 // ReadAuthListで使用する構造体
 type ReadAuthListRequest struct {
-	TeacherID int `json:"teacher_id"`
+	UserUid string `json:"user_uid"`
 }
 
 type ReadAuthListResponse struct {
@@ -17,9 +17,9 @@ type ReadAuthListResponse struct {
 	DocumentID int `json:"document_id"`
 }
 
-type TakeClassName struct {
-	PositionID int    `json:"position_id"`
-	ClassName  string `json:"class_name"`
+type TakeClassId struct {
+	PostId int    `json:"post_id"`
+	ClassId  string `json:"class_id"`
 }
 
 
