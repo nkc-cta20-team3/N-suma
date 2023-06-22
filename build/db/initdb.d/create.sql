@@ -64,7 +64,17 @@ COLLATE=utf8mb4_0900_as_cs
 COMMENT='役職表/マスターデータ';
 # show create table `post` ;
 /* 
-    IDの2桁目が学科の種別ごとに違うなどのIDを振り分けたい(予定) 
+    登録しているユーザーの役職を管理する
+
+    例: 0, 1, 2, 3, 4, 5, 6
+    0: 管理者
+    1: 学生
+    2: 担任
+    3: 主任
+    4: 学科長
+    5: 学部長
+    6: 所属長
+
 */
 
 
@@ -82,18 +92,26 @@ COLLATE=utf8mb4_0900_as_cs
 COMMENT='区分表/マスターデータ';
 # show create table `division` ;
 /* 
-    IDの2桁目が学科の種別ごとに違うなどのIDを振り分けたい(予定) 
+    書類の区分を管理する
+
+    例: 1, 2, 3, 4
+    1: 国家試験/基本情報
+    2: 国家試験/応用情報
+    3: 国家試験/情報セキュリティマネジメント
+    4: 国家試験/ITパスポート
+
 */
 
 
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user`(
-    `user_uid` varchar(255),
+    `user_id` int AUTO_INCREMENT,
+    `user_uuid` varchar(255),
     `user_name` varchar(80),
     `user_number` int,
     `post_id` int,
     `class_id` int,
-    PRIMARY KEY (`user_uid`),
+    PRIMARY KEY (`user_id`),
     FOREIGN KEY (`post_id`) REFERENCES `post`(`post_id`),
     FOREIGN KEY (`class_id`) REFERENCES `classification`(`class_id`)
 )
@@ -102,6 +120,13 @@ DEFAULT CHARSET=utf8mb4
 COLLATE=utf8mb4_0900_as_cs
 COMMENT='ユーザー表';
 # show create table `user` ;
+/* 
+    サービスに登録されているユーザーを管理する
+    
+    user_idはユーザーの識別番号であり、基本的にバックエンドでのみ使用する。
+    ※絶対にフロントエンド側に渡さないこと
+    
+*/
 
 
 DROP TABLE IF EXISTS `oa`;
@@ -117,10 +142,10 @@ CREATE TABLE `oa`(
     `read_flag` boolean NOT NULL,
     `student_comment` varchar(8000) NOT NULL,
     `teacher_comment` varchar(8000),
-    `user_uid` varchar(255) NOT NULL,
+    `user_id` int NOT NULL,
     `division_id` int NOT NULL,
     PRIMARY KEY (`document_id`),
-    FOREIGN KEY (`user_uid`) REFERENCES `user`(`user_uid`),
+    FOREIGN KEY (`user_id`) REFERENCES `user`(`user_id`),
     FOREIGN KEY (`division_id`) REFERENCES `division`(`division_id`)
 )
 ENGINE=InnoDB
@@ -128,3 +153,11 @@ DEFAULT CHARSET=utf8mb4
 COLLATE=utf8mb4_0900_as_cs
 COMMENT='公欠表';
 # show create table `oa` ;
+/* 
+    サービスに登録されているユーザーを管理する
+    
+    user_idはユーザーの識別番号であり、基本的にバックエンドでのみ使用する。
+    ※絶対にフロントエンド側に渡さないこと
+    
+*/
+
