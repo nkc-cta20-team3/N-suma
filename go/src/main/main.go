@@ -48,14 +48,18 @@ func main() {
 	// ルーティング
 	routes := g.Group("/api")
 	{
-		//apiフォルダ内のapiをルーティング
+		// apiフォルダ内のapiをルーティング
 		routes.POST("/ral", api.ReadAuthList)
 		routes.POST("/rd", api.ReadDocument)
 		routes.POST("/ua", api.UpdateAuth)
+		
+		// 実装予定の管理者向けのAPI
+		// routes.POST("/cd", api.CreateDocument)
+		// routes.POST("/dd", api.DeleteDocument)
 
-		//実装予定の管理者向けのAPI
-		//routes.POST("/cd", api.CreateDocument)
-		//routes.POST("/dd", api.DeleteDocument)
+		// 動作確認用
+		routes.GET("/hello", api.Hello)
+		
 	}
 
 	g.Run(":8080")
