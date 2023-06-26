@@ -14,7 +14,7 @@ func ReadAuthList(c *gin.Context) {
 
 	request := model.ReadAuthListRequest{}
 	response := []model.ReadAuthListResponse{}
-	take_class_id := model.TakeClassId{}
+	take_class_id := model.TakeClassID{}
 
 	//POSTで受け取った値を格納する
 	if err := c.ShouldBindJSON(&request); err != nil {

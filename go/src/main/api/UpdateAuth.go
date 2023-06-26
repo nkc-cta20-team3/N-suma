@@ -33,7 +33,7 @@ func UpdateAuth(c *gin.Context) {
 	db.Table("oa").Select("status").Where("document_id = ?", request.DocumentID).Scan(&documentStatus)
 
 	//役職IDの取得
-	db.Table("users").Select("position_id").Where("user_uid = ?", request.UserUid).Scan(&teacherPosition)
+	db.Table("user").Select("post_id").Where("user_uid = ?", request.UserUid).Scan(&teacherPosition)
 
 	log.Println(request)
 	log.Println(documentStatus)

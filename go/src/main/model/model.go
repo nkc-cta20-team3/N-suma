@@ -17,7 +17,7 @@ type ReadAuthListResponse struct {
 	DocumentID      int    `json:"document_id"`
 }
 
-type TakeClassId struct {
+type TakeClassID struct {
 	PostID  int    `json:"post_id"`
 	ClassID string `json:"class_id"`
 }
