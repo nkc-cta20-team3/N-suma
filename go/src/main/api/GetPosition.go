@@ -17,7 +17,7 @@ type UserPosition struct {
 	Position int "json/position_id"
 }
 
-func ReadAuthList(c *gin.Context) {
+func GetPosition(c *gin.Context) {
 	request := UserData{}
 
 	if err := c.ShouldBindJSON(&request); err != nil {
