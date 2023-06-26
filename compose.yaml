@@ -24,6 +24,7 @@ services:
             - db
         tty: true
         init: true
+        command: air -c .air.toml
     db:
         build: ./build/db/
         container_name: "sssr-mysql-dbserver"

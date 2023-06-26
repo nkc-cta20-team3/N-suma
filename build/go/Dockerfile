@@ -1,7 +1,7 @@
 FROM golang:1.19.1-alpine
 
-RUN apk update 
+WORKDIR /go/src/main
 
-WORKDIR /go/src/
+RUN apk update && go install github.com/cosmtrek/air@latest
 
-# CMD ["go", "run", "main/main.go"]
+
