@@ -9,12 +9,13 @@ VALUES
 
 INSERT INTO `post`(post_id,post_name)
 VALUES
-(0,'学生'),
-(1,'担任'),
-(2,'主任'),
-(3,'学科長'),
-(4,'学部長'),
-(5,'所属長');
+(0,'管理者'),
+(1,'学生'),
+(2,'担任'),
+(3,'主任'),
+(4,'学科長'),
+(5,'学部長'),
+(6,'所属長');
 
 INSERT INTO `division`(division_id,division_name,division_detail,division_remark)
 VALUES
