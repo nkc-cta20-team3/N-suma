@@ -49,15 +49,24 @@ func main() {
 	routes := g.Group("/api")
 	{
 		// apiフォルダ内のapiをルーティング
+
+		// curl -X POST http://localhost:8080/api/ral
 		routes.POST("/ral", api.ReadAuthList)
+
+
 		routes.POST("/rd", api.ReadDocument)
+
+
 		routes.POST("/ua", api.UpdateAuth)
+		
+
 		
 		// 実装予定の管理者向けのAPI
 		// routes.POST("/cd", api.CreateDocument)
 		// routes.POST("/dd", api.DeleteDocument)
 
 		// 動作確認用
+		// curl -X GET http://localhost:8080/api/hello
 		routes.GET("/hello", api.Hello)
 		
 	}
