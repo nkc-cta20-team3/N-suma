@@ -24,14 +24,14 @@ VALUES
 
 INSERT INTO `user`(user_uuid,user_name,user_number,post_id,class_id)
 VALUES
-('1waffa4r','田中太郎',20206000,0,117),
-('ff3ru6dg ','高橋啓太',null,1,117),
-('ohigw923','藤井雄太',null,2,null),
-('foqihnfl','斎藤勇',null,3,null),
-('o32tgbkl','小澤直樹',null,4,null),
-('4hpivesw','大橋健一',null,5,null),
-('9vacugh2','櫻井健一',20206100,0,116),
-('36gew305','鈴木秀昭',20206200,0,118);
+('1waffa4r','田中太郎',20206000,1,117),
+('ff3ru6dg ','高橋啓太',null,2,117),
+('ohigw923','藤井雄太',null,3,null),
+('foqihnfl','斎藤勇',null,4,null),
+('o32tgbkl','小澤直樹',null,5,null),
+('4hpivesw','大橋健一',null,6,null),
+('9vacugh2','櫻井健一',20206100,1,116),
+('36gew305','鈴木秀昭',20206200,1,118);
 
 INSERT INTO `oa`(request_at,start_date,start_flame,end_date,end_flame,location,status,read_flag,student_comment,teacher_comment,user_id,division_id)
 VALUES
