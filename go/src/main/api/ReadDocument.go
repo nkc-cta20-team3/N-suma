@@ -1,8 +1,8 @@
 package api
 
 import (
-	"net/http"
 	"log"
+	"net/http"
 
 	"main/infra"
 	"main/model"
@@ -12,7 +12,6 @@ import (
 
 func ReadDocument(c *gin.Context) {
 
-	
 	request := model.ReadDocumentRequest{}
 	response := model.ReadDocumentResponse{}
 
@@ -23,7 +22,6 @@ func ReadDocument(c *gin.Context) {
 		return
 	}
 
-
 	//データベース接続
 	db := infra.DBInitGorm()
 	if db.Error != nil {
@@ -32,44 +30,41 @@ func ReadDocument(c *gin.Context) {
 		return
 	}
 
-
 	/*
-	
 
-type ReadDocumentResponse struct {
-	DocumentID int `json:"document_id"`
-	RequestDate time.Time `json:"request_date"`
-	StudentID int `json:"student_id"`
-	ClassName string `json:"class_name"`
-	StudentName string `json:"student_name"`
-	StartDate time.Time `json:"absence_start_date"`
-	StartFlame int `json:"start_flame"`
-	EndDate time.Time `json:"end_date"`
-	EndFlame int `json:"end_flame"`
-	Location string `json:"location"`
-	StudentComment string `json:"student_comment"`
-	TeacherComment string `json:"teacher_comment"`
-}
+
+		type ReadDocumentResponse struct {
+			DocumentID int `json:"document_id"`
+			RequestDate time.Time `json:"request_date"`
+			StudentID int `json:"student_id"`
+			ClassName string `json:"class_name"`
+			StudentName string `json:"student_name"`
+			StartDate time.Time `json:"absence_start_date"`
+			StartFlame int `json:"start_flame"`
+			EndDate time.Time `json:"end_date"`
+			EndFlame int `json:"end_flame"`
+			Location string `json:"location"`
+			StudentComment string `json:"student_comment"`
+			TeacherComment string `json:"teacher_comment"`
+		}
 	*/
 
-	
-
 	// データベースからデータを取得する
-	db.Debug().Table("absence_document AS ab").
+	db.Debug().Table("oa").
 		Select(
-			"ab.document_id",
-			"ab.request_date",
-			"ab.student_id",
+			"oa.document_id",
+			"oa.request_at",
+			"oa.start_date",
+			"oa.start_flame",
+			"oa.end_date",
+			"oa.end_flame",
+			"oa.location",
+			"oa.student_comment",
+			"oa.teacher_comment",
+			"oa.user_uid",
 			"st.class_name",
-			"st.student_name",
-			"ab.absence_start_date",
-			"ab.absence_start_flame",
-			"ab.absence_end_date",
-			"ab.absence_end_flame",
-			"ab.location",
-			"ab.student_comment",
-			"ab.teacher_comment").
-		Joins("JOIN students AS st ON ab.student_id = st.student_id").
+			"st.student_name").
+		Joins("JOIN user ON oa.user_uid = user.user_id").
 		Where("document_id = ?", request.DocumentID).
 		First(&response)
 	if db.Error != nil {
@@ -79,7 +74,7 @@ type ReadDocumentResponse struct {
 	}
 
 	log.Println(response)
-	
+
 	c.JSON(http.StatusOK, gin.H{"document": response})
-	
+
 }

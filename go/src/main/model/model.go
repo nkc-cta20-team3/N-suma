@@ -11,18 +11,16 @@ type ReadAuthListRequest struct {
 }
 
 type ReadAuthListResponse struct {
-	ClassName  string `json:"class_name"`
-	StudentName string `json:"student_name"`
+	ClassName       string `json:"class_name"`
+	StudentName     string `json:"student_name"`
 	AbsenceCategory string `json:"absence_category"`
-	DocumentID int `json:"document_id"`
+	DocumentID      int    `json:"document_id"`
 }
 
-type TakeClassId struct {
-	PostId int    `json:"post_id"`
-	ClassId  string `json:"class_id"`
+type TakeClassID struct {
+	PostID  int    `json:"post_id"`
+	ClassID string `json:"class_id"`
 }
-
-
 
 // ReadDocumentで使用する構造体
 type ReadDocumentRequest struct {
@@ -30,30 +28,30 @@ type ReadDocumentRequest struct {
 }
 
 type ReadDocumentResponse struct {
-	DocumentID int `json:"document_id"`
-	RequestDate time.Time `json:"request_date"`
-	StudentID int `json:"student_id"`
-	ClassName string `json:"class_name"`
-	StudentName string `json:"student_name"`
-	StartDate time.Time `json:"absence_start_date"`
-	StartFlame int `json:"start_flame"`
-	EndDate time.Time `json:"end_date"`
-	EndFlame int `json:"end_flame"`
-	Location string `json:"location"`
-	StudentComment string `json:"student_comment"`
-	TeacherComment string `json:"teacher_comment"`
+	DocumentID     int       `json:"document_id"`
+	RequestAt      time.Time `json:"request_at"`
+	StartDate      time.Time `json:"start_date"`
+	StartFlame     int       `json:"start_flame"`
+	EndDate        time.Time `json:"end_date"`
+	EndFlame       int       `json:"end_flame"`
+	Location       string    `json:"location"`
+	StudentComment string    `json:"student_comment"`
+	TeacherComment string    `json:"teacher_comment"`
+	UserUid        int       `json:"user_uid"`
+	ClassName      string    `json:"class_name"`
+	StudentName    string    `json:"student_name"`
 }
 
 // UpdateAuthで使用する構造体
 type UpdateAuthRequest struct {
-	DocumentID int `json:"document_id"`
-	TeacherID int `json:"teacher_id"`
+	DocumentID     int    `json:"document_id"`
+	UserUid        int    `json:"user_uid"`
 	TeacherComment string `json:"teacher_comment"`
 }
 
 type UpdateDocument struct {
-	DocumentID        int            `json:"document_id"`         // ドキュメントID
-	StudentID         int            `json:"student_id"`          // 学籍番号
+	DocumentID int `json:"document_id"` // ドキュメントID
+	// 学籍番号
 	CompanyID         int            `json:"company_id"`          // 会社ID
 	ReasonID          int            `json:"reason_id"`           // 理由ID
 	RequestDate       time.Time      `json:"request_date"`        // 申請日
@@ -65,7 +63,7 @@ type UpdateDocument struct {
 	ReadFlag          bool           `json:"read_flag"`           // 既読フラグ
 	Status            int            `json:"status"`              // ステータス
 	StudentComment    sql.NullString `json:"student_comment"`     // 学生コメント
-	TeacherComment    string		 `json:"teacher_comment"`     // 教員コメント
+	TeacherComment    string         `json:"teacher_comment"`     // 教員コメント
 }
 
 // CreateDocumentで使用する構造体

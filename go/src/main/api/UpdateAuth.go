@@ -30,28 +30,28 @@ func UpdateAuth(c *gin.Context) {
 	response := http.StatusBadRequest
 
 	//認可ステータスの取得
-	db.Table("absence_document").Select("status").Where("document_id = ?", request.DocumentID).Scan(&documentStatus)
+	db.Table("oa").Select("status").Where("document_id = ?", request.DocumentID).Scan(&documentStatus)
 
 	//役職IDの取得
-	db.Table("teachers").Select("position_id").Where("teacher_id = ?", request.TeacherID).Scan(&teacherPosition)
+	db.Table("user").Select("post_id").Where("user_uid = ?", request.UserUid).Scan(&teacherPosition)
 
 	log.Println(request)
 	log.Println(documentStatus)
 	log.Println(teacherPosition)
 
 	if teacherPosition == documentStatus+1 {
-		
+
 		if teacherPosition == 1 {
 
 			//担任だけが変更する
-			db.Table("absence_document").
+			db.Table("oa").
 				Where("document_id = ?", request.DocumentID).
 				Updates(model.UpdateDocument{Status: teacherPosition, TeacherComment: request.TeacherComment})
 
 		} else if teacherPosition >= 2 {
 
-			//教員が認可する 
-			db.Table("absence_document").
+			//教員が認可する
+			db.Table("oa").
 				Where("document_id = ?", request.DocumentID).
 				Updates(model.UpdateDocument{Status: teacherPosition})
 
