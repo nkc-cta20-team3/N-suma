@@ -12,24 +12,30 @@ import (
 
 func ReadAuthList(c *gin.Context) {
 
-	request := model.ReadAuthListRequest{}
 	response := []model.ReadAuthListResponse{}
 	take_class_id := model.TakeClassID{}
 
+	/*
+	request := model.ReadAuthListRequest{}
 	//POSTで受け取った値を格納する
 	if err := c.ShouldBindJSON(&request); err != nil {
 		// エラーな場合、ステータス400と、エラー情報を返す
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
-	}
+	}*/
 
 	//DB接続
 	db := infra.DBInitGorm()
 
-	//サブクエリ(副問い合わせ)の作成
+	// 本来ならミドルウェアの認証処理を挟み、取得したIDを格納する
+	id := 2
 
+	//サブクエリ(副問い合わせ)の作成
 	//所属クラス名を取得
-	db.Table("user").Select("post_id, class_id").Where("user_uid = ?", request.UserUid).First(&take_class_id)
+	db.Table("user").Select("post_id, class_id").Where("user_id = ?", id).First(&take_class_id)
+	// 実行予定のSQL
+	// SELECT post_id, class_id FROM user WHERE user_id = 2;
+
 	post := take_class_id.PostID - 1
 
 	if post == 1 {
@@ -42,12 +48,14 @@ func ReadAuthList(c *gin.Context) {
 				"user.user_name",
 				"dv.division_name",
 				"oa.document_id").
-			Joins("JOIN user ON oa.user_uid = user.user_uid").
+			Joins("JOIN user ON oa.user_id = user.user_id").
 			Joins("JOIN division AS dv ON oa.division_id = dv.division_id").
 			Joins("JOIN classification AS cs ON user.class_id = cs.class_id").
 			Where("oa.status = ?", post).
 			Where("cs.class_id = ?", take_class_id.ClassID).
 			Scan(&response)
+		// 実行予定のSQL
+		// SELECT cs.class_name, user.user_name, dv.division_name, oa.document_id FROM oa JOIN user ON oa.user_id = user.user_id JOIN division AS dv ON oa.division_id = dv.division_id JOIN classification AS cs ON user.class_id = cs.class_id WHERE oa.status = 1 AND cs.class_id = 117;
 		if db.Error != nil {
 			fmt.Print("ERROR!")
 		}
@@ -56,22 +64,22 @@ func ReadAuthList(c *gin.Context) {
 
 		//主任以上の場合
 		//すべてのクラスを出力する
-
 		db.Table("oa").
 			Select(
 				"cs.class_name",
 				"user.user_name",
 				"dv.division_name",
 				"oa.document_id").
-			Joins("JOIN user ON user.user_uid = oa.user_uid").
-			Joins("JOIN division AS dv ON dv.division_id = oa.division_id").
+			Joins("JOIN user ON oa.user_id = user.user_id").
+			Joins("JOIN division AS dv ON oa.division_id = dv.division_id").
 			Joins("JOIN classification AS cs ON user.class_id = cs.class_id").
-			Where("ad.status = ?", post).
+			Where("oa.status = ?", post).
 			Scan(&response)
+		// 実行予定のSQL
+		// SELECT cs.class_name, user.user_name, dv.division_name, oa.document_id FROM oa JOIN user ON oa.user_id = user.user_id JOIN division AS dv ON oa.division_id = dv.division_id JOIN classification AS cs ON user.class_id = cs.class_id WHERE oa.status = 2;
 		if db.Error != nil {
 			fmt.Print("ERROR!")
 		}
-
 	}
 
 	// ステータス200と、responseを返します
