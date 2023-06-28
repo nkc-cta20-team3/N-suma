@@ -10,7 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func GetPosition(c *gin.Context) {
+func ReadPosition(c *gin.Context) {
 	request := model.UserData{}
 
 	if err := c.ShouldBindJSON(&request); err != nil {
