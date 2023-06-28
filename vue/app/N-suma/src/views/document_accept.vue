@@ -122,7 +122,7 @@
         }
 
 
-        fetch(new URL("ua" , import.meta.env.VITE_API_URL), {
+        fetch(new URL("api/ua" , import.meta.env.VITE_API_URL), {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -164,7 +164,7 @@
             return
         }
         
-        fetch(new URL("rd" , import.meta.env.VITE_API_URL), {
+        fetch(new URL("api/rd" , import.meta.env.VITE_API_URL), {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
