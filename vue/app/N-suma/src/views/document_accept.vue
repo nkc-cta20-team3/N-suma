@@ -7,6 +7,14 @@
         ◀戻る
     </router-link>
 
+    <template>
+        <div>
+            <textarea v-model="comment"></textarea>
+            <p v-if="message && !error">{{ message }}</p>
+            <p v-if="error" class="error">{{ error }}</p>
+        </div>
+    </template>
+  
     <!--
         request_date: "2020-10-01T00:00:00Z"
         student_id: 20206001
@@ -85,8 +93,8 @@
             </div>
 
             <div class="is-flex mb-5">
-                <div class="ml-4 button is-medium" @click="OnClickAccept(true)">受理</div>
-                <div class="ml-4 button is-medium" @click="OnClickAccept(false)">却下</div>
+                <div class="ml-4 button is-medium" @click="approve">受理</div>
+                <div class="ml-4 button is-medium" @click="reject">却下</div>
             </div>
         </div>
     </div>
@@ -117,7 +125,7 @@
 
         if(!isAcceptance){
             // 却下された時のAPI側の仕様が定まっていないため保留
-            alert("却下されました")
+            alert("却下されました。")
             return;
         }
 
@@ -194,5 +202,41 @@
             console.log(error)
         })
     })
+
+
+    // 新規追加
+
+    const validateComment = () => {
+        if (!inputValue.value.trim()) {
+            return false;
+        }
+        return true;
+    };
+  
+    const approve = () => {
+        if (validateComment()) {
+            if(confirm('受理されました。次の書類に遷移しますか？')){
+                router.push('/document_auth');
+            } else {
+                alert("キャンセルしました。") 
+            }
+        } else {
+            alert("コメントを入力してください。")
+        }
+    };
+
+    const reject = () => {
+        if (validateComment()) {
+            if(confirm('却下しました。次の書類に遷移しますか？')){
+                router.push('/document_auth');
+            } else {
+                alert("キャンセルしました。") 
+            }
+        } else {
+            alert("コメントを入力してください。")
+        }
+    };
+
+
 
 </script>
