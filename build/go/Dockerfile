@@ -4,4 +4,4 @@ WORKDIR /go/src/main
 
 RUN apk update && go install github.com/cosmtrek/air@latest
 
-
+COPY ./n-suma-firebase-admin.secret /go/select/n-suma-firebase-admin.secret
