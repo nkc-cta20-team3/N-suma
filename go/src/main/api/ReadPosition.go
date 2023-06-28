@@ -1,24 +1,17 @@
 package api
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 
 	"main/infra"
+	"main/model"
 
 	"github.com/gin-gonic/gin"
 )
 
-type UserData struct {
-	UserID int "json/user_id"
-}
-
-type UserPosition struct {
-	Position int "json/position_id"
-}
-
-func GetPosition(c *gin.Context) {
-	request := UserData{}
+func ReadPosition(c *gin.Context) {
+	request := model.UserData{}
 
 	if err := c.ShouldBindJSON(&request); err != nil {
 		// エラーな場合、ステータス400と、エラー情報を返す
@@ -26,17 +19,19 @@ func GetPosition(c *gin.Context) {
 		return
 	}
 
-	responceDocument := UserPosition{}
+	responceDocument := model.UserPosition{}
 	db := infra.DBInitGorm()
 
 	//役職IDを取得する
-	db.Table("users").Select("position").Where("user_id = ?", request).First(&responceDocument)
+	db.Table("user").Select("post_id").Where("user_id = ?", request.UserID).First(&responceDocument)
+
 	if db.Error != nil {
-		fmt.Print("ERROR!")
+		log.Println("SQL ERROR!")
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "SQL ERROR"})
 	}
 
 	//戻り値
-	c.JSON(http.StatusOK, gin.H{responceDocument})
+	c.JSON(http.StatusOK, gin.H{"message": responceDocument})
 	return
 
 }
