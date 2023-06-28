@@ -6,7 +6,7 @@
     <router-link to="/document_auth" class="has-text-left" style="font-size: 1.5em">
         ◀戻る
     </router-link>
-  
+
     <!--
         request_date: "2020-10-01T00:00:00Z"
         student_id: 20206001
