@@ -26,7 +26,7 @@ VALUES
 INSERT INTO `user`(user_uuid,user_name,user_number,post_id,class_id)
 VALUES
 ('1waffa4r','田中太郎',20206000,1,117),
-('ff3ru6dg ','高橋啓太',null,2,117),
+('ff3ru6dg','高橋啓太',null,2,117),
 ('ohigw923','藤井雄太',null,3,null),
 ('foqihnfl','斎藤勇',null,4,null),
 ('o32tgbkl','小澤直樹',null,5,null),
