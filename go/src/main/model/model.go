@@ -54,9 +54,18 @@ type UpdateDocument struct {
 	TeacherComment string `json:"teacher_comment"` // 教員コメント
 }
 
-// Rejectionで使用する構造体
+// RejectAuthで使用する構造体
 type DocumentRejection struct {
 	DocumentID int `json:"document_id"`
+}
+
+// ReadPositionで使用する構造体
+type UserData struct {
+	UserID int `json:"user_id"`
+}
+
+type UserPosition struct {
+	PostID int `json:"post_id"`
 }
 
 // CreateDocumentで使用する構造体

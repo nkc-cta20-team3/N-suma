@@ -5,20 +5,13 @@ import (
 	"net/http"
 
 	"main/infra"
+	"main/model"
 
 	"github.com/gin-gonic/gin"
 )
 
-type UserData struct {
-	UserID int `json:"user_id"`
-}
-
-type UserPosition struct {
-	PostID int `json:"post_id"`
-}
-
 func GetPosition(c *gin.Context) {
-	request := UserData{}
+	request := model.UserData{}
 
 	if err := c.ShouldBindJSON(&request); err != nil {
 		// エラーな場合、ステータス400と、エラー情報を返す
@@ -26,7 +19,7 @@ func GetPosition(c *gin.Context) {
 		return
 	}
 
-	responceDocument := UserPosition{}
+	responceDocument := model.UserPosition{}
 	db := infra.DBInitGorm()
 
 	//役職IDを取得する
