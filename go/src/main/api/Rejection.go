@@ -12,7 +12,7 @@ import (
 
 func Rejection(c *gin.Context) {
 
-	request := model.UpdateDocument{}
+	request := model.DocumentRejection{}
 
 	//POSTで受け取った値を格納する
 	if err := c.ShouldBindJSON(&request); err != nil {
