@@ -44,9 +44,9 @@ type ReadDocumentResponse struct {
 
 // UpdateAuthで使用する構造体
 type UpdateAuthRequest struct {
-	DocumentID     int    `json:"document_id"`
-	UserUuid       string `json:"user_uuid"`
-	TeacherComment string `json:"teacher_comment"`
+	DocumentID     int    `json:"document_id"`     //ドキュメントID
+	UserID         int    `json:"user_id"`         //ユーザID
+	TeacherComment string `json:"teacher_comment"` //教員コメント
 }
 
 type UpdateDocument struct {
