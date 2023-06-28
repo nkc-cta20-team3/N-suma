@@ -6,14 +6,6 @@
     <router-link to="/document_auth" class="has-text-left" style="font-size: 1.5em">
         ◀戻る
     </router-link>
-
-    <template>
-        <div>
-            <textarea v-model="comment"></textarea>
-            <p v-if="message && !error">{{ message }}</p>
-            <p v-if="error" class="error">{{ error }}</p>
-        </div>
-    </template>
   
     <!--
         request_date: "2020-10-01T00:00:00Z"
@@ -115,21 +107,24 @@
     const DocId = store.state.DocId
     const document = ref()
 
-    // 認可用のAPIを叩く
-    const OnClickAccept = (isAcceptance) => {
+    // 文字を入力されているかのチェック
+    const validateComment = () => {
+        if (inputValue.value.trim()) {
+            return false;
+        }
+        return true;
+    }
 
-        if (!inputValue.value){
+    // 認可ボタンをクリックした時
+    const approve = () => {
+
+        // 文字をチェックする
+        if (validateComment()) {
             alert("コメントを入力してください。")
             return
-        }     
-
-        if(!isAcceptance){
-            // 却下された時のAPI側の仕様が定まっていないため保留
-            alert("却下されました。")
-            return;
         }
 
-
+        // 認可用のAPIをたたく
         fetch(new URL("ua" , import.meta.env.VITE_API_URL), {
             method: 'POST',
             headers: {
@@ -138,7 +133,7 @@
             },
             body: JSON.stringify({
                 "document_id": DocId,
-	            "teacher_id": 1,
+                "teacher_id": 1,
                 "teacher_comment": inputValue.value,
             })
         })
@@ -154,16 +149,35 @@
                 throw new Error(`${data.message}`)
             }
 
-            alert("受理されました")
-            router.push('/document_auth')
+            if(confirm('受理されました。次の書類に遷移しますか？')){
+                router.push('/document_auth');
+            } else {
+                alert("キャンセルしました。") 
+            }
 
         })
         .catch((error) => {
+            // 認可用のAPIがうまく叩けなかった場合にエラーを出す
             alert(error)
         })
 
-    }
+    };
 
+    // 却下ボタンをクリックした時
+    const reject = () => {
+        
+        if (validateComment()) {
+            alert("コメントを入力してください。")
+        }
+
+        if(confirm('却下しました。次の書類に遷移しますか？')){
+            router.push('/document_auth');
+        } else {
+            alert("キャンセルしました。") 
+        }
+
+    };
+    
     onMounted(() => {
 
         // DocIdがnullの場合は、document_authに戻る
@@ -202,41 +216,5 @@
             console.log(error)
         })
     })
-
-
-    // 新規追加
-
-    const validateComment = () => {
-        if (!inputValue.value.trim()) {
-            return false;
-        }
-        return true;
-    };
-  
-    const approve = () => {
-        if (validateComment()) {
-            if(confirm('受理されました。次の書類に遷移しますか？')){
-                router.push('/document_auth');
-            } else {
-                alert("キャンセルしました。") 
-            }
-        } else {
-            alert("コメントを入力してください。")
-        }
-    };
-
-    const reject = () => {
-        if (validateComment()) {
-            if(confirm('却下しました。次の書類に遷移しますか？')){
-                router.push('/document_auth');
-            } else {
-                alert("キャンセルしました。") 
-            }
-        } else {
-            alert("コメントを入力してください。")
-        }
-    };
-
-
 
 </script>
