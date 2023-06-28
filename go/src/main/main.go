@@ -59,6 +59,8 @@ func main() {
 
 		routes.POST("/gp", api.GetPosition)
 
+		routes.POST("/ra", api.RejectAuth)
+
 		// 実装予定の管理者向けのAPI
 		// routes.POST("/cd", api.CreateDocument)
 		// routes.POST("/dd", api.DeleteDocument)
