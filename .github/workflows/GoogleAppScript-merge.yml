@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+      - develop
+      - '83-lambda_cicd'
   workflow_dispatch:
 
 defaults:
