@@ -57,7 +57,7 @@ func main() {
 
 		routes.POST("/ua", api.UpdateAuth)
 
-		routes.POST("/gp", api.ReadPosition)
+		routes.POST("/rp", api.ReadPosition)
 
 		routes.POST("/ra", api.RejectAuth)
 
