@@ -72,7 +72,7 @@ type UserData struct {
 }
 
 type UserPosition struct {
-	PostID int `json:"position_id"`
+	PositionID int `json:"position_id"`
 }
 
 // CreateDocumentで使用する構造体
