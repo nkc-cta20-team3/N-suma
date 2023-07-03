@@ -23,7 +23,7 @@ func GetPosition(c *gin.Context) {
 	db := infra.DBInitGorm()
 
 	//役職IDを取得する
-	db.Table("teachers").Select("position").Where("teacher_id = ?", request.UserID).First(&responceDocument)
+	db.Table("teachers").Select("position_id").Where("teacher_id = ?", request.UserID).First(&responceDocument)
 
 	if db.Error != nil {
 		log.Println("SQL ERROR!")
