@@ -83,8 +83,6 @@
         onAuthStateChanged(auth, (user) => {
             isLoggedIn.value = !!user
         })
-
-
     })
 
     const handleSignOut = () => {
@@ -108,6 +106,24 @@
             })
 
     }
+
+    //GetPotisionAPIに引数userIdを渡し返り値potisionIDを受け取る
+   
+const userId = 0;
+      fetch(new URL(`fakeendpoint`, import.meta.env.VITE_API_URL))
+      .then((response) => {
+          if (!response.ok) {
+             throw new Error(`${response.status} ${response.statusText}`)
+          }
+          return response.json()
+      })
+      .then((data) => {
+          posts.value = data.posts; // 取得したデータのpostsを格納
+      })
+      .catch((error) => {
+          console.log(error)
+      })
+
 
     //ハンバーガーメニューの実装
     document.addEventListener('DOMContentLoaded', () => {
@@ -134,6 +150,6 @@
             });
         }
     });
-   
+
 </script>
 
