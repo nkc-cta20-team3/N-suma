@@ -149,10 +149,11 @@
                 throw new Error(`${data.message}`)
             }
 
-            if(confirm('受理されました。次の書類に遷移しますか？')){
-                router.push('/document_auth');
+            if(confirm('受理されました。次の書類に遷移しますか？\n(キャンセルした場合は未認可書類一覧に戻ります。)')){
+                router.push(teacher_id, 1,'/document_accept');
             } else {
-                alert("キャンセルしました。") 
+                    alert("未認可書類一覧に戻ります。") 
+                    router.push('/document_auth');
             }
 
         })
@@ -170,10 +171,11 @@
             alert("コメントを入力してください。")
         }
 
-        if(confirm('却下しました。次の書類に遷移しますか？')){
-            router.push('/document_auth');
+        if(confirm('却下されました。次の書類に遷移しますか？\n(キャンセルした場合は未認可書類一覧に戻ります。)')){
+            router.push('/document_accept');
         } else {
-            alert("キャンセルしました。") 
+            alert("未認可書類一覧に戻ります。") 
+            router.push('/document_auth');
         }
 
     };
@@ -207,6 +209,7 @@
             // 取得したデータを格納
             document.value = data.document;
             studentComment.value = data.document.student_comment;
+
             
             // データ確認用
             // console.log(document.value)
