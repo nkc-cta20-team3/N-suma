@@ -82,6 +82,8 @@ func main() {
 		routeapi.POST("/ral", api.ReadAuthList)
 		routeapi.POST("/rd", api.ReadDocument)
 		routeapi.POST("/ua", api.UpdateAuth)
+		//routeapi.POST("/rp", api.ReadPosition)
+		routeapi.POST("/gp", api.GetPosition)
 
 		//実装予定の管理者向けのAPI
 		//routeapi.POST("/cd", api.CreateDocument)
