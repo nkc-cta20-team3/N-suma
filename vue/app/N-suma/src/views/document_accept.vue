@@ -167,11 +167,54 @@
     // 却下ボタンをクリックした時
     const reject = () => {
         
+        //コメントチェック
         if (validateComment()) {
             alert("コメントを入力してください。")
         }
 
         if(confirm('却下されました。次の書類に遷移しますか？\n(キャンセルした場合は未認可書類一覧に戻ります。)')){
+            //このとき、却下するAPIを差し込みたい
+            onMounted(() => {
+
+                // 認可待ちの書類一覧を取得
+                // 本来はログインユーザーのIDを取得し、そのユーザーの認可待ちの書類一覧を取得する
+                // 現在は、ユーザーIDをハードコーディングしているため、修正する必要があります
+                fetch(new URL("ral" , import.meta.env.VITE_API_URL), {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest',
+                    },
+                    body: JSON.stringify({
+                        "teacher_id": 1,
+                        "position": 1,
+                        "class_name": "CTA20"
+                    })
+                })
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error(`${response.status} ${response.statusText}`)
+                    }
+                    return response.json()
+                })
+                .then((data) => {
+                    
+                    // 取得したデータをusersに格納
+                    data.document.forEach((document) => {
+                        documents.value.push({
+                            id: document.document_id,
+                            class: document.class_name,
+                            name: document.student_name,
+                            type: document.absence_category,
+                        })
+                    })
+
+                })
+                .catch((error) => {
+                    console.log(error)
+                })
+                })
+
             router.push('/document_accept');
         } else {
             alert("未認可書類一覧に戻ります。") 
