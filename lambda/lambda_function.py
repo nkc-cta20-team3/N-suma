@@ -3,7 +3,7 @@ import logging
 import pymysql
 import json
 
-#20230706変更
+#20230706変更　secret追加
 # RDSの情報登録
 #更新した後
 rds_host  = "ctagr3-rds.cmedpe62g1hv.us-east-1.rds.amazonaws.com"
