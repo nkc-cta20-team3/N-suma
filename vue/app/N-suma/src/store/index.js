@@ -5,7 +5,8 @@ const store = createStore({
     return {
       userId: null,
       ClassId: null,
-      DocId: null
+      DocId: null,
+      PostId: null
     }
   },
   mutations: {
@@ -17,6 +18,9 @@ const store = createStore({
     },
     setDocId(state, DocId) {
       state.DocId = DocId
+    },
+    setPostId(state, PostId){
+      state.PostId = PostId
     }
   },
   actions: {
@@ -29,6 +33,9 @@ const store = createStore({
     },
     updateDocId({ commit }, DocId) {
       commit('setDocId', DocId)
+    },
+    updatePostId({ commit }, PostId) { 
+      commit('setPostId', PostId)
     }
   },
   getters: {
@@ -40,6 +47,9 @@ const store = createStore({
     },
     getDocId(state) {
       return state.DocId
+    },
+    getPostId(state){
+      return state.PostId
     }
   }
 })

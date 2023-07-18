@@ -38,7 +38,7 @@
                     個人データ
                 </router-link>
                 
-                <router-link class="navbar-item" to="/document_auth" v-if="isLoggedIn">
+                <router-link class="navbar-item" to="/document_auth" v-if="isLoggedIn&&showDocument">
                     書類認可
                 </router-link>
 
@@ -73,9 +73,11 @@
 <script setup>
     import { onMounted, ref } from 'vue'
     import { getAuth, onAuthStateChanged, signOut , GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
-    import router from '../router';
+    import router from '../router'
+    //import store from './store';
 
     const isLoggedIn = ref(false)
+    const showDocument = ref(false)
 
     let auth
     onMounted(() => {
@@ -83,8 +85,6 @@
         onAuthStateChanged(auth, (user) => {
             isLoggedIn.value = !!user
         })
-
-
     })
 
     const handleSignOut = () => {
@@ -108,6 +108,37 @@
             })
 
     }
+
+    //GetPotisionAPIに引数userIdを渡し返り値potisionIDを受け取る
+   
+      fetch(new URL("gp", import.meta.env.VITE_API_URL), {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: JSON.stringify({
+                "userId": 1
+             })
+      })
+      .then((response) => {
+          if (!response.ok) {
+             throw new Error(`${response.status} ${response.statusText}`)
+          }
+          return response.json()
+      })
+      .then((data) => {
+          posts.value = data.posts; // 取得したデータのpostsを格納
+      })
+      .catch((error) => {
+          console.log(error)
+      })
+
+    //positionId(役職)があれば表示
+    //現状ハードコーディングしているので変更する必要がある
+    const positionId = 1;
+    showDocument.value = positionId !== 0; 
+    
 
     //ハンバーガーメニューの実装
     document.addEventListener('DOMContentLoaded', () => {
@@ -134,6 +165,6 @@
             });
         }
     });
-   
+
 </script>
 
