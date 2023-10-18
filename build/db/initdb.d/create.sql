@@ -111,6 +111,8 @@ CREATE TABLE `user`(
     `user_number` int,
     `post_id` int,
     `class_id` int,
+    `mail_address` varchar(255),
+    `user_flag` boolean,
     PRIMARY KEY (`user_id`),
     FOREIGN KEY (`post_id`) REFERENCES `post`(`post_id`),
     FOREIGN KEY (`class_id`) REFERENCES `classification`(`class_id`)
@@ -133,9 +135,9 @@ DROP TABLE IF EXISTS `oa`;
 CREATE TABLE `oa`(
     `document_id` int AUTO_INCREMENT,
     `request_at` date NOT NULL,
-    `start_date` date NOT NULL,
+    `start_time` datetime NOT NULL,
     `start_flame` int NOT NULL,
-    `end_date` date NOT NULL,
+    `end_time` datetime NOT NULL,
     `end_flame` int NOT NULL,
     `location` varchar(16) NOT NULL,
     `status` int NOT NULL,
