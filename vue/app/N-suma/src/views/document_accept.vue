@@ -130,7 +130,7 @@
             },
             body: JSON.stringify({
                 "document_id": DocId,
-	            "teacher_id": 1,
+	            "user_id": 1,
                 "teacher_comment": inputValue.value,
             })
         })
