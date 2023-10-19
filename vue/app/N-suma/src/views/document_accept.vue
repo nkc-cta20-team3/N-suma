@@ -33,11 +33,11 @@
         <thead>
             <tr>
                 <th>申請日</th>
-                <th>{{ document.request_date }}</th>
+                <th>{{ document.request_at }}</th>
             </tr>
             <tr>
                 <th>学籍番号</th>
-                <th>{{ document.student_id }}</th>
+                <th>{{ document.user_number }}</th>
             </tr>
             <tr>
                 <th>クラス略称</th>
@@ -45,11 +45,11 @@
             </tr>
             <tr>
                 <th>氏名</th>
-                <th>{{ document.student_name }}</th>
+                <th>{{ document.user_name }}</th>
             </tr>
             <tr>
                 <th>開始日</th>
-                <th>{{ document.absence_start_date }}</th>
+                <th>{{ document.start_time }}</th>
             </tr>
             <tr>
                 <th>開始時限</th>
@@ -57,7 +57,7 @@
             </tr>
             <tr>
                 <th>終了日</th>
-                <th>{{ document.end_date }}</th>
+                <th>{{ document.end_time }}</th>
             </tr>
             <tr>
                 <th>終了時限</th>
@@ -117,12 +117,41 @@
 
         if(!isAcceptance){
             // 却下された時のAPI側の仕様が定まっていないため保留
+            // alert("却下されました")
+
+             fetch(new URL("api/ra" , import.meta.env.VITE_API_URL), {
+             method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+            body: JSON.stringify({
+                "document_id": DocId,
+
+                "teacher_comment": inputValue.value,
+            })
+        })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error(`${response.status} ${response.statusText}`)
+            }
+            return response.json()
+        })
+        .then((data) => {
+
+            if(data.message != "200"){
+                throw new Error(`${data.message}`)
+            }
+
             alert("却下されました")
-            return;
+            router.push('/document_auth')
+        })
+            // return;
         }
 
-
-        fetch(new URL("api/ua" , import.meta.env.VITE_API_URL), {
+        if(isAcceptance){
+            //認可ボタンが押下されたとき→認可処理
+            fetch(new URL("api/ua" , import.meta.env.VITE_API_URL), {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -130,7 +159,7 @@
             },
             body: JSON.stringify({
                 "document_id": DocId,
-	            "teacher_id": 1,
+	            "user_id": 1,
                 "teacher_comment": inputValue.value,
             })
         })
@@ -153,6 +182,9 @@
         .catch((error) => {
             alert(error)
         })
+        }
+
+        
 
     }
 

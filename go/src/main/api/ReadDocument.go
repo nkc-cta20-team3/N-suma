@@ -53,14 +53,14 @@ func ReadDocument(c *gin.Context) {
 		Select(
 			"oa.document_id",
 			"oa.request_at",
-			"oa.start_date",
+			"oa.start_time",
 			"oa.start_flame",
-			"oa.end_date",
+			"oa.end_time",
 			"oa.end_flame",
 			"oa.location",
 			"oa.student_comment",
 			"oa.teacher_comment",
-			"user.user_uuid",
+			"user.user_number",
 			"cs.class_name",
 			"user.user_name").
 		Joins("JOIN user ON oa.user_id = user.user_id").

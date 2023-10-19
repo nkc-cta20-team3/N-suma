@@ -30,14 +30,14 @@ type ReadDocumentRequest struct {
 type ReadDocumentResponse struct {
 	DocumentID     int       `json:"document_id"`
 	RequestAt      time.Time `json:"request_at"`
-	StartDate      time.Time `json:"start_date"`
+	StartDate      time.Time `json:"start_time"`
 	StartFlame     int       `json:"start_flame"`
-	EndDate        time.Time `json:"end_date"`
+	EndDate        time.Time `json:"end_time"`
 	EndFlame       int       `json:"end_flame"`
 	Location       string    `json:"location"`
 	StudentComment string    `json:"student_comment"`
 	TeacherComment string    `json:"teacher_comment"`
-	UserUuid       string    `json:"user_uuid"`
+	UserNumber     int       `json:"user_number"`
 	ClassName      string    `json:"class_name"`
 	UserName       string    `json:"user_name"`
 }
@@ -56,7 +56,8 @@ type UpdateDocument struct {
 
 // RejectAuthで使用する構造体
 type DocumentRejection struct {
-	DocumentID int `json:"document_id"`
+	DocumentID     int    `json:"document_id"`
+	TeacherComment string `json:"teacher_comment"` // 教員コメント
 }
 
 // ReadPositionで使用する構造体

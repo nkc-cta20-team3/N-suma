@@ -73,9 +73,10 @@
                 'X-Requested-With': 'XMLHttpRequest',
             },
             body: JSON.stringify({
-                "teacher_id": 1,
-                "position": 1,
-                "class_name": "CTA20"
+                // "teacher_id": 1,
+                // "position": 1,
+                // "class_name": "CTA20"
+                "user_id": 1
             })
         })
         .then((response) => {
@@ -91,8 +92,8 @@
                 documents.value.push({
                     id: document.document_id,
                     class: document.class_name,
-                    name: document.student_name,
-                    type: document.absence_category,
+                    name: document.user_name,
+                    type: document.division_name,
                 })
             })
 
