@@ -33,11 +33,11 @@
         <thead>
             <tr>
                 <th>申請日</th>
-                <th>{{ document.request_date }}</th>
+                <th>{{ document.request_at }}</th>
             </tr>
             <tr>
                 <th>学籍番号</th>
-                <th>{{ document.student_id }}</th>
+                <th>{{ document.user_number }}</th>
             </tr>
             <tr>
                 <th>クラス略称</th>
@@ -45,11 +45,11 @@
             </tr>
             <tr>
                 <th>氏名</th>
-                <th>{{ document.student_name }}</th>
+                <th>{{ document.user_name }}</th>
             </tr>
             <tr>
                 <th>開始日</th>
-                <th>{{ document.absence_start_date }}</th>
+                <th>{{ document.start_time }}</th>
             </tr>
             <tr>
                 <th>開始時限</th>
@@ -57,7 +57,7 @@
             </tr>
             <tr>
                 <th>終了日</th>
-                <th>{{ document.end_date }}</th>
+                <th>{{ document.end_time }}</th>
             </tr>
             <tr>
                 <th>終了時限</th>
