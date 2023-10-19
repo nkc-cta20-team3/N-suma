@@ -31,7 +31,11 @@ func RejectAuth(c *gin.Context) {
 	//却下
 	db.Table("oa").
 		Where("document_id = ?", request.DocumentID).
-		Updates(model.UpdateDocument{Status: -1})
+		Updates(model.UpdateDocument{Status: -1, TeacherComment: request.TeacherComment})
+
+	// db.Table("oa").
+	// 	Where("document_id = ?", request.DocumentID).
+	// 	Updates(model.UpdateDocument{Status: -1})
 
 	//エラーハンドリング
 	if db.Error != nil {

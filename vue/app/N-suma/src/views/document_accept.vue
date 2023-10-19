@@ -117,12 +117,41 @@
 
         if(!isAcceptance){
             // 却下された時のAPI側の仕様が定まっていないため保留
+            // alert("却下されました")
+
+             fetch(new URL("api/ra" , import.meta.env.VITE_API_URL), {
+             method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+            body: JSON.stringify({
+                "document_id": DocId,
+
+                "teacher_comment": inputValue.value,
+            })
+        })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error(`${response.status} ${response.statusText}`)
+            }
+            return response.json()
+        })
+        .then((data) => {
+
+            if(data.message != "200"){
+                throw new Error(`${data.message}`)
+            }
+
             alert("却下されました")
-            return;
+            router.push('/document_auth')
+        })
+            // return;
         }
 
-
-        fetch(new URL("api/ua" , import.meta.env.VITE_API_URL), {
+        if(isAcceptance){
+            //認可ボタンが押下されたとき→認可処理
+            fetch(new URL("api/ua" , import.meta.env.VITE_API_URL), {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -153,6 +182,9 @@
         .catch((error) => {
             alert(error)
         })
+        }
+
+        
 
     }
 
