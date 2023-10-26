@@ -72,7 +72,7 @@
 
 <script setup>
     import { onMounted, ref } from 'vue'
-    import { getAuth, onAuthStateChanged, signOut , GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
+    import { getAuth, onAuthStateChanged, signOut , GoogleAuthProvider, signInWithRedirect } from 'firebase/auth'
     import router from '../router';
 
     const isLoggedIn = ref(false)
@@ -99,7 +99,7 @@
     const signInWithGoogle = () => {
 
         const provider = new GoogleAuthProvider()
-        signInWithPopup(getAuth(), provider)
+        signInWithRedirect(getAuth(), provider)
             .then((result) => {
                 //console.log(result.user)
                 router.push('/document_form')
