@@ -51,6 +51,7 @@ func main() {
 		// apiフォルダ内のapiをルーティング
 
 		// curl -X POST http://localhost:8080/api/ral
+		// curl -X POST -H "Content-Type: application/json" -d "{"user_id" : "1"}" http://localhost:8080/api/ral
 		routes.POST("/ral", api.ReadAuthList)
 
 		routes.POST("/rd", api.ReadDocument)
