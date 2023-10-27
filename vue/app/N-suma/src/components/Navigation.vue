@@ -74,7 +74,7 @@
     import { onMounted, ref } from 'vue'
     import { getAuth, onAuthStateChanged, signOut , GoogleAuthProvider, signInWithRedirect } from 'firebase/auth'
     import router from '../router';
-
+    import store from './store'
     const isLoggedIn = ref(false)
 
     let auth
@@ -108,6 +108,7 @@
             })
 
     }
+    //ログインしたアカウントの情報を受け取り一部ナビゲーションバーの表示の制限をする
 
     //ハンバーガーメニューの実装
     document.addEventListener('DOMContentLoaded', () => {
