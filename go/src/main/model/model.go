@@ -93,3 +93,18 @@ type CreateDocumentRequest struct {
 type DeleteDocumentRequest struct {
 	DocumentID int `json:"document_id"`
 }
+
+//ResubmitDocumentで使用する構造体
+type ResubmitDocumentRequest struct {
+	DocumentID     int       `json:"document_id"`
+	UserID		   int		 `json:"user_id"`
+	RequestAt      time.Time `json:"request_at"`
+	StartTime      time.Time `json:"start_time"`
+	StartFlame     int       `json:"start_flame"`
+	EndTime        time.Time `json:"end_time"`
+	EndFlame       int       `json:"end_flame"`
+	Location       string    `json:"location"`
+	StudentComment string    `json:"student_comment"`
+	TeacherComment string    `json:"teacher_comment"`
+	DivisionID	   int 		 `json:"division_id"`
+}
