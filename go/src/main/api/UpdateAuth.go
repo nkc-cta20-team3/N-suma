@@ -46,12 +46,12 @@ func UpdateAuth(c *gin.Context) {
 	//役職IDの取得
 	db.Table("user").Select("post_id").Where("user_number = ?", request.UserNumber).Scan(&post)
 
-	log.Print("リクエスト")
-	log.Println(request)
-	log.Print("認可する書類の状態")
-	log.Println(documentStatus)
-	log.Print("認可者の役職")
-	log.Println(post)
+	// log.Print("リクエスト")
+	// log.Println(request)
+	// log.Print("認可する書類の状態")
+	// log.Println(documentStatus)
+	// log.Print("認可者の役職")
+	// log.Println(post)
 
 	//教員かどうかの判定
 	if post == documentStatus+1 && documentStatus >= 0 {
