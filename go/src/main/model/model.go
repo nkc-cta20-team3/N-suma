@@ -7,7 +7,7 @@ import (
 
 // ReadAuthListで使用する構造体
 type ReadAuthListRequest struct {
-	UserNumber int `json:"user_number"`
+	UserID int `json:"user_id"` //ユーザID
 }
 
 type ReadAuthListResponse struct {

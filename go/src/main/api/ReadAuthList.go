@@ -35,10 +35,31 @@ func ReadAuthList(c *gin.Context) {
 	db.Table("user").Select("post_id, class_id").Where("user_id = ?", request.UserID).First(&take_class_id)
 	// 実行予定のSQL
 	// SELECT post_id, class_id FROM user WHERE user_id = 2;
+	fmt.Println(take_class_id)
 
-	post := take_class_id.PostID - 1
+	post := take_class_id.PostID
 
-	if take_class_id.PostID == 1 {
+	if post == 0 {
+		//学生であるとき
+		//学生自身の提出した公欠届を取得
+		db.Table("oa").
+			Select(
+				"cs.class_name",
+				"user.user_name",
+				"dv.division_name",
+				"oa.document_id",
+				"oa.status").
+			Joins("JOIN user ON oa.user_id = user.user_id").
+			Joins("JOIN division AS dv ON oa.division_id = dv.division_id").
+			Joins("JOIN classification AS cs ON user.class_id = cs.class_id").
+			Where("oa.status = ?", post).
+			Where("cs.class_id = ?", take_class_id.ClassID).
+			Scan(&response)
+		if db.Error != nil {
+			fmt.Print("STUDENT DATA CATCH ERROR!")
+		}
+
+	} else if post == 1 {
 
 		//担任教員であるとき
 		//担任クラスのみ出力する
@@ -47,17 +68,18 @@ func ReadAuthList(c *gin.Context) {
 				"cs.class_name",
 				"user.user_name",
 				"dv.division_name",
-				"oa.document_id").
+				"oa.document_id",
+				"oa.status").
 			Joins("JOIN user ON oa.user_id = user.user_id").
 			Joins("JOIN division AS dv ON oa.division_id = dv.division_id").
 			Joins("JOIN classification AS cs ON user.class_id = cs.class_id").
-			Where("oa.status = ?", post).
+			Where("oa.status = ?", post-1).
 			Where("cs.class_id = ?", take_class_id.ClassID).
 			Scan(&response)
 		// 実行予定のSQL
 		// SELECT cs.class_name, user.user_name, dv.division_name, oa.document_id FROM oa JOIN user ON oa.user_id = user.user_id JOIN division AS dv ON oa.division_id = dv.division_id JOIN classification AS cs ON user.class_id = cs.class_id WHERE oa.status = 1 AND cs.class_id = 117;
 		if db.Error != nil {
-			fmt.Print("ERROR!")
+			fmt.Print("CLASS TEACHER DATA CATCH ERROR!")
 		}
 
 	} else if post >= 2 && post <= 5 {
@@ -69,16 +91,17 @@ func ReadAuthList(c *gin.Context) {
 				"cs.class_name",
 				"user.user_name",
 				"dv.division_name",
-				"oa.document_id").
+				"oa.document_id",
+				"oa.status").
 			Joins("JOIN user ON oa.user_id = user.user_id").
 			Joins("JOIN division AS dv ON oa.division_id = dv.division_id").
 			Joins("JOIN classification AS cs ON user.class_id = cs.class_id").
-			Where("oa.status = ?", post).
+			Where("oa.status = ?", post-1).
 			Scan(&response)
 		// 実行予定のSQL
 		// SELECT cs.class_name, user.user_name, dv.division_name, oa.document_id FROM oa JOIN user ON oa.user_id = user.user_id JOIN division AS dv ON oa.division_id = dv.division_id JOIN classification AS cs ON user.class_id = cs.class_id WHERE oa.status = 2;
 		if db.Error != nil {
-			fmt.Print("ERROR!")
+			fmt.Print("HIGHER TEACHER DATA CATCH ERROR!")
 		}
 	}
 
