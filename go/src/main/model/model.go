@@ -78,9 +78,8 @@ type NextDocumentResponse struct {
 	StudentComment string    `json:"student_comment"` //学生コメント
 	TeacherComment string    `json:"teacher_comment"` //教員コメント
 	UserNumber     int       `json:"user_number"`     //学籍番号
-	ClassName      string    `json:"class_name"`      //所属クラス名
 	ClassAddr      string    `json:"class_addr"`      //クラス略称
-	UserName       string    `json:"user_name"`       //氏名
+	DivisionName   string    `json:"division_name"`   //区分名
 }
 
 // ReadPositionで使用する構造体
