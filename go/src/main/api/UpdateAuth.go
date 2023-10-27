@@ -11,8 +11,8 @@ import (
 )
 
 // type UpdateAuthRequest struct {
-// 	DocumentID     int    `json:"document_id"`     //ドキュメントID
-// 	UserNumber     int    `json:"user_number"`     //学内識別番号
+// 	DocumentID     int    `json:"document_id"` //ドキュメントID
+// 	UserID         int    `json:"user_id"`
 // 	TeacherComment string `json:"teacher_comment"` //教員コメント
 // }
 
@@ -44,7 +44,7 @@ func UpdateAuth(c *gin.Context) {
 	db.Table("oa").Select("status").Where("document_id = ?", request.DocumentID).Scan(&documentStatus)
 
 	//役職IDの取得
-	db.Table("user").Select("post_id").Where("user_number = ?", request.UserNumber).Scan(&post)
+	db.Table("user").Select("post_id").Where("user_number = ?", request.UserID).Scan(&post)
 
 	// log.Print("リクエスト")
 	// log.Println(request)
