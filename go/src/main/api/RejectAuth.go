@@ -1,7 +1,6 @@
 package api
 
 import (
-	"log"
 	"net/http"
 
 	"main/infra"
@@ -13,7 +12,6 @@ import (
 func RejectAuth(c *gin.Context) {
 
 	request := model.RejectAuthRequest{}
-	response := http.StatusBadRequest
 
 	//POSTで受け取った値を格納する
 	if err := c.ShouldBindJSON(&request); err != nil {
@@ -22,30 +20,29 @@ func RejectAuth(c *gin.Context) {
 		return
 	}
 
-	//DB接続
-	db := infra.DBInitGorm()
+	if request.TeacherComment == "" {
+		//値が消失していた時、または何も入っていない時
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "TEACHER COMMENT NOT EXISTS",
+		})
+	} else {
+		//DB接続
+		db := infra.DBInitGorm()
+		//却下
+		db.Table("oa").
+			Where("document_id = ?", request.DocumentID).
+			Updates(model.UpdateDocument{Status: -1, TeacherComment: request.TeacherComment})
 
-	log.Println(request)
+		//エラーハンドリング
+		if db.Error != nil {
+			errMsg := "データベース接続エラー"
+			c.JSON(http.StatusInternalServerError, gin.H{"error": errMsg})
+			return
+		}
 
-	//却下
-	db.Table("oa").
-		Where("document_id = ?", request.DocumentID).
-		Updates(model.UpdateDocument{Status: -1, TeacherComment: request.TeacherComment})
-
-	// db.Table("oa").
-	// 	Where("document_id = ?", request.DocumentID).
-	// 	Updates(model.UpdateDocument{Status: -1})
-
-	//エラーハンドリング
-	if db.Error != nil {
-		errMsg := "データベース接続エラー"
-		c.JSON(http.StatusInternalServerError, gin.H{"error": errMsg})
-		return
+		c.JSON(http.StatusOK, gin.H{
+			"message": http.StatusOK,
+		})
 	}
 
-	response = http.StatusOK
-
-	c.JSON(http.StatusOK, gin.H{
-		"message": response,
-	})
 }
