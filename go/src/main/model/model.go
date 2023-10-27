@@ -61,6 +61,28 @@ type RejectAuthRequest struct {
 	TeacherComment string `json:"teacher_comment"` // 教員コメント
 }
 
+// NextDocumentで使用する構造体
+type NextDocumentRequest struct {
+	DocumentID int `json:"document_id"` //書類ID
+	UserID     int `json:"user_id"`     //ユーザID
+}
+
+type NextDocumentResponse struct {
+	DocumentID     int       `json:"document_id"`     //書類ID
+	RequestAt      time.Time `json:"request_at"`      //申請日
+	StartTime      time.Time `json:"start_time"`      //公欠開始日時
+	StartFlame     int       `json:"start_flame"`     //公欠開始時限
+	EndTime        time.Time `json:"end_time"`        //公欠終了日時
+	EndFlame       int       `json:"end_flame"`       //公欠終了時限
+	Location       string    `json:"location"`        //場所
+	StudentComment string    `json:"student_comment"` //学生コメント
+	TeacherComment string    `json:"teacher_comment"` //教員コメント
+	UserNumber     int       `json:"user_number"`     //学籍番号
+	ClassName      string    `json:"class_name"`      //所属クラス名
+	ClassAddr      string    `json:"class_addr"`      //クラス略称
+	UserName       string    `json:"user_name"`       //氏名
+}
+
 // ReadPositionで使用する構造体
 type UserData struct {
 	UserID int `json:"user_id"`
