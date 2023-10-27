@@ -12,7 +12,8 @@ import (
 
 func RejectAuth(c *gin.Context) {
 
-	request := model.DocumentRejection{}
+	request := model.RejectAuthRequest{}
+	response := http.StatusBadRequest
 
 	//POSTで受け取った値を格納する
 	if err := c.ShouldBindJSON(&request); err != nil {
@@ -23,8 +24,6 @@ func RejectAuth(c *gin.Context) {
 
 	//DB接続
 	db := infra.DBInitGorm()
-
-	response := http.StatusBadRequest
 
 	log.Println(request)
 
