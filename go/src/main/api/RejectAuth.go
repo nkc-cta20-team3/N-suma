@@ -9,6 +9,18 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type UpdateDocument struct {
+	Status         int    `json:"status"`          // ステータス
+	TeacherComment string `json:"teacher_comment"` // 教員コメント
+}
+
+// RejectAuthで使用する構造体
+type RejectAuthRequest struct {
+	DocumentID     int    `json:"document_id"`
+	UserID         int    `json:"user_id"`
+	TeacherComment string `json:"teacher_comment"` // 教員コメント
+}
+
 func RejectAuth(c *gin.Context) {
 
 	request := model.RejectAuthRequest{}
