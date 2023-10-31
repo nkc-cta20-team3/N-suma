@@ -89,7 +89,7 @@ type CreateDocument struct {
 	EndFlame       int       `json:"end_flame"`       //開始時限
 	Location       string    `json:"location"`        // 場所
 	Status         int       `json:"status"`          //ステータス
-	ReadFlag       int       `json:"read_flag"`       //既読フラグ
+	ReadFlag       bool      `json:"read_flag"`       //既読フラグ
 	StudentComment string    `json:"student_comment"` // 学生コメント
 	DivisionID     int       `json:"division_id"`     //区分ID
 }

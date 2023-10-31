@@ -1,7 +1,6 @@
 package api
 
 import (
-	"fmt"
 	"net/http"
 
 	"main/infra"
@@ -60,14 +59,12 @@ func CreateDocument(c *gin.Context) {
 		Location:       request.Location,
 		Status:         0,
 		StudentComment: request.StudentComment,
-		ReadFlag:       0,
+		ReadFlag:       false,
 		DivisionID:     request.DivisionID,
 	}
 
-	//err := db.Table("oa").Create(&request)
-	err := db.Table("oa").Create(&oa)
-	if err != nil {
-		fmt.Print(err)
+	if err := db.Table("oa").Create(&oa).Error; err != nil {
+		// 更新中にエラーが発生した場合のエラーハンドリング
 		responseMessage = "CREATE ERROR"
 	}
 
