@@ -90,14 +90,14 @@ type CreateDocumentRequest struct {
 }
 
 // DeleteDocumentで使用する構造体
-type DeleteDocumentRequest struct {
-	DocumentID int `json:"document_id"`
-}
+// type DeleteDocumentRequest struct {
+// 	DocumentID int `json:"document_id"`
+// }
 
-//ResubmitDocumentで使用する構造体
+// ResubmitDocumentで使用する構造体
 type ResubmitDocumentRequest struct {
 	DocumentID     int       `json:"document_id"`
-	UserID		   int		 `json:"user_id"`
+	UserID         int       `json:"user_id"`
 	RequestAt      time.Time `json:"request_at"`
 	StartTime      time.Time `json:"start_time"`
 	StartFlame     int       `json:"start_flame"`
@@ -106,5 +106,21 @@ type ResubmitDocumentRequest struct {
 	Location       string    `json:"location"`
 	StudentComment string    `json:"student_comment"`
 	TeacherComment string    `json:"teacher_comment"`
-	DivisionID	   int 		 `json:"division_id"`
+	DivisionID     int       `json:"division_id"`
+}
+
+type ResubmitDocument struct {
+	DocumentID     int       `json:"document_id"`     //書類ID
+	UserID         int       `json:"user_id"`         //ユーザID
+	RequestAt      time.Time `json:"request_at"`      // 申請日
+	StartTime      time.Time `json:"start_time"`      // 欠席開始日
+	StartFlame     int       `json:"start_flame"`     //開始時限
+	EndTime        time.Time `json:"end_time"`        // 欠席終了日
+	EndFlame       int       `json:"end_flame"`       //終了時限
+	Location       string    `json:"location"`        // 場所
+	Status         *int      `json:"status"`          //ステータス
+	ReadFlag       bool      `json:"read_flag"`       //既読フラグ
+	StudentComment string    `json:"student_comment"` // 学生コメント
+	TeacherComment string    `json:"teacher_comment"` //教員コメント
+	DivisionID     int       `json:"division_id"`     //区分ID
 }
