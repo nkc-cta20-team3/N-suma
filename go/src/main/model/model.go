@@ -96,3 +96,7 @@ type UserPosition struct {
 type ReadAlarmRequest struct {
 	UserID int `json:"user_id"` //ユーザID
 }
+
+type TakePostID struct {
+	PostID int `json:"post_id"` //役職ID
+}
