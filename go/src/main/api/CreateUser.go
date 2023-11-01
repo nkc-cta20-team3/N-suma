@@ -1,8 +1,8 @@
 package api
 
 import (
-	"fmt"
 	"net/http"
+	"fmt"
 
 	"main/infra"
 	"main/model"
@@ -10,7 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func UpdateAuth(c *gin.Context) {
+func CreateUser(c *gin.Context) {
 
 	request := model.CreateUserRequest{}
 
@@ -24,14 +24,17 @@ func UpdateAuth(c *gin.Context) {
 	//DB接続
 	db := infra.DBInitGorm()
 
+	//管理者の判別
 
+	fmt.Println(request)
+	
+	
 	//ユーザ情報をDBに格納
 	db.Table("user").
-	Where("user_id = ?", request.UserID)
+	Where("user_id = ?", request.UserID).
 	Create(model.CreateUserRequest{
-		UserNumber:      request.UserNumber,
 		UserName:        request.UserName,
-		CreateUserNumber: request.CreateUserNumber,
+		UserNumber: 	 request.UserNumber,
 		PostID:          request.PostID,
 		ClassID:         request.ClassID,
 		MailAddress:     request.MailAddress,
