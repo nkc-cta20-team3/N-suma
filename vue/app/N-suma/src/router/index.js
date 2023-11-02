@@ -9,8 +9,10 @@ const router = createRouter({
         {  path: '/document_form', component: () => import('../views/document_form.vue') ,meta: { requiresAuth: true },},
         {  path: '/document_auth', component: () => import('../views/document_auth.vue') ,meta: { requiresAuth: true },},
         {  path: '/document_accept', component: () => import('../views/document_accept.vue') ,meta: { requiresAuth: true },},
+        {  path: '/admin_add', component: () => import('../views/admin_add.vue'),meta: { requiresAuth: true },},
+        {  path: '/admin_edit', component: () => import('../views/admin_edit.vue'),meta: { requiresAuth: true },},
         {  path: '/practice', component: () => import('../views/practice.vue') ,meta: {requiresAuth: true},},
-        
+
     ],
 })
 
