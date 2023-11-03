@@ -7,7 +7,7 @@ import (
 
 // ReadAuthListで使用する構造体
 type ReadAuthListRequest struct {
-	UserID int `json:"user_id"`
+	UserID int `json:"user_id"` //ユーザID
 }
 
 type ReadAuthListResponse struct {
@@ -15,6 +15,7 @@ type ReadAuthListResponse struct {
 	UserName     string `json:"user_name"`
 	DivisionName string `json:"division_name"`
 	DocumentID   int    `json:"document_id"`
+	Status       int    `json:"status"`
 }
 
 type TakeClassID struct {
@@ -44,8 +45,8 @@ type ReadDocumentResponse struct {
 
 // UpdateAuthで使用する構造体
 type UpdateAuthRequest struct {
-	DocumentID     int    `json:"document_id"`     //ドキュメントID
-	UserID         int    `json:"user_id"`         //ユーザID
+	DocumentID     int    `json:"document_id"` //ドキュメントID
+	UserID         int    `json:"user_id"`
 	TeacherComment string `json:"teacher_comment"` //教員コメント
 }
 
@@ -55,8 +56,9 @@ type UpdateDocument struct {
 }
 
 // RejectAuthで使用する構造体
-type DocumentRejection struct {
+type RejectAuthRequest struct {
 	DocumentID     int    `json:"document_id"`
+	UserID         int    `json:"user_id"`
 	TeacherComment string `json:"teacher_comment"` // 教員コメント
 }
 
