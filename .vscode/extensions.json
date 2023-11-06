@@ -6,7 +6,8 @@
 	"recommendations": [
 		"pkief.material-icon-theme",
 		"esbenp.prettier-vscode",
-		"dbaeumer.vscode-eslint"
+		"dbaeumer.vscode-eslint",
+		"Vue.volar",
 	],
 	// List of extensions recommended by VS Code that should not be recommended for users of this workspace.
 	"unwantedRecommendations": [
