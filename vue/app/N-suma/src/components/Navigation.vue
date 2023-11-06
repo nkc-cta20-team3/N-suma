@@ -26,20 +26,24 @@
                     Home
                 </router-link>
 
-                <router-link class="navbar-item" to="/document_form" v-if="isLoggedIn">
+                <router-link class="navbar-item" to="/document_form" v-if="isLoggedIn && userId !== 'admin'">
                     各種書類提出
                 </router-link>
             
-                <router-link class="navbar-item" to="/document_list" v-if="isLoggedIn">
+                <router-link class="navbar-item" to="/document_list" v-if="isLoggedIn && userId === 'student'">
                     各種書類閲覧
                 </router-link>
-    
-                <router-link class="navbar-item" to="#" v-if="isLoggedIn">
-                    個人データ
-                </router-link>
                 
-                <router-link class="navbar-item" to="/document_auth" v-if="isLoggedIn">
+                <router-link class="navbar-item" to="/document_auth" v-if="isLoggedIn && userId === 'teacher'">
                     書類認可
+                </router-link>
+
+                <router-link class="navbar-item" to="admin_add" v-if="isLoggedIn && userId === 'admin'">
+                    ユーザー登録
+                </router-link>
+
+                <router-link class="navbar-item" to="admin_edit" v-if="isLoggedIn && userId === 'admin'">
+                    ユーザー情報編集
                 </router-link>
 
             </div>
@@ -71,17 +75,30 @@
 </template>
 
 <script setup>
+
     import { onMounted, ref } from 'vue'
     import { getAuth, onAuthStateChanged, signOut , GoogleAuthProvider, signInWithRedirect } from 'firebase/auth'
     import router from '../router';
-
+    //import store from './store';
     const isLoggedIn = ref(false)
+    const userId = "admin";
+    const classId = "";
+    const DocId = ""; 
+    
 
     let auth
     onMounted(() => {
         auth = getAuth()
         onAuthStateChanged(auth, (user) => {
             isLoggedIn.value = !!user
+
+            if(user){
+                store.dispatch('updateUser', {
+                    userId: userId,
+                    classId: ClassId,
+                    DocId: DocId
+                })
+            }
         })
 
 
@@ -108,6 +125,10 @@
             })
 
     }
+    
+  
+
+
 
     //ハンバーガーメニューの実装
     document.addEventListener('DOMContentLoaded', () => {
