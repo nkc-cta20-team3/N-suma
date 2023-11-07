@@ -41,7 +41,6 @@ import (
 func ResubmitDocument(c *gin.Context) {
 	request := model.ResubmitDocumentRequest{}
 	responseMessage := "RESUBMIT SUCCESS"
-	testnum := 0
 
 	// var test int
 
@@ -61,7 +60,7 @@ func ResubmitDocument(c *gin.Context) {
 		EndTime:        request.EndTime,
 		EndFlame:       request.EndFlame,
 		Location:       request.Location,
-		Status:         &testnum,
+		Status:         1,
 		ReadFlag:       false,
 		StudentComment: request.StudentComment,
 		TeacherComment: request.TeacherComment,

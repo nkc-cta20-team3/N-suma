@@ -118,7 +118,7 @@ type ResubmitDocument struct {
 	EndTime        time.Time `json:"end_time"`        // 欠席終了日
 	EndFlame       int       `json:"end_flame"`       //終了時限
 	Location       string    `json:"location"`        // 場所
-	Status         *int      `json:"status"`          //ステータス
+	Status         int       `json:"status"`          //ステータス
 	ReadFlag       bool      `json:"read_flag"`       //既読フラグ
 	StudentComment string    `json:"student_comment"` // 学生コメント
 	TeacherComment string    `json:"teacher_comment"` //教員コメント
