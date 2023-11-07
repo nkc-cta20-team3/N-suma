@@ -9,6 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// ResubmitDocumentで使用する構造体
 // type ResubmitDocumentRequest struct {
 // 	DocumentID     int       `json:"document_id"`
 // 	UserID         int       `json:"user_id"`
@@ -19,12 +20,11 @@ import (
 // 	EndFlame       int       `json:"end_flame"`
 // 	Location       string    `json:"location"`
 // 	StudentComment string    `json:"student_comment"`
-// 	TeacherComment string    `json:"teacher_comment"`
-// 	DivisionID     int       `json:"division_id"`
+// 	DivisionID int `json:"division_id"`
 // }
+
 // type ResubmitDocument struct {
-// 	DocumentID     int       `json:"document_id"`     //書類ID
-// 	UserID         int       `json:"user_id"`         //ユーザID
+// 	DocumentID int `json:"document_id"` //書類ID
 // 	RequestAt      time.Time `json:"request_at"`      // 申請日
 // 	StartTime      time.Time `json:"start_time"`      // 欠席開始日
 // 	StartFlame     int       `json:"start_flame"`     //開始時限
@@ -32,21 +32,32 @@ import (
 // 	EndFlame       int       `json:"end_flame"`       //終了時限
 // 	Location       string    `json:"location"`        // 場所
 // 	Status         int       `json:"status"`          //ステータス
-// 	ReadFlag       int       `json:"read_flag"`       //既読フラグ
+// 	ReadFlag       bool      `json:"read_flag"`       //既読フラグ
 // 	StudentComment string    `json:"student_comment"` // 学生コメント
-// 	TeacherComment string    `json:"teacher_comment"` //教員コメント
-// 	DivisionID     int       `json:"division_id"`     //区分ID
+// 	DivisionID int `json:"division_id"` //区分ID
 // }
 
 func ResubmitDocument(c *gin.Context) {
 	request := model.ResubmitDocumentRequest{}
 	responseMessage := "RESUBMIT SUCCESS"
 
-	// var test int
+	var count int64
 
 	if err := c.ShouldBindJSON(&request); err != nil {
 		// エラーな場合、ステータス400と、エラー情報を返す
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	//DB接続
+	db := infra.DBInitGorm()
+
+	//再提出の書類と提出者の整合性確認SQLを発行
+	db.Table("oa").Select("document_id").Where("user_id = ?", request.UserID).Where("document_id = ?", request.DocumentID).Where("status = -1").Count(&count)
+
+	if count == 0 {
+		//再提出する書類と提出者が一致しない、または再提出する書類のステータスが-1でない場合
+		c.JSON(http.StatusBadRequest, gin.H{"document": "DOCUMENT ERROR"})
 		return
 	}
 
@@ -64,9 +75,6 @@ func ResubmitDocument(c *gin.Context) {
 		StudentComment: request.StudentComment,
 		DivisionID:     request.DivisionID,
 	}
-
-	//DB接続
-	db := infra.DBInitGorm()
 
 	//更新を実行
 	//db.Table("oa").Where("document_id = ?", request.DocumentID).Updates(&oa)
