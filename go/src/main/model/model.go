@@ -78,7 +78,7 @@ type NextDocumentResponse struct {
 	StudentComment string    `json:"student_comment"` //学生コメント
 	TeacherComment string    `json:"teacher_comment"` //教員コメント
 	UserNumber     int       `json:"user_number"`     //学籍番号
-	ClassAddr      string    `json:"class_addr"`      //クラス略称
+	ClassAbbr      string    `json:"class_abbr"`      //クラス略称
 	DivisionName   string    `json:"division_name"`   //区分名
 }
 
