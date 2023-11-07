@@ -59,6 +59,9 @@ func ResubmitDocument(c *gin.Context) {
 		//再提出する書類と提出者が一致しない、または再提出する書類のステータスが-1でない場合
 		c.JSON(http.StatusBadRequest, gin.H{"document": "DOCUMENT ERROR"})
 		return
+	} else if request.StudentComment == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"document": "COMMENT ERROR"})
+		return
 	}
 
 	//更新用構造体
