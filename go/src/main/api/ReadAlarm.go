@@ -40,29 +40,39 @@ func ReadAlarm(c *gin.Context) {
 	//ロールごとの処理分け
 	if take_post_id.PostID == 1 {
 		//学生→再提出or(認可完了and未読)
+		unreadQuery := db.Table("oa").Select("document_id").Where("status = 2 AND read_flag = 1")
+		resubmitQuery := db.Table("oa").Select("document_id").Where("status = -1")
 
-		db.Table("oa").
-			Select("document_id").
-			Where("status IN (?)", []int{1, 6}).
-			Where("user_id = ?", request.UserID).
-			Count(&count)
+		if err := unreadQuery.Count(&count).Error; err != nil {
+			//エラーハンドリング
+		} else if count > 0 {
+			//認可済みかつ未読の書類がある
+			AlarmFlag = true
+		}
+		count = 0
+		if err := resubmitQuery.Count(&count).Error; err != nil {
+			//エラーハンドリング
+		} else if count > 0 {
+			//再提出の書類がある
+			AlarmFlag = true
+		}
 
-	} else if take_post_id.PostID >= 2 && take_post_id.PostID <= 6 {
+	} else if take_post_id.PostID == 2 {
 		//教員→未認可リストの存在有無
 		db.Table("oa").
 			Select("document_id").
 			Where("oa.status = ?", take_post_id.PostID-1).
 			Count(&count)
 
+		//ここから通知があったときの戻り値フラグをONにする
+		if count > 0 {
+			AlarmFlag = true
+		}
+
 	} else {
 		//エラー
 		c.JSON(http.StatusOK, gin.H{"document": "POST ERROR"})
 		return
-	}
-
-	//ここから通知があったときの戻り値フラグをONにする
-	if count > 0 {
-		AlarmFlag = true
 	}
 
 	//結果を返却
