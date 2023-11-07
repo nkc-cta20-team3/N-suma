@@ -49,7 +49,7 @@ func ReadAuthList(c *gin.Context) {
 	db.Table("user").Select("post_id").Where("user_id = ?", request.UserID).First(&take_class_id)
 	// 実行予定のSQL
 	// SELECT post_id, class_id FROM user WHERE user_id = 2;
-	fmt.Println(take_class_id)
+	// fmt.Println(take_class_id)
 
 	post := take_class_id.PostID
 
