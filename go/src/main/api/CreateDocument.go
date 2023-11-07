@@ -57,7 +57,7 @@ func CreateDocument(c *gin.Context) {
 	db.Table("user").Select("post_id").Where("user_id = ?", request.UserID).First(&post)
 
 	//学生チェック
-	if post.PostID == 1 {
+	if post.PostID == 1 && request.StudentComment != "" {
 		//正規の処理
 		oa := model.CreateDocument{
 			UserID:         request.UserID,
@@ -79,9 +79,13 @@ func CreateDocument(c *gin.Context) {
 			return
 		}
 
-	} else {
+	} else if post.PostID != 1 {
 		//学生ではない時
-		c.JSON(http.StatusBadRequest, gin.H{"document": "CREATE ERROR"})
+		c.JSON(http.StatusBadRequest, gin.H{"document": "POST ERROR"})
+		return
+	} else {
+		//学生コメントがない時
+		c.JSON(http.StatusBadRequest, gin.H{"document": "COMMENT ERROR"})
 		return
 	}
 
