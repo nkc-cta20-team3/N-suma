@@ -105,13 +105,13 @@ type ResubmitDocumentRequest struct {
 	EndFlame       int       `json:"end_flame"`
 	Location       string    `json:"location"`
 	StudentComment string    `json:"student_comment"`
-	TeacherComment string    `json:"teacher_comment"`
-	DivisionID     int       `json:"division_id"`
+	// TeacherComment string    `json:"teacher_comment"`
+	DivisionID int `json:"division_id"`
 }
 
 type ResubmitDocument struct {
-	DocumentID     int       `json:"document_id"`     //書類ID
-	UserID         int       `json:"user_id"`         //ユーザID
+	DocumentID int `json:"document_id"` //書類ID
+	// UserID         int       `json:"user_id"`         //ユーザID
 	RequestAt      time.Time `json:"request_at"`      // 申請日
 	StartTime      time.Time `json:"start_time"`      // 欠席開始日
 	StartFlame     int       `json:"start_flame"`     //開始時限

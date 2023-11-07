@@ -53,7 +53,6 @@ func ResubmitDocument(c *gin.Context) {
 	//更新用構造体
 	oa := model.ResubmitDocument{
 		DocumentID:     request.DocumentID,
-		UserID:         request.UserID,
 		RequestAt:      request.RequestAt,
 		StartTime:      request.StartTime,
 		StartFlame:     request.StartFlame,
