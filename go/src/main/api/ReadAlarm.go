@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"main/infra"
 	"main/model"
 	"net/http"
@@ -48,6 +49,7 @@ func ReadAlarm(c *gin.Context) {
 		} else if count > 0 {
 			//認可済みかつ未読の書類がある
 			AlarmFlag = true
+			fmt.Println("UNREAD DOCUMENT EXIST")
 		}
 		count = 0
 		if err := resubmitQuery.Count(&count).Error; err != nil {
@@ -55,6 +57,7 @@ func ReadAlarm(c *gin.Context) {
 		} else if count > 0 {
 			//再提出の書類がある
 			AlarmFlag = true
+			fmt.Println("RESUBMIT DOCUMENT EXIST")
 		}
 
 	} else if take_post_id.PostID == 2 {
@@ -67,11 +70,12 @@ func ReadAlarm(c *gin.Context) {
 		//ここから通知があったときの戻り値フラグをONにする
 		if count > 0 {
 			AlarmFlag = true
+			fmt.Println("UNAUTH DOCUMENT EXIST")
 		}
 
 	} else {
 		//エラー
-		c.JSON(http.StatusOK, gin.H{"document": "POST ERROR"})
+		c.JSON(http.StatusBadRequest, gin.H{"document": "POST ERROR"})
 		return
 	}
 
