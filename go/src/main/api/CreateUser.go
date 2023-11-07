@@ -10,6 +10,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type Post struct {
+	PostID int
+}
+
 func CreateUser(c *gin.Context) {
 
 	request := model.CreateUserRequest{}
@@ -25,10 +29,13 @@ func CreateUser(c *gin.Context) {
 	db := infra.DBInitGorm()
 
 	//引数定義
-	var PostID int
+	post := Post{}
 	//post_idを取得(reqest.UserIDの部分に取得したいユーザのユーザIDを入れる)
-	db.Table("user").Select("post_id").Where("user_id = ?", request.UserID).First(&PostID)
+	db.Table("user").Select("post_id").Where("user_id = ?", request.UserID).First(&post)
 
+	PostID := post.PostID 
+
+	fmt.Println(PostID)
     if PostID == 0 {
   	//管理者処理
         
@@ -55,7 +62,7 @@ func CreateUser(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"message": http.StatusOK,
 		})
-	}else{
+	}else {
 		fmt.Println("アクセス権限がありません")
 	}
 
