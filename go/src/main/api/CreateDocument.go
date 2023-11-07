@@ -33,11 +33,15 @@ import (
 // 	DivisionID     int       `json:"division_id"`     //区分ID
 // }
 
+type Post struct {
+	PostID int
+}
+
 func CreateDocument(c *gin.Context) {
 	//必要な変数定義
-	// request := model.OA{}
 	request := model.CreateDocumentRequest{}
-	responseMessage := "CREATE SUCCESS"
+
+	post := Post{}
 
 	//引数受け取り
 	if err := c.ShouldBindJSON(&request); err != nil {
@@ -49,25 +53,39 @@ func CreateDocument(c *gin.Context) {
 	//DB接続
 	db := infra.DBInitGorm()
 
-	oa := model.CreateDocument{
-		UserID:         request.UserID,
-		RequestAt:      request.RequestAt,
-		StartTime:      request.StartTime,
-		StartFlame:     0,
-		EndTime:        request.EndTime,
-		EndFlame:       0,
-		Location:       request.Location,
-		Status:         0,
-		StudentComment: request.StudentComment,
-		ReadFlag:       false,
-		DivisionID:     request.DivisionID,
+	//役職取得
+	db.Table("user").Select("post_id").Where("user_id = ?", request.UserID).First(&post)
+
+	//学生チェック
+	if post.PostID == 1 {
+		//正規の処理
+		oa := model.CreateDocument{
+			UserID:         request.UserID,
+			RequestAt:      request.RequestAt,
+			StartTime:      request.StartTime,
+			StartFlame:     0,
+			EndTime:        request.EndTime,
+			EndFlame:       0,
+			Location:       request.Location,
+			Status:         0,
+			StudentComment: request.StudentComment,
+			ReadFlag:       false,
+			DivisionID:     request.DivisionID,
+		}
+
+		if err := db.Table("oa").Create(&oa).Error; err != nil {
+			// 更新中にエラーが発生した場合のエラーハンドリング
+			c.JSON(http.StatusBadRequest, gin.H{"document": "CREATE ERROR"})
+			return
+		}
+
+	} else {
+		//学生ではない時
+		c.JSON(http.StatusBadRequest, gin.H{"document": "CREATE ERROR"})
+		return
 	}
 
-	if err := db.Table("oa").Create(&oa).Error; err != nil {
-		// 更新中にエラーが発生した場合のエラーハンドリング
-		responseMessage = "CREATE ERROR"
-	}
-
-	c.JSON(http.StatusOK, gin.H{"document": responseMessage})
+	c.JSON(http.StatusOK, gin.H{"document": "CREATE SUCCESS"})
+	return
 
 }
