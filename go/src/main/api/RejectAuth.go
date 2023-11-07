@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"net/http"
 
 	"main/infra"
@@ -36,6 +37,7 @@ func RejectAuth(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+	fmt.Print("&")
 
 	//DB接続
 	db := infra.DBInitGorm()
@@ -59,9 +61,15 @@ func RejectAuth(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"message": http.StatusOK,
 		})
-	} else {
+	} else if request.TeacherComment == "" {
+		//教員コメントがない場合
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": "TEACHER COMMENT NOT EXISTS",
+		})
+	} else {
+		//却下者が不適切な場合
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "POST ERROR",
 		})
 	}
 
