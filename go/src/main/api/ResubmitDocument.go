@@ -63,7 +63,6 @@ func ResubmitDocument(c *gin.Context) {
 		Status:         1,
 		ReadFlag:       false,
 		StudentComment: request.StudentComment,
-		TeacherComment: request.TeacherComment,
 		DivisionID:     request.DivisionID,
 	}
 

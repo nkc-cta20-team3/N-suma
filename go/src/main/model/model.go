@@ -121,6 +121,6 @@ type ResubmitDocument struct {
 	Status         int       `json:"status"`          //ステータス
 	ReadFlag       bool      `json:"read_flag"`       //既読フラグ
 	StudentComment string    `json:"student_comment"` // 学生コメント
-	TeacherComment string    `json:"teacher_comment"` //教員コメント
-	DivisionID     int       `json:"division_id"`     //区分ID
+	// TeacherComment string    `json:"teacher_comment"` //教員コメント
+	DivisionID int `json:"division_id"` //区分ID
 }
