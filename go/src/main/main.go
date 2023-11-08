@@ -62,6 +62,7 @@ func main() {
 
 		routes.POST("/ra", api.RejectAuth)
 
+		routes.POST("/nd", api.NextDocument)
     routes.POST("/cu", api.CreateUser)
 		routes.POST("/uu",api.UpdateUser)
 
