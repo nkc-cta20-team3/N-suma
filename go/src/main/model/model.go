@@ -26,6 +26,7 @@ type TakeClassID struct {
 // ReadDocumentで使用する構造体
 type ReadDocumentRequest struct {
 	DocumentID int `json:"document_id"`
+	UserID	   int `json:"user_id"`
 }
 
 type ReadDocumentResponse struct {
