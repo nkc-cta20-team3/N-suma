@@ -97,7 +97,7 @@ type DeleteDocumentRequest struct {
 // UpdateUserで使用する構造体
 type UpdateUserRequest struct {
 	UserID       int    `json:"user_id"`
-	UpdateUserID int    `json:"user_id"`
+	UpdateUserID int    `json:"update_user_id"`
 	UserName     string `json:"user_name"`
 	UserNumber   int    `json:"user_number"`
 	PostID       int    `json:"post_id"`
