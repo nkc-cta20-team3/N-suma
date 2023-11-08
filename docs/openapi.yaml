@@ -1,0 +1,108 @@
+# ドキュメント
+# https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#fixed-fields
+
+# セマンティックバージョニング番号で記載 ※必須
+openapi: 3.0.3
+# ツールによって使用される可能性のあるメタデータを記載 ※必須
+info:
+  title: N-suma-API
+  description: N-suma用にGo側で実装するAPI
+  version: 1.0.0
+  contact: # 連絡先 
+    name: 4年A組3班 Nスマ開発チーム 
+    url: 'https://github.com/nkc-cta20-team3/N-suma' 
+    email: 'dev@example.com' # チームの開発用メアドに後ほど置き換える 
+# サーバーへの接続情報を記載
+servers:
+  - url: 'http://localhost:8080'
+    description: Docker開発環境でのアドレス
+# 使用可能なパスと操作を記載 ※必須
+paths:
+  '/api/v1/users/{user_id}':
+    get:
+      description: ユーザ詳細
+      operationId: UserShow
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ユーザID
+      responses:
+        '200':
+          description: 成功時
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    format: int64
+                  name:
+                    type: string
+                  age:
+                    type: integer
+                  created_at:
+                    type: string
+                    format: date-time
+                  updated_at:
+                    type: string
+                    format: date-time
+    put:
+      description: ユーザ更新
+      operationId: UserUpdate
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ユーザID
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+                age:
+                  type: integer
+      responses:
+        '200':
+          description: 成功時
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    format: int64
+                  name:
+                    type: string
+                  age:
+                    type: integer
+                  created_at:
+                    type: string
+                    format: date-time
+                  updated_at:
+                    type: string
+                    format: date-time
+# 仕様の様々なスキーマを保持するための場所
+components:
+  ...
+# どのセキュリティメカニズムを使用できるかの宣言
+security:
+  ...
+# 使用されるタグのリストと追加のメタデータを記載。タグ名は一意である必要がある。
+tags:
+  ...
+# 追加の外部ドキュメント
+externalDocs:
+  description: より詳細なAPI設計
+  url: https://hackmd.io/0X6UzSXwTt2Bz5LJaKSIWA?both

@@ -62,7 +62,8 @@ func main() {
 
 		routes.POST("/ra", api.RejectAuth)
 
-		routes.POST("/cu", api.CreateUser)
+    routes.POST("/cu", api.CreateUser)
+		routes.POST("/uu",api.UpdateUser)
 
 		// 実装予定の管理者向けのAPI
 		// routes.POST("/cd", api.CreateDocument)
