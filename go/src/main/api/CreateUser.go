@@ -1,13 +1,15 @@
 package api
 
 import (
-	"net/http"
+	"errors"
 	"fmt"
+	"net/http"
 
 	"main/infra"
 	"main/model"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 type Post struct {
@@ -31,39 +33,58 @@ func CreateUser(c *gin.Context) {
 	//引数定義
 	post := Post{}
 	//post_idを取得(reqest.UserIDの部分に取得したいユーザのユーザIDを入れる)
-	db.Table("user").Select("post_id").Where("user_id = ?", request.UserID).First(&post)
+	err := db.Table("user").Select("post_id").Where("user_id = ?", request.UserID).First(&post).Error
 
-	PostID := post.PostID 
+	if err != nil {
+		//エラーハンドリング
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			// 行が見つからなかった場合の処理
+			fmt.Println("行が見つかりませんでした")
+			c.JSON(http.StatusBadRequest, gin.H{"message": "USER NOT FOUND"})
+			return
+		} else {
+			//その他のエラーハンドリング
+			c.JSON(http.StatusBadRequest, gin.H{"message": "OTHER ERROR"})
+			return
+		}
+
+	}
+
+	PostID := post.PostID
 
 	fmt.Println(PostID)
-    if PostID == 0 {
-  	//管理者処理
-        
-	fmt.Println(request)
-	
-	//ユーザ情報をDBに格納
+	if PostID == 0 {
+		//管理者処理
+
+		fmt.Println(request)
+
+		//ユーザ情報をDBに格納
 		db.Table("user").
-		Where("user_id = ?", request.UserID).
-		Create(model.CreateUserRequest{
-			UserName:        request.UserName,
-			UserNumber: 	 request.UserNumber,
-			PostID:          request.PostID,
-			ClassID:         request.ClassID,
-			MailAddress:     request.MailAddress,
-		})
+			Where("user_id = ?", request.UserID).
+			Create(model.CreateUserRequest{
+				UserName:    request.UserName,
+				UserNumber:  request.UserNumber,
+				PostID:      request.PostID,
+				ClassID:     request.ClassID,
+				MailAddress: request.MailAddress,
+			})
 
 		//エラーハンドリング
 		if db.Error != nil {
 			errMsg := "データベース接続エラー"
 			c.JSON(http.StatusInternalServerError, gin.H{"error": errMsg})
-		return
+			return
 		}
 
 		c.JSON(http.StatusOK, gin.H{
 			"message": http.StatusOK,
 		})
-	}else {
+		return
+
+	} else {
 		fmt.Println("アクセス権限がありません")
+		c.JSON(http.StatusBadRequest, gin.H{"message": "POST ERROR"})
+		return
 	}
 
 }
