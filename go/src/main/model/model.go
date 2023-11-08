@@ -52,6 +52,7 @@ type UpdateAuthRequest struct {
 type UpdateDocument struct {
 	Status         int    `json:"status"`          // ステータス
 	TeacherComment string `json:"teacher_comment"` // 教員コメント
+	ReadFlag       bool   `json:"read_flag"`       //既読フラグ
 }
 
 // RejectAuthで使用する構造体

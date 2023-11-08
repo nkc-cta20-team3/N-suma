@@ -53,11 +53,17 @@ func UpdateAuth(c *gin.Context) {
 	log.Print("認可者の役職")
 	log.Println(post)
 
+	if request.TeacherComment == "" {
+		//教員コメントがないとき
+		c.JSON(http.StatusBadRequest, gin.H{"message": "TEACHER COMMENT NOT EXIST"})
+		return
+	}
+
 	if post == 2 && documentStatus == 1 {
 		//教員かつ認可できる書類の場合→認可処理
 		db.Table("oa").
 			Where("document_id = ?", request.DocumentID).
-			Updates(model.UpdateDocument{Status: post})
+			Updates(model.UpdateDocument{Status: post, TeacherComment: request.TeacherComment, ReadFlag: true})
 		//エラーハンドリング
 		if db.Error != nil {
 			errMsg := "UPDATE ERROR"
