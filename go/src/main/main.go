@@ -68,6 +68,8 @@ func main() {
 
 		routes.POST("/rsd", api.ResubmitDocument)
 
+		routes.POST("/cd", api.CreateDocument)
+
 		// 実装予定の管理者向けのAPI
 		// routes.POST("/cd", api.CreateDocument)
 		// routes.POST("/dd", api.DeleteDocument)
