@@ -11,8 +11,8 @@ import (
 )
 
 // type UpdateAuthRequest struct {
-// 	DocumentID     int    `json:"document_id"`     //ドキュメントID
-// 	UserNumber     int    `json:"user_number"`     //学内識別番号
+// 	DocumentID     int    `json:"document_id"` //ドキュメントID
+// 	UserID         int    `json:"user_id"`
 // 	TeacherComment string `json:"teacher_comment"` //教員コメント
 // }
 
@@ -38,60 +38,56 @@ func UpdateAuth(c *gin.Context) {
 	//必要な変数を定義
 	var documentStatus int
 	var post int
-	response := http.StatusBadRequest
+	message := ""
 
 	//認可ステータスの取得
 	db.Table("oa").Select("status").Where("document_id = ?", request.DocumentID).Scan(&documentStatus)
 
 	//役職IDの取得
-	db.Table("user").Select("post_id").Where("user_number = ?", request.UserNumber).Scan(&post)
+	db.Table("user").Select("post_id").Where("user_id = ?", request.UserID).Scan(&post)
 
-	// log.Print("リクエスト")
-	// log.Println(request)
-	// log.Print("認可する書類の状態")
-	// log.Println(documentStatus)
-	// log.Print("認可者の役職")
-	// log.Println(post)
+	log.Print("リクエスト")
+	log.Println(request)
+	log.Print("認可する書類の状態")
+	log.Println(documentStatus)
+	log.Print("認可者の役職")
+	log.Println(post)
 
-	//教員かどうかの判定
-	if post == documentStatus+1 && documentStatus >= 0 {
+	if request.TeacherComment == "" {
+		//教員コメントがないとき
+		c.JSON(http.StatusBadRequest, gin.H{"message": "TEACHER COMMENT NOT EXIST"})
+		return
+	}
 
-		if post == 1 {
-
-			//担任が認可するとき
-
-			//認可書類の提出者と認可者が学生・担任関係にあるかの確認
-
-			//更新処理
-			db.Table("oa").
-				Where("document_id = ?", request.DocumentID).
-				Updates(model.UpdateDocument{Status: post, TeacherComment: request.TeacherComment})
-
-		} else if post >= 2 {
-
-			//教員(主任以上)が認可する
-
-			//更新処理
-			db.Table("oa").
-				Where("document_id = ?", request.DocumentID).
-				Updates(model.UpdateDocument{Status: post})
-
-		}
-
+	if post == 2 && documentStatus == 1 {
+		//教員かつ認可できる書類の場合→認可処理
+		db.Table("oa").
+			Where("document_id = ?", request.DocumentID).
+			Updates(model.UpdateDocument{Status: post, TeacherComment: request.TeacherComment, ReadFlag: true})
 		//エラーハンドリング
 		if db.Error != nil {
 			errMsg := "UPDATE ERROR"
 			c.JSON(http.StatusInternalServerError, gin.H{"error": errMsg})
 			return
 		}
-
-		response = http.StatusOK
-
+	} else if post == 2 {
+		//ステータスが異なるとき
+		message = "DOCUMENT STATUS ERROR"
+	} else if documentStatus == 1 {
+		//認可者が不適切な時
+		message = "POST ERROR"
 	} else {
-		log.Print("認可書類が適切でない、または認可者が適切ではありません")
+		//ステータスも認可者も違うとき
+		message = "DOCUMENT STATUS & POST ERROR"
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"message": response,
-	})
+	if message == "" {
+		c.JSON(http.StatusOK, gin.H{
+			"message": "SUCCESS",
+		})
+	} else {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": message,
+		})
+	}
 }
