@@ -19,8 +19,8 @@ type ReadAuthListResponse struct {
 }
 
 type TakeClassID struct {
-	PostID  int    `json:"post_id"`
-	ClassID string `json:"class_id"`
+	PostID int `json:"post_id"`
+	// ClassID string `json:"class_id"`
 }
 
 // ReadDocumentで使用する構造体
