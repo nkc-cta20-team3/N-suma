@@ -116,6 +116,37 @@ type UserPosition struct {
 // 	DocumentID int `json:"document_id"`
 // }
 
+// ResubmitDocumentで使用する構造体
+type ResubmitDocumentRequest struct {
+	DocumentID     int       `json:"document_id"`
+	UserID         int       `json:"user_id"`
+	RequestAt      time.Time `json:"request_at"`
+	StartTime      time.Time `json:"start_time"`
+	StartFlame     int       `json:"start_flame"`
+	EndTime        time.Time `json:"end_time"`
+	EndFlame       int       `json:"end_flame"`
+	Location       string    `json:"location"`
+	StudentComment string    `json:"student_comment"`
+	// TeacherComment string    `json:"teacher_comment"`
+	DivisionID int `json:"division_id"`
+}
+
+type ResubmitDocument struct {
+	DocumentID int `json:"document_id"` //書類ID
+	// UserID         int       `json:"user_id"`         //ユーザID
+	RequestAt      time.Time `json:"request_at"`      // 申請日
+	StartTime      time.Time `json:"start_time"`      // 欠席開始日
+	StartFlame     int       `json:"start_flame"`     //開始時限
+	EndTime        time.Time `json:"end_time"`        // 欠席終了日
+	EndFlame       int       `json:"end_flame"`       //終了時限
+	Location       string    `json:"location"`        // 場所
+	Status         int       `json:"status"`          //ステータス
+	ReadFlag       bool      `json:"read_flag"`       //既読フラグ
+	StudentComment string    `json:"student_comment"` // 学生コメント
+	// TeacherComment string    `json:"teacher_comment"` //教員コメント
+	DivisionID int `json:"division_id"` //区分ID
+}
+
 type ReadAlarmRequest struct {
 	UserID int `json:"user_id"` //ユーザID
 }
