@@ -25,7 +25,7 @@ type TakeClassID struct {
 // ReadDocumentで使用する構造体
 type ReadDocumentRequest struct {
 	DocumentID int `json:"document_id"`
-	UserID	   int `json:"user_id"`
+	UserID     int `json:"user_id"`
 }
 
 type ReadDocumentResponse struct {
@@ -104,6 +104,20 @@ type CreateDocumentRequest struct {
 	DivisionID     int       `json:"division_id"`     //区分ID
 }
 
+type CreateDocument struct {
+	UserID         int       // ユーザID
+	RequestAt      time.Time // 申請日
+	StartTime      time.Time // 欠席開始日
+	StartFlame     int       // 開始時限
+	EndTime        time.Time // 欠席終了日
+	EndFlame       int       // 終了時限
+	Location       string    // 場所
+	Status         int       // 認可状態
+	StudentComment string    // 学生コメント
+	ReadFlag       bool      // 既読フラグ
+	DivisionID     int       // 区分ID
+}
+
 // ResubmitDocumentで使用する構造体
 type ResubmitDocumentRequest struct {
 	DocumentID     int       `json:"document_id"`
@@ -142,16 +156,16 @@ type TakePostID struct {
 	PostID int `json:"post_id"` //役職ID
 }
 
-
 // CreateUserで使用する構造体
 type CreateUserRequest struct {
-	UserID 				int 		`json:"user_id"`
-	UserName 			string		`json:"user_name"`
-	UserNumber 			int 		`json:"user_number"`
-	PostID 				int 		`json:"post_id"`
-	ClassID 			int 		`json:"class_id"`
-	MailAddress 		string		`json:"mail_address"`
+	UserID      int    `json:"user_id"`
+	UserName    string `json:"user_name"`
+	UserNumber  int    `json:"user_number"`
+	PostID      int    `json:"post_id"`
+	ClassID     int    `json:"class_id"`
+	MailAddress string `json:"mail_address"`
 }
+
 // UpdateUserで使用する構造体
 type UpdateUserRequest struct {
 	UserID       int    `json:"user_id"`
@@ -161,10 +175,9 @@ type UpdateUserRequest struct {
 	PostID       int    `json:"post_id"`
 	ClassID      int    `json:"class_id"`
 	MailAddress  string `json:"mail_address"`
-
 }
 
-// DeleteDocumentで使用する構造体
-// type DeleteDocumentRequest struct {
-// 	DocumentID int `json:"document_id"`
-// }
+// 役職ID取得用
+type Post struct {
+	PostID int
+}

@@ -30,17 +30,13 @@ import (
 // 	DivisionName   string    `json:"division_name"`   //区分名
 // }
 
-type Post struct {
-	PostID int
-}
-
 func NextDocument(c *gin.Context) {
 	//必要な変数(引数・戻り値)の定義
 	request := model.NextDocumentRequest{}
 	response := []model.NextDocumentResponse{}
 
 	// var testUserID int
-	post := Post{}
+	post := model.Post{}
 	var PostID int
 
 	//POSTで受け取った値を格納する
