@@ -1,12 +1,14 @@
 package api
 
 import (
+	"errors"
 	"net/http"
 
 	"main/infra"
 	"main/model"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 type Post struct {
@@ -68,7 +70,7 @@ func ReadDocument(c *gin.Context) {
 		//学生処理
 
 		// データベースからデータを取得する
-		db.Debug().Table("oa").
+		err := db.Debug().Table("oa").
 			Select(
 				"oa.document_id",
 				"oa.request_at",
@@ -85,10 +87,14 @@ func ReadDocument(c *gin.Context) {
 			Joins("JOIN user ON oa.user_id = user.user_id").
 			Joins("JOIN classification AS cs ON user.class_id = cs.class_id").
 			Where("document_id = ?", request.DocumentID).
-			First(&response)
+			Where("oa.user_id = ?", request.UserID).
+			First(&response).Error
 		if db.Error != nil {
 			errMsg := "データベースからデータを取得できませんでした"
 			c.JSON(http.StatusInternalServerError, gin.H{"error": errMsg})
+			return
+		} else if errors.Is(err, gorm.ErrRecordNotFound) {
+			c.JSON(http.StatusBadRequest, gin.H{"document": "書類が見つかりませんでした"})
 			return
 		}
 
@@ -99,7 +105,7 @@ func ReadDocument(c *gin.Context) {
 		//教員処理
 
 		// データベースからデータを取得する
-		db.Debug().Table("oa").
+		err := db.Debug().Table("oa").
 			Select(
 				"oa.document_id",
 				"oa.request_at",
@@ -116,10 +122,13 @@ func ReadDocument(c *gin.Context) {
 			Joins("JOIN user ON oa.user_id = user.user_id").
 			Joins("JOIN classification AS cs ON user.class_id = cs.class_id").
 			Where("document_id = ?", request.DocumentID).
-			First(&response)
+			First(&response).Error
 		if db.Error != nil {
 			errMsg := "データベースからデータを取得できませんでした"
 			c.JSON(http.StatusInternalServerError, gin.H{"error": errMsg})
+			return
+		} else if errors.Is(err, gorm.ErrRecordNotFound) {
+			c.JSON(http.StatusBadRequest, gin.H{"document": "書類が見つかりませんでした"})
 			return
 		}
 
