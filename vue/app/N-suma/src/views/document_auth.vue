@@ -25,6 +25,8 @@
     <div class="container">
         
         <table class="table" v-if="documents.length > 0">
+        
+        <table class="table" v-if="documents.length > 0">
             <thead>
                 <tr>
                     <th>クラス略称</th>
@@ -34,6 +36,11 @@
                 </tr>
             </thead>
             <thead>
+                <tr v-for="document in documents" :key="document.id">
+                    <th>{{ document.class }}</th>
+                    <th>{{ document.name }}</th>
+                    <th>{{ document.type }}</th>
+                    <th><button @click="showAccept(document.id)">詳細</button></th>
                 <tr v-for="document in documents" :key="document.id">
                     <th>{{ document.class }}</th>
                     <th>{{ document.name }}</th>
@@ -49,6 +56,13 @@
                 </div>
             </div> 
         </div>
+        <div v-else>
+            <div class="has-text-centered">
+                <div class="title mb-5">
+                    認可待ちの書類はありません
+                </div>
+            </div> 
+        </div>
     </div>
 </template>
 
@@ -56,7 +70,12 @@
 
     import store from '../store'
     import { useRouter } from 'vue-router'
+    import store from '../store'
+    import { useRouter } from 'vue-router'
     import { onMounted,ref } from 'vue'
+
+    const router = useRouter();    
+    const documents = ref([])
 
     const router = useRouter();    
     const documents = ref([])

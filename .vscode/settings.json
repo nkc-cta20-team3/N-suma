@@ -1,0 +1,14 @@
+{
+    // 保存する同時に自動整形
+    "editor.formatOnSave": true,
+
+    // Prettierを使うファイル種類
+    "[javascript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[vue]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+
+    "material-icon-theme.activeIconPack": "vue_vuex"
+}
