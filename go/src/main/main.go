@@ -52,23 +52,18 @@ func main() {
 
 		// curl -X POST http://localhost:8080/api/ral
 		// curl -X POST -H "Content-Type: application/json" -d "{"user_id" : "1"}" http://localhost:8080/api/ral
-		routes.POST("/ral", api.ReadAuthList)
-
-		routes.POST("/rd", api.ReadDocument)
-
-		routes.POST("/ua", api.UpdateAuth)
-
-		routes.POST("/rp", api.ReadPosition)
-
-		routes.POST("/ra", api.RejectAuth)
-		routes.POST("/al", api.ReadAlarm)
-		routes.POST("/nd", api.NextDocument)
-    routes.POST("/cu", api.CreateUser)
-		routes.POST("/uu",api.UpdateUser)
-
-		routes.POST("/rsd", api.ResubmitDocument)
 
 		routes.POST("/cd", api.CreateDocument)
+		routes.POST("/cu", api.CreateUser)
+		routes.POST("/nd", api.NextDocument)
+		routes.POST("/al", api.ReadAlarm)
+		routes.POST("/ral", api.ReadAuthList)
+		routes.POST("/rd", api.ReadDocument)
+		routes.POST("/rp", api.ReadPosition)
+		routes.POST("/ra", api.RejectAuth)
+		routes.POST("/rsd", api.ResubmitDocument)
+		routes.POST("/ua", api.UpdateAuth)
+		routes.POST("/uu", api.UpdateUser)
 
 		// 実装予定の管理者向けのAPI
 		// routes.POST("/cd", api.CreateDocument)
