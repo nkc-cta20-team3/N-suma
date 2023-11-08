@@ -19,7 +19,6 @@ type ReadAuthListResponse struct {
 
 type TakeClassID struct {
 	PostID int `json:"post_id"`
-	// ClassID string `json:"class_id"`
 }
 
 // ReadDocumentで使用する構造体
@@ -129,13 +128,11 @@ type ResubmitDocumentRequest struct {
 	EndFlame       int       `json:"end_flame"`
 	Location       string    `json:"location"`
 	StudentComment string    `json:"student_comment"`
-	// TeacherComment string    `json:"teacher_comment"`
-	DivisionID int `json:"division_id"`
+	DivisionID     int       `json:"division_id"`
 }
 
 type ResubmitDocument struct {
-	DocumentID int `json:"document_id"` //書類ID
-	// UserID         int       `json:"user_id"`         //ユーザID
+	DocumentID     int       `json:"document_id"`     //書類ID
 	RequestAt      time.Time `json:"request_at"`      // 申請日
 	StartTime      time.Time `json:"start_time"`      // 欠席開始日
 	StartFlame     int       `json:"start_flame"`     //開始時限
