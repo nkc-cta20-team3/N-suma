@@ -93,3 +93,14 @@ type CreateDocumentRequest struct {
 type DeleteDocumentRequest struct {
 	DocumentID int `json:"document_id"`
 }
+
+// UpdateUserで使用する構造体
+type UpdateUserRequest struct {
+	UserID       int    `json:"user_id"`
+	UpdateUserID int    `json:"update_user_id"`
+	UserName     string `json:"user_name"`
+	UserNumber   int    `json:"user_number"`
+	PostID       int    `json:"post_id"`
+	ClassID      int    `json:"class_id"`
+	MailAddress  string `json:"mail_address"`
+}
