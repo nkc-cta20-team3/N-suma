@@ -71,7 +71,7 @@ func UpdateUser(c *gin.Context) {
 			return
 		}
 
-		c.JSON(http.StatusOK, gin.H{"flag": "データの更新が成功しました"})
+		c.JSON(http.StatusOK, gin.H{"flag": true})
 		return
 
 		//新たに管理者を増やすことができない
