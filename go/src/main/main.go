@@ -59,7 +59,6 @@ func main() {
 		routes.POST("/al", api.ReadAlarm)
 		routes.POST("/ral", api.ReadAuthList)
 		routes.POST("/rd", api.ReadDocument)
-		routes.POST("/rp", api.ReadPosition)
 		routes.POST("/ra", api.RejectAuth)
 		routes.POST("/rsd", api.ResubmitDocument)
 		routes.POST("/ua", api.UpdateAuth)
