@@ -7,7 +7,7 @@ import (
 
 // ReadAuthListで使用する構造体
 type ReadAuthListRequest struct {
-	UserID int `json:"user_id"`
+	UserID int `json:"user_id"` //ユーザID
 }
 
 type ReadAuthListResponse struct {
@@ -15,16 +15,18 @@ type ReadAuthListResponse struct {
 	UserName     string `json:"user_name"`
 	DivisionName string `json:"division_name"`
 	DocumentID   int    `json:"document_id"`
+	Status       int    `json:"status"`
 }
 
 type TakeClassID struct {
-	PostID  int    `json:"post_id"`
-	ClassID string `json:"class_id"`
+	PostID int `json:"post_id"`
+	// ClassID string `json:"class_id"`
 }
 
 // ReadDocumentで使用する構造体
 type ReadDocumentRequest struct {
 	DocumentID int `json:"document_id"`
+	UserID	   int `json:"user_id"`
 }
 
 type ReadDocumentResponse struct {
@@ -44,20 +46,21 @@ type ReadDocumentResponse struct {
 
 // UpdateAuthで使用する構造体
 type UpdateAuthRequest struct {
-	DocumentID     int    `json:"document_id"`     //ドキュメントID
-	UserNumber     int    `json:"user_number"`     //学内識別番号
+	DocumentID     int    `json:"document_id"` //ドキュメントID
+	UserID         int    `json:"user_id"`
 	TeacherComment string `json:"teacher_comment"` //教員コメント
 }
 
 type UpdateDocument struct {
 	Status         int    `json:"status"`          // ステータス
 	TeacherComment string `json:"teacher_comment"` // 教員コメント
+	ReadFlag       bool   `json:"read_flag"`       //既読フラグ
 }
 
 // RejectAuthで使用する構造体
 type RejectAuthRequest struct {
 	DocumentID     int    `json:"document_id"`
-	UserNumber     int    `json:"user_number"`     //学内識別番号
+	UserID         int    `json:"user_id"`
 	TeacherComment string `json:"teacher_comment"` // 教員コメント
 }
 
@@ -112,4 +115,25 @@ type CreateDocumentRequest struct {
 // DeleteDocumentで使用する構造体
 type DeleteDocumentRequest struct {
 	DocumentID int `json:"document_id"`
+}
+
+
+// CreateUserで使用する構造体
+type CreateUserRequest struct {
+	UserID 				int 		`json:"user_id"`
+	UserName 			string		`json:"user_name"`
+	UserNumber 			int 		`json:"user_number"`
+	PostID 				int 		`json:"post_id"`
+	ClassID 			int 		`json:"class_id"`
+	MailAddress 		string		`json:"mail_address"`
+}
+// UpdateUserで使用する構造体
+type UpdateUserRequest struct {
+	UserID       int    `json:"user_id"`
+	UpdateUserID int    `json:"update_user_id"`
+	UserName     string `json:"user_name"`
+	UserNumber   int    `json:"user_number"`
+	PostID       int    `json:"post_id"`
+	ClassID      int    `json:"class_id"`
+	MailAddress  string `json:"mail_address"`
 }

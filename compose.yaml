@@ -2,7 +2,6 @@ version: '3'
 services:
     vue:
         build: ./build/vue/
-        container_name: "sssr-vue-webserver"
         links:
             - go
         ports:
@@ -13,7 +12,6 @@ services:
         stdin_open: true
     go:
         build: ./build/go/
-        container_name: "sssr-go-webserver"
         volumes:
             - "./go/src/:/go/src/"
         env_file:
@@ -27,7 +25,6 @@ services:
         command: air -c .air.toml
     db:
         build: ./build/db/
-        container_name: "sssr-mysql-dbserver"
         volumes:
             - ./build/db/initdb.d:/docker-entrypoint-initdb.d
             - ./db/mysql/:/var/lib/mysql/
@@ -35,7 +32,6 @@ services:
           - ./build/db/.env
     phpmyadmin:
         image: phpmyadmin/phpmyadmin
-        container_name: "sssr-phpmyadmin"
         env_file:
           - ./build/phpmyadmin/.env
         links:
