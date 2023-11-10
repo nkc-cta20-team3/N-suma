@@ -2,12 +2,20 @@ package apiHello
 
 import (
 	"net/http"
+	"time"
+
+	"fmt"
+	"log"
 
 	"github.com/gin-gonic/gin"
 )
 
 // GETメソッドで動作し、ステータス200と、HelloWorldを返します
 func Hello(c *gin.Context) {
+
+	// アクセス元のIPアドレスを取得する
+	fmt.Println(c.ClientIP())
+	log.Println(c.ClientIP())
 
 	c.JSON(http.StatusOK, gin.H{"message": "HelloWorld"})
 	return
@@ -21,6 +29,10 @@ func Name(c *gin.Context) {
 	// パスパラメータを取得します
 	name := c.Param("name")
 
+	// アクセス元のIPアドレスを取得する
+	fmt.Println(c.ClientIP())
+	log.Println(c.ClientIP())
+
 	// ステータス200と、Helloと取得したパスパラメータを結合した文字列を返します
 	c.JSON(http.StatusOK, gin.H{"message": "Hello" + name})
 	return
@@ -33,6 +45,10 @@ func Time(c *gin.Context) {
 	// 現在時刻を取得します
 	time := time.Now()
 
+	// アクセス元のIPアドレスを取得する
+	fmt.Println(c.ClientIP())
+	log.Println(c.ClientIP())
+
 	// ステータス200と、現在時刻を返します
 	c.JSON(http.StatusOK, gin.H{"message": time})
 	return
@@ -41,6 +57,10 @@ func Time(c *gin.Context) {
 
 // POSTメソッドで動作し、ステータス200と、POSTされたaとbを合算した値を返します
 func Sum(c *gin.Context) {
+
+	// アクセス元のIPアドレスを取得する
+	fmt.Println(c.ClientIP())
+	log.Println(c.ClientIP())
 
 	// 必要な変数定義
 	request := SumRequest{}

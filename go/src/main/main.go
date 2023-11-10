@@ -8,6 +8,7 @@ import (
 
 	// ローカルモジュールのインポート
 	"main/api"
+	"main/apiHello"
 )
 
 func main() {
@@ -74,10 +75,10 @@ func main() {
 	{	
 		// 動作確認用
 		// curl -X GET http://localhost:8080/hello
-		routes.GET("/", apiHello.Hello)
-		routes.GET("/name", apiHello.Name)
-		routes.GET("/time", apiHello.Time)
-		routes.POST("/sum", apiHello.Sum)
+		routes2.GET("", apiHello.Hello)
+		routes2.GET("/name", apiHello.Name)
+		routes2.GET("/time", apiHello.Time)
+		routes2.POST("/sum", apiHello.Sum)
 	}
 
 	g.Run(":8080")
