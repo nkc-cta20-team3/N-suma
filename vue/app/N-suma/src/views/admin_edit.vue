@@ -6,6 +6,7 @@
     </v-app-bar>
 
     <v-main>
+      <!-- 検索バー -->
       <v-row justify="center">
         <v-col cols="13" sm="10" md="8" lg="6">
           <v-card ref="form">
@@ -19,7 +20,7 @@
                     ref="student_number"
                   ></v-text-field>
                 </v-col>
-                  
+
                 <!-- 検索ボタン -->
                 <v-col cols="1" class="d-flex justify-end align-center">
                   <v-btn @click="buttonClick" icon>
@@ -30,17 +31,29 @@
                 <!-- 役職メニュー -->
                 <v-col cols="2">
                   <v-autocomplete
-                  ref="section"
-                  v-model="section"
-                  :items="sections"
-                  label="区分"
-                  placeholder="選択"
-                  required
-                  persistent-hint
+                    ref="section"
+                    v-model="section"
+                    :items="sections"
+                    label="区分"
+                    placeholder="選択"
+                    required
+                    persistent-hint
                   ></v-autocomplete>
                 </v-col>
               </v-row>
             </v-container>
+          </v-card>
+        </v-col>
+      </v-row>
+
+      <!-- 表示一覧 -->
+      <v-row justify="center">
+        <v-col>
+          <v-card class="mx-auto" max-width="700">
+            <v-list :items="item2" item-title="name" item-value="id"></v-list>
+          </v-card>
+          <v-card class="mx-auto" max-width="700">
+            <v-list :items="item2" item-title="name" item-value="id"></v-list>
           </v-card>
         </v-col>
       </v-row>
@@ -60,6 +73,6 @@ export default {
     zip: null,
     country: null,
     formHasErrors: false,
-  })
+  }),
 };
 </script>
