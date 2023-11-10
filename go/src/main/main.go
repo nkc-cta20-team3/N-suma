@@ -52,23 +52,17 @@ func main() {
 
 		// curl -X POST http://localhost:8080/api/ral
 		// curl -X POST -H "Content-Type: application/json" -d "{"user_id" : "1"}" http://localhost:8080/api/ral
-		routes.POST("/ral", api.ReadAuthList)
 
-		routes.POST("/rd", api.ReadDocument)
-
-		routes.POST("/ua", api.UpdateAuth)
-
-		routes.POST("/rp", api.ReadPosition)
-
-		routes.POST("/ra", api.RejectAuth)
-		routes.POST("/al", api.ReadAlarm)
-		routes.POST("/nd", api.NextDocument)
-	    routes.POST("/cu", api.CreateUser)
-		routes.POST("/uu",api.UpdateUser)
-
-		routes.POST("/rsd", api.ResubmitDocument)
-
-		routes.POST("/cd", api.CreateDocument)
+		routes.POST("/cd", api.CreateDocument)    //公欠届作成
+		routes.POST("/cu", api.CreateUser)        //ユーザ作成
+		routes.POST("/nd", api.NextDocument)      //公欠届切り替え
+		routes.POST("/al", api.ReadAlarm)         //通知取得
+		routes.POST("/ral", api.ReadAuthList)     //未認可リスト取得
+		routes.POST("/rd", api.ReadDocument)      //公欠届詳細取得
+		routes.POST("/ra", api.RejectAuth)        //公欠届却下
+		routes.POST("/rsd", api.ResubmitDocument) //公欠届再提出
+		routes.POST("/ua", api.UpdateAuth)        //公欠届認可
+		routes.POST("/uu", api.UpdateUser)        //ユーザ編集
 
 		// 実装予定の管理者向けのAPI
 		// routes.POST("/cd", api.CreateDocument)

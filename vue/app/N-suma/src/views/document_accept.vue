@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div class="title has-text-centered">書類受理</div>
 
   <router-link
@@ -9,7 +9,7 @@
     ◀戻る
   </router-link>
 
-  <!--
+  
         request_date: "2020-10-01T00:00:00Z"
         student_id: 20206001
         class_name: "CTA20"
@@ -23,7 +23,7 @@
         
         document_id: 1
         teacher_comment: ""
-    -->
+   
   <router-link
     to="/document_auth"
     class="has-text-left"
@@ -32,7 +32,7 @@
     ◀戻る
   </router-link>
 
-  <!--
+  
         request_date: "2020-10-01T00:00:00Z"
         student_id: 20206001
         class_name: "CTA20"
@@ -46,14 +46,14 @@
         
         document_id: 1
         teacher_comment: ""
-    -->
+   
 
-  <!--取得したデータを表示-->
-  <!--documentがnullではない場合、画面に出す-->
-  <!--
+  取得したデータを表示
+  documentがnullではない場合、画面に出す
+  
         このコードでは、何かしらのエラーでデータを取得できなかった場合の処理がないため、実装する必要がある。
         また、教員コメントが入力済みのデータが渡された場合の処理も考慮しなければならない
-    -->
+   
   <table class="table" v-if="document != null">
     <thead>
       <tr>
@@ -283,4 +283,92 @@ onMounted(() => {
         console.log(error)
     })
 })
+</script> -->
+
+<template>
+  <v-app id="inspire">
+    <v-navigation-drawer v-model="drawer" app>
+      <!--  -->
+    </v-navigation-drawer>
+
+    <v-app-bar app>
+      <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
+
+      <v-toolbar-title><Nav>Nスマ</Nav></v-toolbar-title>
+    </v-app-bar>
+
+    <v-main>
+      <!--  -->
+      <v-responsive class="mx-auto" max-width="700">
+        <v-text-field
+          v-model="date"
+          clearable
+          hide-details="auto"
+          label="申請日"
+        ></v-text-field>
+      </v-responsive>
+      <v-responsive class="mx-auto" max-width="700">
+        <v-text-field
+          v-model="classification"
+          clearable
+          hide-details="auto"
+          label="公欠区分"
+        ></v-text-field>
+      </v-responsive>
+      <v-responsive class="mx-auto" max-width="700">
+        <v-text-field
+          v-model="tame"
+          clearable
+          hide-details="auto"
+          label="申請時間"
+        ></v-text-field>
+      </v-responsive>
+      <v-responsive class="mx-auto" max-width="700">
+        <v-text-field
+          v-model="location"
+          clearable
+          hide-details="auto"
+          label="場所"
+        ></v-text-field>
+      </v-responsive>
+      <v-responsive class="mx-auto" max-width="700">
+        <v-text-field
+          v-model="abs_tame"
+          clearable
+          hide-details="auto"
+          label="必要欠席時間"
+        ></v-text-field>
+      </v-responsive>
+      <v-responsive class="mx-auto" max-width="700">
+        <v-text-field
+          v-model="stu_comment"
+          clearable
+          hide-details="auto"
+          label="学生コメント"
+        ></v-text-field>
+      </v-responsive>
+      <v-responsive class="mx-auto" max-width="700">
+        <v-text-field
+          v-model="tea_comment"
+          clearable
+          hide-details="auto"
+          label="教員コメント"
+        ></v-text-field>
+      </v-responsive>
+    </v-main>
+  </v-app>
+</template>
+
+<script>
+export default {
+  data: () => ({
+    date: "2023/11/05",
+    classification: "就活",
+    tame: "10月10日10:00~10月10日15:00",
+    location: "愛知県名古屋市",
+    abs_tame: "1限目~6限目",
+    stu_comment: "よろしくお願いします。",
+    tea_comment: "確認しました。",
+  }),
+};
 </script>

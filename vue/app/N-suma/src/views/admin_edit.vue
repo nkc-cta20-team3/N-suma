@@ -1,37 +1,90 @@
 <template>
-  <div v-if="userId === 'admin'">
-    <h1>管理者編集画面だお</h1>
-  </div>
-  <div iv-if="userId != 'admin'">
-    <h1>不法侵入を検知　ただちにもとのページに戻りなさい</h1>
-  </div>
+  <v-app id="inspire">
+    <v-app-bar app>
+      <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
+      <v-toolbar-title><Nav>Nスマ</Nav></v-toolbar-title>
+    </v-app-bar>
+
+    <v-main>
+      <!-- 検索バー -->
+      <v-row justify="center">
+        <v-col cols="13" sm="10" md="8" lg="6">
+          <v-card ref="form">
+            <v-container>
+              <v-row justify="center">
+                <!-- テキストボックス -->
+                <v-col cols="8">
+                  <v-text-field
+                    label="学籍番号"
+                    v-model="studentId"
+                    ref="student_number"
+                  ></v-text-field>
+                </v-col>
+
+                <!-- 検索ボタン -->
+                <v-col cols="1" class="d-flex justify-end align-center">
+                  <v-btn @click="buttonClick" icon>
+                    <v-icon>mdi-arrow-down-bold-circle</v-icon>
+                  </v-btn>
+                </v-col>
+
+                <!-- 役職メニュー -->
+                <v-col cols="2">
+                  <v-autocomplete
+                    ref="section"
+                    v-model="section"
+                    :items="sections"
+                    label="区分"
+                    placeholder="選択"
+                    required
+                    persistent-hint
+                  ></v-autocomplete>
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-card>
+        </v-col>
+      </v-row>
+
+      <!-- 表示一覧 -->
+      <v-row justify="center">
+        <v-col>
+          <v-card class="mx-auto" max-width="700">
+            <v-list :items="item1" item-title="name" item-value="id"></v-list>
+          </v-card>
+          <v-card class="mx-auto" max-width="700">
+            <v-list :items="item2" item-title="name" item-value="id"></v-list>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-main>
+  </v-app>
 </template>
 
-<script setup>
-import { onMounted, ref } from "vue";
-import {
-  getAuth,
-  onAuthStateChanged,
-  signOut,
-  GoogleAuthProvider,
-  signInWithRedirect,
-} from "firebase/auth";
-import router from "../router";
-//import store from './store';
-
-let auth;
-onMounted(() => {
-  auth = getAuth();
-  onAuthStateChanged(auth, (user) => {
-    isLoggedIn.value = !!user;
-
-    if (user) {
-      store.dispatch("updateUser", {
-        userId: userId,
-        classId: ClassId,
-        DocId: DocId,
-      });
-    }
-  });
-});
+<script>
+export default {
+  data: () => ({
+    sections: ["担任", "学生"],
+    errorMessages: "",
+    name: null,
+    address: null,
+    city: null,
+    state: null,
+    zip: null,
+    country: null,
+    formHasErrors: false,
+    item1: [
+      {
+        name: "学生1",
+        id: 1,
+      },
+    ],
+    item2: [
+      {
+        name: "学生2",
+        id: 2,
+      },
+    ],
+  }),
+};
 </script>

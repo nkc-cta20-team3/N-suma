@@ -12,10 +12,6 @@ import (
 	"gorm.io/gorm"
 )
 
-type Post struct {
-	PostID int
-}
-
 func CreateUser(c *gin.Context) {
 
 	request := model.CreateUserRequest{}
@@ -31,7 +27,7 @@ func CreateUser(c *gin.Context) {
 	db := infra.DBInitGorm()
 
 	//引数定義
-	post := Post{}
+	post := model.Post{}
 	//post_idを取得(reqest.UserIDの部分に取得したいユーザのユーザIDを入れる)
 	err := db.Table("user").Select("post_id").Where("user_id = ?", request.UserID).First(&post).Error
 
