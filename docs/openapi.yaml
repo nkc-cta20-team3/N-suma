@@ -18,17 +18,13 @@ servers:
     description: Docker開発環境でのアドレス
 # 使用可能なパスと操作を記載 ※必須
 paths:
-  '/api/v1/users/{user_id}':
+  '/hello':
     get:
-      description: ユーザ詳細
-      operationId: UserShow
-      parameters:
-        - name: user_id
-          in: path
-          required: true
-          schema:
-            type: integer
-          description: ユーザID
+      tags:
+        - Example
+      summary: Hello World
+      description: Hello Worldを返す
+      operationId: HelloWorld
       responses:
         '200':
           description: 成功時
@@ -37,41 +33,22 @@ paths:
               schema:
                 type: object
                 properties:
-                  id:
-                    type: integer
-                    format: int64
-                  name:
+                  message:
                     type: string
-                  age:
-                    type: integer
-                  created_at:
-                    type: string
-                    format: date-time
-                  updated_at:
-                    type: string
-                    format: date-time
-    put:
-      description: ユーザ更新
-      operationId: UserUpdate
+  '/hello/{name}':
+    get:
+      tags:
+        - Example
+      summary: Hello {name}
+      description: Hello {name} を返す
+      operationId: HelloName
       parameters:
-        - name: id
+        - name: name
           in: path
           required: true
           schema:
-            type: integer
-          description: ユーザID
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - name
-              properties:
-                name:
-                  type: string
-                age:
-                  type: integer
+            type: string
+          description: 名前
       responses:
         '200':
           description: 成功時
@@ -80,28 +57,139 @@ paths:
               schema:
                 type: object
                 properties:
-                  id:
-                    type: integer
-                    format: int64
-                  name:
+                  message:
                     type: string
-                  age:
-                    type: integer
-                  created_at:
+  '/hello/time':
+    get:
+      tags:
+        - Example
+      summary: 現在時刻
+      description: 現在時刻を返す
+      operationId: HelloTime
+      responses:
+        '200':
+          description: 成功時
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  time:
                     type: string
                     format: date-time
-                  updated_at:
-                    type: string
-                    format: date-time
+  '/hello/sum':
+    post:
+      tags:
+        - Example
+      summary: 2つの数値の和
+      description: 2つの数値の和を返す
+      operationId: HelloSum
+      parameters:
+        - name: a
+          in: query
+          required: true
+          schema:
+            type: integer
+          description: 数値a
+        - name: b
+          in: query
+          required: true
+          schema:
+            type: integer
+          description: 数値b
+      responses:
+        '200':
+          description: 成功時
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  sum:
+                    type: integer
 # 仕様の様々なスキーマを保持するための場所
 components:
-  ...
+  schemas:
+    # ユーザー情報
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ユーザーID
+        name:
+          type: string
+          description: ユーザー名
+        email:
+          type: string
+          description: メールアドレス
+        password:
+          type: string
+          description: パスワード
+        createdAt:
+          type: string
+          format: date-time
+          description: 作成日時
+        updatedAt:
+          type: string
+          format: date-time
+          description: 更新日時
+    # ユーザー情報の配列
+    Users:
+      type: array
+      items:
+        $ref: '#/components/schemas/User'
+    # ユーザー情報の配列を返す
+    UsersResponse:
+      type: object
+      properties:
+        users:
+          $ref: '#/components/schemas/Users'
+    # ユーザー情報を返す
+    UserResponse:
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/User'
+    # ユーザー情報を作成する
+    UserCreate:
+      type: object
+      properties:
+        name:
+          type: string
+          description: ユーザー名
+        email:
+          type: string
+          description: メールアドレス
+        password:
+          type: string
+          description: パスワード
+    # ユーザー情報を更新する
+    UserUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          description: ユーザー名
+        email:
+          type: string
+          description: メールアドレス
+        password:
+          type: string
+          description: パスワード
+    # ユーザー情報を作成する
+    UserCreateResponse:
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/User'
 # どのセキュリティメカニズムを使用できるかの宣言
 security:
-  ...
+  - api_key: []
 # 使用されるタグのリストと追加のメタデータを記載。タグ名は一意である必要がある。
 tags:
-  ...
+  - name: Example
+    description: サンプルAPI
 # 追加の外部ドキュメント
 externalDocs:
   description: より詳細なAPI設計
