@@ -33,15 +33,11 @@ import (
 // 	DivisionID     int       `json:"division_id"`     //区分ID
 // }
 
-type Post struct {
-	PostID int
-}
-
 func CreateDocument(c *gin.Context) {
 	//必要な変数定義
 	request := model.CreateDocumentRequest{}
 
-	post := Post{}
+	post := model.Post{}
 
 	//引数受け取り
 	if err := c.ShouldBindJSON(&request); err != nil {

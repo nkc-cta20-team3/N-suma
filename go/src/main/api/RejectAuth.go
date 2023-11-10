@@ -22,14 +22,11 @@ import (
 //		UserID         int    `json:"user_id"`
 //		TeacherComment string `json:"teacher_comment"` // 教員コメント
 //	}
-type Post struct {
-	PostID int
-}
 
 func RejectAuth(c *gin.Context) {
 
 	request := model.RejectAuthRequest{}
-	post := Post{}
+	post := model.Post{}
 
 	//POSTで受け取った値を格納する
 	if err := c.ShouldBindJSON(&request); err != nil {
