@@ -63,7 +63,7 @@ func main() {
 		routes.POST("/ra", api.RejectAuth)
 		routes.POST("/al", api.ReadAlarm)
 		routes.POST("/nd", api.NextDocument)
-    routes.POST("/cu", api.CreateUser)
+	    routes.POST("/cu", api.CreateUser)
 		routes.POST("/uu",api.UpdateUser)
 
 		routes.POST("/rsd", api.ResubmitDocument)
@@ -73,11 +73,17 @@ func main() {
 		// 実装予定の管理者向けのAPI
 		// routes.POST("/cd", api.CreateDocument)
 		// routes.POST("/dd", api.DeleteDocument)
+	}
 
+	// ルーティング
+	routes2 := g.Group("/hello")
+	{	
 		// 動作確認用
-		// curl -X GET http://localhost:8080/api/hello
-		routes.GET("/hello", api.Hello)
-
+		// curl -X GET http://localhost:8080/hello
+		routes.GET("/", apiHello.Hello)
+		routes.GET("/name", apiHello.Name)
+		routes.GET("/time", apiHello.Time)
+		routes.POST("/sum", apiHello.Sum)
 	}
 
 	g.Run(":8080")
