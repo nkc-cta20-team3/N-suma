@@ -50,7 +50,7 @@
       <v-row justify="center">
         <v-col>
           <v-card class="mx-auto" max-width="700">
-            <v-list :items="item2" item-title="name" item-value="id"></v-list>
+            <v-list :items="item1" item-title="name" item-value="id"></v-list>
           </v-card>
           <v-card class="mx-auto" max-width="700">
             <v-list :items="item2" item-title="name" item-value="id"></v-list>
@@ -73,6 +73,18 @@ export default {
     zip: null,
     country: null,
     formHasErrors: false,
+    item1: [
+      {
+        name: "学生1",
+        id: 1,
+      },
+    ],
+    item2: [
+      {
+        name: "学生2",
+        id: 2,
+      },
+    ],
   }),
 };
 </script>
