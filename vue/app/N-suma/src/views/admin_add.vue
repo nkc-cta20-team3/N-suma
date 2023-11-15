@@ -1,12 +1,7 @@
 <template>
   <v-app id="inspire">
-
-    <!-- ヘッダー -->
-    <v-app-bar app>
-      <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
-
-      <v-toolbar-title><Nav>Nスマ</Nav></v-toolbar-title>
-    </v-app-bar>
+      <!-- ヘッダーコンポーネントを読み込む -->
+      <Header />
 
     <!-- メイン -->
     <v-main>
@@ -43,7 +38,7 @@
                 required
               ></v-text-field>
               <v-text-field
-                ref="position"
+                ref="section"
                 v-model="position"
                 :rules="[() => !!position || '必須']"
                 :error-messages="errorMessages"
@@ -102,12 +97,24 @@
 </template>
 
 <script>
+//ヘッダー読み込み用
+import Header from '../components/Navigation.vue';
+
 export default {
+  data: () => ({
+    components:{
+      Header,
+    }}),
 
   //アラートボックス処理
   data() {
     return {
-      dialog: false
+      dialog: false,
+      name: '',
+      student_number: '',
+      indispensable: '',
+      position: '',
+      errorMessages: [],
     };
   },
   methods: {

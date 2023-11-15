@@ -1,9 +1,7 @@
 <template>
   <v-app id="inspire">
-    <v-app-bar app>
-      <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
-      <v-toolbar-title><Nav>Nスマ</Nav></v-toolbar-title>
-    </v-app-bar>
+    <!-- ヘッダーコンポーネントを読み込む -->
+    <Header />
 
     <v-main>
       <!-- 検索バー -->
@@ -62,17 +60,15 @@
 </template>
 
 <script>
+//ヘッダー読み込み用
+import Header from '../components/Navigation.vue';
+
 export default {
   data: () => ({
+    components:{
+      Header,
+    },
     sections: ["担任", "学生"],
-    errorMessages: "",
-    name: null,
-    address: null,
-    city: null,
-    state: null,
-    zip: null,
-    country: null,
-    formHasErrors: false,
     item1: [
       {
         name: "学生1",
