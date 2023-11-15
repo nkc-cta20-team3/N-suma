@@ -16,10 +16,10 @@ import (
 // 	PostID int `json:"post_id"` //役職ID
 // }
 
-func ReadAlarm(c *gin.Context) {
+func CheckAlarm(c *gin.Context) {
 
 	//必要な変数定義
-	request := model.ReadAlarmRequest{}
+	request := model.CheckAlarmRequest{}
 	take_post_id := model.TakePostID{}
 	var AlarmFlag = false
 	var count int64

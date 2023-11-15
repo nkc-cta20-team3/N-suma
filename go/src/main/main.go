@@ -57,7 +57,7 @@ func main() {
 		routes.POST("/cd", api.CreateDocument)    //公欠届作成
 		routes.POST("/cu", api.CreateUser)        //ユーザ作成
 		routes.POST("/nd", api.NextDocument)      //公欠届切り替え
-		routes.POST("/al", api.ReadAlarm)         //通知取得
+		routes.POST("/ca", api.CheckAlarm)        //通知取得
 		routes.POST("/ral", api.ReadAuthList)     //未認可リスト取得
 		routes.POST("/rd", api.ReadDocument)      //公欠届詳細取得
 		routes.POST("/ra", api.RejectAuth)        //公欠届却下
@@ -72,7 +72,7 @@ func main() {
 
 	// ルーティング
 	routes2 := g.Group("/hello")
-	{	
+	{
 		// 動作確認用
 		// curl -X GET http://localhost:8080/hello
 		routes2.GET("", apiHello.Hello)

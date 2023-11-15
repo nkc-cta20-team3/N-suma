@@ -145,7 +145,7 @@ type ResubmitDocument struct {
 	DivisionID     int       `json:"division_id"`     //区分ID
 }
 
-type ReadAlarmRequest struct {
+type CheckAlarmRequest struct {
 	UserID int `json:"user_id"` //ユーザID
 }
 
