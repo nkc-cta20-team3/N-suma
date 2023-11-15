@@ -1,41 +1,48 @@
-version: '3'
+version: "3"
 services:
-    vue:
-        build: ./build/vue/
-        links:
-            - go
-        ports:
-            - "5173:5173"
-        volumes:
-            - "./vue/app:/app"
-        tty: true
-        stdin_open: true
-    go:
-        build: ./build/go/
-        volumes:
-            - "./go/src/:/go/src/"
-        env_file:
-            - ./build/go/.go_env
-        ports:
-            - "8080:8080"
-        depends_on:
-            - db
-        tty: true
-        init: true
-        command: air -c .air.toml
-    db:
-        build: ./build/db/
-        volumes:
-            - ./build/db/initdb.d:/docker-entrypoint-initdb.d
-            - ./db/mysql/:/var/lib/mysql/
-        env_file:
-          - ./build/db/.env
-    phpmyadmin:
-        image: phpmyadmin/phpmyadmin
-        env_file:
-          - ./build/phpmyadmin/.env
-        links:
-            - db
-        ports:
-            - 4000:80
-        
+  vue:
+    build: ./build/vue/
+    links:
+      - go
+    ports:
+      - "5173:5173"
+    volumes:
+      - "./vue/app:/app"
+    tty: true
+    stdin_open: true
+    profiles:
+      - dev_front
+  go:
+    build: ./build/go/
+    volumes:
+      - "./go/src/:/go/src/"
+    env_file:
+      - ./build/go/.go_env
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    tty: true
+    init: true
+    command: air -c .air.toml
+    profiles:
+      - dev_back
+  db:
+    build: ./build/db/
+    volumes:
+      - ./build/db/initdb.d:/docker-entrypoint-initdb.d
+      - ./db/mysql/:/var/lib/mysql/
+    env_file:
+      - ./build/db/.env
+    profiles:
+      - dev_back
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    env_file:
+      - ./build/phpmyadmin/.env
+    links:
+      - db
+    ports:
+      - 4000:80
+    profiles:
+      - db_debug
