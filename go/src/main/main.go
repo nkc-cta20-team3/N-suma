@@ -65,6 +65,15 @@ func main() {
 		routes.POST("/ua", api.UpdateAuth)        //公欠届認可
 		routes.POST("/uu", api.UpdateUser)        //ユーザ編集
 
+		routes.POST("/cl", api.CheckLogin)              //ログイン確認
+		routes.POST("/rdv", api.ReadDivision)           //区分取得
+		routes.POST("/al", api.ReadAlarm)               //通知詳細取得
+		routes.POST("/rul", api.ReadUserList)           //ユーザリスト取得
+		routes.POST("/ru", api.ReadUser)                //ユーザ詳細取得
+		routes.POST("/su", api.SortUser)                //ユーザソート
+		routes.POST("/du", api.DeleteUser)              //ユーザ削除
+		routes.POST("/rpi", api.ReadPrepareInformation) //登録用情報取得
+
 		// 実装予定の管理者向けのAPI
 		// routes.POST("/cd", api.CreateDocument)
 		// routes.POST("/dd", api.DeleteDocument)
