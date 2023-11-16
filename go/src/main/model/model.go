@@ -221,6 +221,16 @@ type ReadUserResponse struct {
 	PostID     int    `json:"post_id"`
 }
 
+// SortUserで使用する構造体
+type SortUserRequest struct {
+	UserID       int    `json:"user_id"`
+	SearchString string `json:"search_string"`
+}
+type SortUserResponse struct {
+	UserID    int    `json:"user_id"`
+	ClassAbbr string `json:"class_abbr"`
+}
+
 // 役職ID取得用
 type Post struct {
 	PostID int
