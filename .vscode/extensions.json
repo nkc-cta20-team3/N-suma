@@ -10,7 +10,8 @@
 		"vue.volar",
 		"42crunch.vscode-openapi",
 		"mermade.openapi-lint",
-		"arjun.swagger-viewer"
+		"arjun.swagger-viewer",
+		"naumovs.color-highlight"
 	],
 	// List of extensions recommended by VS Code that should not be recommended for users of this workspace.
 	"unwantedRecommendations": [

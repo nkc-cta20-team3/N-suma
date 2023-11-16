@@ -1,11 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
-const userId = "admin";
-const DocId = "";
-const classId = "";
-
-
 const router = createRouter({
   history: createWebHistory(),
   routes: [
@@ -69,13 +64,6 @@ const getCurrentUser = () => {
 router.beforeEach(async (to, from, next) => {
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     if (await getCurrentUser()) {
-      /*
-      store.dispatch("updateUser",{
-        userId : userId,
-        classId : classId,
-        DocId : DocId,
-      });
-      */
       if(to.meta.requiresAdmin && userId !== 'admin'){
         alert('管理者権限が必要です');
         next({path: '/' });

@@ -3,12 +3,16 @@ import { createStore } from "vuex";
 const store = createStore({
   state() {
     return {
+      useruuid: null,
       userId: null,
       ClassId: null,
       DocId: null,
     };
   },
   mutations: {
+    setUseruuid(state, useruuid) {
+      state.useruuid = useruuid;
+    },
     setUserId(state, userId) {
       state.userId = userId;
     },
@@ -20,6 +24,9 @@ const store = createStore({
     },
   },
   actions: {
+    updateUseruuid({ commit }, useruuid) {
+      commit("setUseruuid", useruuid);
+    },
     updateUserId({ commit }, userId) {
       // ユーザIDをVuexのstateに保存する
       commit("setUserId", userId);
@@ -32,6 +39,9 @@ const store = createStore({
     },
   },
   getters: {
+    getUseruuid(state) {
+      return state.useruuid;
+    },
     getUserId(state) {
       return state.userId;
     },

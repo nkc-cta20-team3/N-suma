@@ -1,33 +1,30 @@
 <template>
-  <v-app>
-    <v-app-bar app color="#FF9800">
-      <!-- ロゴ -->
-      <v-img src="#" alt="ロゴ" max-width="112" max-height="40"></v-img>
-      <v-img src="/vite.svg" max-width="112" max-height="28"></v-img>
+  <v-app-bar color="primary">
+    <!-- ロゴ #FF9800 -->
+    <v-img src="/logo.svg" max-width="112" max-height="40"></v-img>
 
-      <!-- メニュー項目 -->
-      <v-toolbar-items>
-        <v-btn v-if="!isLoggedIn" to="/">ホーム</v-btn>
-        <v-btn v-if="isLoggedIn && userId !== 'admin'" to="/document_form"
-          >各種書類提出</v-btn
-        >
-        <v-btn v-if="isLoggedIn && userId === 'student'" to="/document_list"
-          >各種書類閲覧
-        </v-btn>
-        <v-btn v-if="isLoggedIn && userId === 'teacher'" to="/document_auth"
-          >書類認可
-        </v-btn>
-        <v-btn v-if="isLoggedIn && userId === 'admin'" to="/admin_add"
-          >ユーザー登録
-        </v-btn>
-        <v-btn v-if="isLoggedIn && userId === 'admin'" to="/admin_edit"
-          >ユーザー情報編集
-        </v-btn>
-        <v-btn v-if="!isLoggedIn" @click="signInWithGoogle">ログイン </v-btn>
-        <v-btn v-if="isLoggedIn" @click="handleSignOut">ログアウト</v-btn>
-      </v-toolbar-items>
-    </v-app-bar>
-  </v-app>
+    <!-- メニュー項目 -->
+    <v-toolbar-items>
+      <v-btn v-if="!isLoggedIn" to="/">ホーム</v-btn>
+      <v-btn v-if="isLoggedIn && userId !== 'admin'" to="/document_form"
+        >各種書類提出</v-btn
+      >
+      <v-btn v-if="isLoggedIn && userId === 'student'" to="/document_list"
+        >各種書類閲覧
+      </v-btn>
+      <v-btn v-if="isLoggedIn && userId === 'teacher'" to="/document_auth"
+        >書類認可
+      </v-btn>
+      <v-btn v-if="isLoggedIn && userId === 'admin'" to="/admin_add"
+        >ユーザー登録
+      </v-btn>
+      <v-btn v-if="isLoggedIn && userId === 'admin'" to="/admin_edit"
+        >ユーザー情報編集
+      </v-btn>
+      <v-btn v-if="!isLoggedIn" @click="signInWithGoogle">ログイン </v-btn>
+      <v-btn v-if="isLoggedIn" @click="handleSignOut">ログアウト</v-btn>
+    </v-toolbar-items>
+  </v-app-bar>
 </template>
 
 <script setup>
@@ -40,11 +37,8 @@ import {
   signInWithRedirect,
 } from "firebase/auth";
 import router from "../router";
-//import store from './store';
+import store from "../store";
 const isLoggedIn = ref(false);
-const userId = "admin";
-const classId = "";
-const DocId = "";
 
 let auth;
 onMounted(() => {

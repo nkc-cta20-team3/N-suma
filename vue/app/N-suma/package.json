@@ -12,6 +12,7 @@
     "bulma": "^0.9.4",
     "firebase": "^9.22.1",
     "firebase-tools": "^12.2.1",
+    "vite-plugin-vuetify": "^1.0.2",
     "vue": "^3.2.47",
     "vue-router": "4",
     "vuetify": "^3.3.23",
