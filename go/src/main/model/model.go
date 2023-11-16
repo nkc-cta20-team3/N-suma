@@ -209,6 +209,18 @@ type TeacherReadAlarmResponse struct {
 	ClassAbbr  string `json:"class_abbr"`
 }
 
+// ReadUserで使用する構造体
+type ReadUserRequest struct {
+	AccessUserID int `json:"access_user_id"`
+	TargetUserID int `json:"target_user_id"`
+}
+type ReadUserResponse struct {
+	UserName   string `json:"user_name"`
+	UserNumber int    `json:"user_number"`
+	ClassAbbr  string `json:"class_abbr"`
+	PostID     int    `json:"post_id"`
+}
+
 // 役職ID取得用
 type Post struct {
 	PostID int
