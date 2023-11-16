@@ -1,9 +1,8 @@
 version: "3"
 services:
   vue:
+    container_name: n-suna_front
     build: ./build/vue/
-    links:
-      - go
     ports:
       - "5173:5173"
     volumes:
@@ -13,6 +12,7 @@ services:
     profiles:
       - dev_front
   go:
+    container_name: n-suna_back
     build: ./build/go/
     volumes:
       - "./go/src/:/go/src/"
@@ -24,10 +24,10 @@ services:
       - db
     tty: true
     init: true
-    command: air -c .air.toml
     profiles:
       - dev_back
   db:
+    container_name: n-suna_db
     build: ./build/db/
     volumes:
       - ./build/db/initdb.d:/docker-entrypoint-initdb.d
@@ -38,6 +38,7 @@ services:
       - dev_back
       - db_debug
   phpmyadmin:
+    container_name: n-suna_phpmyadmin
     image: phpmyadmin/phpmyadmin
     env_file:
       - ./build/phpmyadmin/.env
@@ -47,3 +48,6 @@ services:
       - 4000:80
     profiles:
       - db_debug
+networks:
+  default:
+    name: n-suna
