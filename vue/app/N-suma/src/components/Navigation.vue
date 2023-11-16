@@ -1,7 +1,10 @@
 <template>
   <v-app-bar color="primary">
-    <!-- ロゴ #FF9800 -->
-    <v-img src="/logo.svg" max-width="112" max-height="40"></v-img>
+    <!-- ロゴ -->
+    <!-- 作業中断-->
+    <div color="surface">
+      <v-img src="/logo.svg" max-width="112" max-height="40"></v-img>
+    </div>
 
     <!-- メニュー項目 -->
     <v-toolbar-items>
