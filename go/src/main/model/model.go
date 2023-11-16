@@ -64,9 +64,15 @@ type RejectAuthRequest struct {
 
 // NextDocumentで使用する構造体
 type NextDocumentRequest struct {
-	DocumentID int `json:"document_id"` //書類ID
-	UserID     int `json:"user_id"`     //ユーザID
+	DocumentID int  `json:"document_id"` //書類ID
+	UserID     int  `json:"user_id"`     //ユーザID
+	NextFlag   bool `json:"next_flag"`   //フラグ
 }
+
+/*
+NextFlagがtrueのときは次の書類
+NextFlagがfalseのときは前の書類
+*/
 
 type NextDocumentResponse struct {
 	DocumentID     int       `json:"document_id"`     //書類ID
