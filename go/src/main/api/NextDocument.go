@@ -1,20 +1,22 @@
 package api
 
 import (
+	"errors"
 	"fmt"
 	"main/infra"
 	"main/model"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 // model.go記載の構造体
 // type NextDocumentRequest struct {
-// 	DocumentID int `json:"document_id"` //書類ID
-// 	UserID     int `json:"user_id"`     //ユーザID
+// 	DocumentID int  `json:"document_id"` //書類ID(基準点)
+// 	UserID     int  `json:"user_id"`     //ユーザID(誰の書類？)
+// 	NextFlag   bool `json:"next_flag"`   //フラグ
 // }
-
 // type NextDocumentResponse struct {
 // 	DocumentID     int       `json:"document_id"`     //書類ID
 // 	RequestAt      time.Time `json:"request_at"`      //申請日
@@ -30,10 +32,16 @@ import (
 // 	DivisionName   string    `json:"division_name"`   //区分名
 // }
 
+type DocumentArray struct {
+	DocumentID int `json:"document_id"`
+}
+
 func NextDocument(c *gin.Context) {
 	//必要な変数(引数・戻り値)の定義
 	request := model.NextDocumentRequest{}
 	response := []model.NextDocumentResponse{}
+	documentArray := []DocumentArray{}
+	slide := 0
 
 	// var testUserID int
 	post := model.Post{}
@@ -50,11 +58,57 @@ func NextDocument(c *gin.Context) {
 	db := infra.DBInitGorm()
 
 	//ここでユーザIDと書類の整合性を確認(教員かどうか確認)
-	db.Table("user").Select("post_id").Where("user_id = ?", request.UserID).First(&post)
-
+	err := db.Table("user").Select("post_id").Where("user_id = ?", request.UserID).First(&post).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			// 行が見つからなかった場合の処理
+			c.JSON(http.StatusBadRequest, gin.H{"message": "DOCUMENT NOT FOUND"})
+			return
+		} else {
+			//その他のエラーハンドリング
+			c.JSON(http.StatusBadRequest, gin.H{"message": "OTHER ERROR"})
+			return
+		}
+	}
 	PostID = post.PostID
 
+	//ずらす書類を決める
+	if request.NextFlag {
+		slide = 1
+	} else {
+		slide = -1
+	}
+
 	if PostID == 1 {
+
+		//書類ID一覧を取得
+		err = db.Table("oa").Select("document_id").Where("user_id = ?", request.UserID).Scan(&documentArray).Error
+
+		for index := 0; index < len(DocumentArray.DocumentID); index++ {
+			// fmt.Println(i)
+		}
+
+		db.Table("oa").
+			Select(
+				"oa.document_id",
+				"oa.request_at",
+				"oa.start_time",
+				"oa.start_flame",
+				"oa.end_time",
+				"oa.end_flame",
+				"oa.location",
+				"oa.student_comment",
+				"oa.teacher_comment",
+				"user.user_number",
+				"cs.class_abbr",
+				"dv.division_name").
+			Joins("JOIN user on oa.user_id = user.user_id").
+			Joins("JOIN division AS dv ON oa.division_id = dv.division_id").
+			Joins("JOIN classification AS cs ON user.class_id = cs.class_id").
+			Where("document_id = ?", re)
+		Order("oa.request_at ASC").
+			First(&response)
+
 		//学生の処理
 		db.Table("oa").
 			Select(
