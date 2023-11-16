@@ -174,6 +174,11 @@ type UpdateUserRequest struct {
 	MailAddress  string `json:"mail_address"`
 }
 
+// ReadDivisionで使用する構造体
+type ReadDivisionReqest struct {
+	UserID int `json:"user_id"`
+}
+
 // 役職ID取得用
 type Post struct {
 	PostID int
