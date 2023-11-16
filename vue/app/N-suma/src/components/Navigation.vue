@@ -7,7 +7,7 @@
 
       <!-- メニュー項目 -->
       <v-toolbar-items>
-        <v-btn v-if="!isLoggedIn" text to="/">ホーム</v-btn>
+        <v-btn v-if="!isLoggedIn" to="/">ホーム</v-btn>
         <v-btn v-if="isLoggedIn && userId !== 'admin'" to="/document_form"
           >各種書類提出</v-btn
         >
