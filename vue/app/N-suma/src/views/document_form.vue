@@ -30,6 +30,7 @@
                 :rules="[() => !!StartTime || '必須']"
                 :error-messages="errorMessages"
                 label="公欠開始時間"
+                type="date"
                 placeholder=""
                 required
               ></v-text-field>
@@ -39,13 +40,14 @@
                 :rules="[() => !!EndTime || '必須']"
                 :error-messages="errorMessages"
                 label="公欠終了時間"
+                type="date"
                 placeholder=""
                 required
               ></v-text-field>
               <v-text-field
                 ref="location"
                 v-model="location"
-                :rules="[() => location || '必須']"
+                :rules="[() => !!location || '必須']"
                 :error-messages="errorMessages"
                 label="実施場所"
                 placeholder=""
@@ -94,21 +96,20 @@
 
 <script>
 //ヘッダー読み込み用
-import Header from '../components/Navigation.vue';
+import Header from "../components/Navigation.vue";
 
 export default {
   data: () => ({
-    components:{
+    components: {
       Header,
     },
     sections: ["就活", "資格試験", "弔事"],
     errorMessages: "",
-    name: null,
-    address: null,
-    city: null,
-    state: null,
-    zip: null,
-    country: null,
+    section: null,
+    StartTime: null,
+    EndTime: null,
+    location: null,
+    comment: null,
     formHasErrors: false,
   }),
 

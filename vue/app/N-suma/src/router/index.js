@@ -36,6 +36,11 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
+      path: "/admin_update",
+      component: () => import("../views/admin_update.vue"),
+      meta: { requiresAuth: true },
+    },
+    {
       path: "/practice",
       component: () => import("../views/practice.vue"),
       meta: { requiresAuth: true },

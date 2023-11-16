@@ -47,9 +47,11 @@
       <!-- 表示一覧 -->
       <v-row justify="center">
         <v-col>
-          <v-card class="mx-auto" max-width="700">
-            <v-list :items="item1" item-title="name" item-value="id"></v-list>
-          </v-card>
+          <router-link to="/admin_update">
+            <v-card class="mx-auto" max-width="700">
+              <v-list :items="item1" item-title="name" item-value="id"></v-list>
+            </v-card>
+          </router-link>
           <v-card class="mx-auto" max-width="700">
             <v-list :items="item2" item-title="name" item-value="id"></v-list>
           </v-card>
@@ -61,13 +63,16 @@
 
 <script>
 //ヘッダー読み込み用
-import Header from '../components/Navigation.vue';
+import Header from "../components/Navigation.vue";
+import router from "../router";
 
 export default {
   data: () => ({
-    components:{
+    components: {
       Header,
     },
+    studentId: null,
+    section: null,
     sections: ["担任", "学生"],
     item1: [
       {

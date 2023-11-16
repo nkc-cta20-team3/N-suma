@@ -1,101 +1,100 @@
 <template>
-    <nav class="navbar" role="navigation" aria-label="main navigation">
-      <div class="navbar-brand">
-        <!-- ロゴ -->
-        <router-link class="navbar-item" to="/">
-          <img src="#" alt="logo" width="112" height="40" />
+  <nav class="navbar" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+      <!-- ロゴ -->
+      <router-link class="navbar-item" to="/">
+        <img src="#" alt="logo" width="112" height="40" />
 
-          <img src="/vite.svg" width="112" height="28" />
+        <img src="/vite.svg" width="112" height="28" />
+      </router-link>
+
+      <!-- ハンバーガーメニュー -->
+      <a
+        role="button"
+        class="navbar-burger"
+        aria-label="menu"
+        aria-expanded="false"
+        data-target="navbarBasicExample"
+      >
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+
+    <!-- メニュー項目 -->
+    <div id="navbarBasicExample" class="navbar-menu">
+      <div class="navbar-start">
+        <router-link class="navbar-item" to="/" v-if="!isLoggedIn">
+          Home
         </router-link>
 
-        <!-- ハンバーガーメニュー -->
-        <a
-          role="button"
-          class="navbar-burger"
-          aria-label="menu"
-          aria-expanded="false"
-          data-target="navbarBasicExample"
+        <router-link
+          class="navbar-item"
+          to="/document_form"
+          v-if="isLoggedIn && userId !== 'admin'"
         >
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
-        </a>
+          各種書類提出
+        </router-link>
+
+        <router-link
+          class="navbar-item"
+          to="/document_list"
+          v-if="isLoggedIn && userId === 'student'"
+        >
+          各種書類閲覧
+        </router-link>
+
+        <router-link
+          class="navbar-item"
+          to="/document_auth"
+          v-if="isLoggedIn && userId === 'teacher'"
+        >
+          書類認可
+        </router-link>
+
+        <router-link
+          class="navbar-item"
+          to="admin_add"
+          v-if="isLoggedIn && userId === 'admin'"
+        >
+          ユーザー登録
+        </router-link>
+
+        <router-link
+          class="navbar-item"
+          to="admin_edit"
+          v-if="isLoggedIn && userId === 'admin'"
+        >
+          ユーザー情報編集
+        </router-link>
       </div>
 
-      <!-- メニュー項目 -->
-        <div id="navbarBasicExample" class="navbar-menu">
-        <div class="navbar-start">
-          
-          <router-link class="navbar-item" to="/" v-if="!isLoggedIn">
-            Home
-          </router-link>
+      <div class="navbar-end">
+        <div class="navbar-item">
+          <div class="buttons">
+            <a
+              @click="signInWithGoogle"
+              v-if="!isLoggedIn"
+              class="button is-primary"
+            >
+              <strong>Log in</strong>
+            </a>
+            <a @click="handleSignOut" v-if="isLoggedIn" class="button is-light">
+              <strong>Sign Out</strong>
+            </a>
 
-          <router-link
-            class="navbar-item"
-            to="/document_form"
-            v-if="isLoggedIn && userId !== 'admin'"
-          >
-            各種書類提出
-          </router-link>
-
-          <router-link
-            class="navbar-item"
-            to="/document_list"
-            v-if="isLoggedIn && userId === 'student'"
-          >
-            各種書類閲覧
-          </router-link>
-
-          <router-link
-            class="navbar-item"
-            to="/document_auth"
-            v-if="isLoggedIn && userId === 'teacher'"
-          >
-            書類認可
-          </router-link>
-
-          <router-link
-            class="navbar-item"
-            to="admin_add"
-            v-if="isLoggedIn && userId === 'admin'"
-          >
-            ユーザー登録
-          </router-link>
-
-          <router-link
-            class="navbar-item"
-            to="admin_edit"
-            v-if="isLoggedIn && userId === 'admin'"
-          >
-            ユーザー情報編集
-          </router-link>
-        </div>
-
-        <div class="navbar-end">
-          <div class="navbar-item">
-            <div class="buttons">
-              <a
-                @click="signInWithGoogle"
-                v-if="!isLoggedIn"
-                class="button is-primary"
-              >
-                <strong>Log in</strong>
-              </a>
-              <a @click="handleSignOut" v-if="isLoggedIn" class="button is-light">
-                <strong>Sign Out</strong>
-              </a>
-
-              <span class="material-symbols-outlined" v-if="isLoggedIn">
-                notifications
-              </span>
-              <span class="material-symbols-outlined" v-if="isLoggedIn">
-                account_circle
-              </span>
-            </div>
+            <span class="material-symbols-outlined" v-if="isLoggedIn">
+              notifications
+            </span>
+            <span class="material-symbols-outlined" v-if="isLoggedIn">
+              account_circle
+            </span>
           </div>
         </div>
       </div>
-    </nav>
+    </div>
+  </nav>
 </template>
 
 <script setup>
@@ -110,7 +109,7 @@ import {
 import router from "../router";
 //import store from './store';
 const isLoggedIn = ref(false);
-const userId = "student";
+const userId = "admin";
 const classId = "";
 const DocId = "";
 
