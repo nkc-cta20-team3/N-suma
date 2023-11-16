@@ -11,6 +11,16 @@ import (
 	"gorm.io/gorm"
 )
 
+// ReadDivisionで使用する構造体
+// type ReadDivisionRequest struct {
+// 	UserID int `json:"user_id"`
+// }
+
+// type ReadDivisionResponse struct {
+// 	DivisionID   int    `json:"division_id"`
+// 	DivisionName string `json:"division_name"`
+// }
+
 func ReadDivision(c *gin.Context) {
 
 	request := model.ReadDivisionRequest{}
@@ -26,8 +36,6 @@ func ReadDivision(c *gin.Context) {
 
 	//DB接続
 	db := infra.DBInitGorm()
-
-	fmt.Println(request)
 
 	//役職ID取得
 	db.Table("user").Select("post_id").Where("user_id = ?", request.UserID).Scan(&post)

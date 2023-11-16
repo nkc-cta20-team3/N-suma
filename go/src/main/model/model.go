@@ -184,6 +184,16 @@ type ReadDivisionResponse struct {
 	DivisionName string `json:"division_name"`
 }
 
+// ReadUserListで使用する構造体
+type ReadUserListRequest struct {
+	UserID int `json:"user_id"`
+}
+type ReadUserListResponse struct {
+	UserID    int    `json:"user_id"`
+	UserName  string `json:"user_name"`
+	ClassAbbr string `json:"class_abbr"`
+}
+
 // 役職ID取得用
 type Post struct {
 	PostID int
