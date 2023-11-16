@@ -1,8 +1,5 @@
 <template>
   <v-app id="inspire">
-      <!-- ヘッダーコンポーネントを読み込む -->
-      <Header />
-
     <v-main>
       <!--  -->
       <v-card class="mx-auto" max-width="586">
@@ -16,12 +13,9 @@
 </template>
 
 <script>
-//ヘッダー読み込み用
-import Header from '../components/Navigation.vue';
-
 export default {
   data: () => ({
-    components:{
+    components: {
       Header,
     },
     item1: [
