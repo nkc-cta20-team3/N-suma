@@ -4,4 +4,4 @@ WORKDIR /app/N-suma
 
 COPY ./vite.sh /vite.sh
 RUN chmod +x /vite.sh
-CMD [ "/vite.sh" ]
+CMD [ "sh","/vite.sh" ]
