@@ -231,6 +231,15 @@ type SortUserResponse struct {
 	ClassAbbr string `json:"class_abbr"`
 }
 
+// DeleteUserで使用する構造体
+type DeleteUserRequest struct {
+	AccessUserID int `json:"access_user_id"`
+	TargetUserID int `json:"target_user_id"`
+}
+type DeleteUserResponse struct {
+	Flag bool
+}
+
 // 役職ID取得用
 type Post struct {
 	PostID int

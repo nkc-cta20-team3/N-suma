@@ -41,8 +41,6 @@ func SortUser(c *gin.Context) {
 	if post.PostID == 0 {
 		//管理者のみ実行できる
 
-		// i, _ := strconv.Atoi(request.SearchString)
-
 		err := db.Table("user").
 			Select("user.user_id,cs.class_abbr").
 			Joins("LEFT OUTER JOIN classification cs ON user.class_id = cs.class_id").
