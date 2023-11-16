@@ -194,6 +194,21 @@ type ReadUserListResponse struct {
 	ClassAbbr string `json:"class_abbr"`
 }
 
+// ReadAlarmで使用する構造体
+type ReadAlarmRequest struct {
+	UserID int `json:"user_id"`
+}
+type StudentReadAlarmResponse struct {
+	DocumentID int       `json:"document_id"`
+	RequestAt  time.Time `json:"request_at"`
+	Status     int       `json:"status"`
+}
+type TeacherReadAlarmResponse struct {
+	DocumentID int    `json:"document_id"`
+	UserName   string `json:"user_name"`
+	ClassAbbr  string `json:"class_abbr"`
+}
+
 // 役職ID取得用
 type Post struct {
 	PostID int
