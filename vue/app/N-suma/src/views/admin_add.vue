@@ -1,8 +1,5 @@
 <template>
   <v-app id="inspire">
-    <!-- ヘッダーコンポーネントを読み込む -->
-    <Header />
-
     <!-- メイン -->
     <v-main>
       <v-row justify="center">
@@ -95,9 +92,6 @@
 </template>
 
 <script>
-//ヘッダー読み込み用
-import Header from "../components/Navigation.vue";
-
 export default {
   data: () => ({
     components: {

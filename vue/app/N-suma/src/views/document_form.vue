@@ -1,13 +1,5 @@
 <template>
   <v-app id="inspire">
-    <!-- ヘッダーコンポーネントを読み込む -->
-    <Header />
-    <!-- <v-app-bar app>
-      <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
-
-      <v-toolbar-title><Nav>Nスマ</Nav></v-toolbar-title>
-    </v-app-bar> -->
-
     <v-main>
       <!--  -->
 
@@ -95,9 +87,6 @@
 </template>
 
 <script>
-//ヘッダー読み込み用
-import Header from "../components/Navigation.vue";
-
 export default {
   data: () => ({
     components: {
