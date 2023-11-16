@@ -175,7 +175,7 @@ type UpdateUserRequest struct {
 }
 
 // ReadDivisionで使用する構造体
-type ReadDivisionReqest struct {
+type ReadDivisionRequest struct {
 	UserID int `json:"user_id"`
 }
 
