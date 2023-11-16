@@ -179,6 +179,11 @@ type ReadDivisionReqest struct {
 	UserID int `json:"user_id"`
 }
 
+type ReadDivisionResponse struct {
+	DivisionID   int    `json:"division_id"`
+	DivisionName string `json:"division_name"`
+}
+
 // 役職ID取得用
 type Post struct {
 	PostID int

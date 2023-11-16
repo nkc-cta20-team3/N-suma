@@ -14,5 +14,11 @@ func ReadDivision(c *gin.Context) {
 	//DB接続
 	db := infra.DBInitGorm()
 
+	//役職ID取得
 	db.Table("user").Select("post_id").Where("user_id = ?", request.UserID).Scan(&post)
+
+	if post.PostID == 1 {
+		//学生のみアクセス可能
+
+	}
 }
