@@ -1,7 +1,7 @@
 <template>
   <v-app id="inspire">
-      <!-- ヘッダーコンポーネントを読み込む -->
-      <Header />
+    <!-- ヘッダーコンポーネントを読み込む -->
+    <Header />
 
     <!-- メイン -->
     <v-main>
@@ -53,7 +53,7 @@
             <v-card-actions>
               <!-- 右寄せ用 -->
               <v-spacer></v-spacer>
-              
+
               <!-- キャンセルボタン -->
               <v-btn variant="text"> Cancel </v-btn>
               <v-slide-x-reverse-transition>
@@ -72,7 +72,7 @@
                   <span>Refresh form</span>
                 </v-tooltip>
               </v-slide-x-reverse-transition>
-              
+
               <!-- 登録ボタン -->
               <v-container fluid>
                 <v-btn color="green" @click="showAlertDialog">登録</v-btn>
@@ -92,28 +92,27 @@
       </v-row>
     </v-main>
   </v-app>
-
-
 </template>
 
 <script>
 //ヘッダー読み込み用
-import Header from '../components/Navigation.vue';
+import Header from "../components/Navigation.vue";
 
 export default {
   data: () => ({
-    components:{
+    components: {
       Header,
-    }}),
+    },
+  }),
 
   //アラートボックス処理
   data() {
     return {
       dialog: false,
-      name: '',
-      student_number: '',
-      indispensable: '',
-      position: '',
+      name: "",
+      student_number: "",
+      indispensable: "",
+      position: "",
       errorMessages: [],
     };
   },
@@ -123,15 +122,15 @@ export default {
     },
     registerUser() {
       // ユーザーを登録する処理を記述する
-      console.log('ユーザーを登録しました');
+      console.log("ユーザーを登録しました");
       this.dialog = false; // ダイアログを閉じる
     },
     cancelRegistration() {
       // キャンセル処理を記述する
-      console.log('登録をキャンセルしました');
+      console.log("登録をキャンセルしました");
       this.dialog = false; // ダイアログを閉じる
-    }
-  }
+    },
+  },
 };
 </script>
 <!-- script setup>
