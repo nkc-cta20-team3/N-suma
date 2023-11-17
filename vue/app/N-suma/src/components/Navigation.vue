@@ -1,17 +1,26 @@
 <template>
   <v-app-bar color="primary">
     <!-- ロゴ -->
-    <!-- 作業中断-->
-    <div color="surface">
-      <v-img src="/logo.svg" max-width="112" max-height="40"></v-img>
-    </div>
+    <v-img
+      class="bg-orange-lighten-4"
+      src="/logo.svg"
+      max-width="112"
+      max-height="40"
+    ></v-img>
+
+    <v-btn v-if="isLoggedIn" @click="consoleDebug">debug</v-btn>
 
     <!-- メニュー項目 -->
+    <!--
     <v-toolbar-items>
       <v-btn v-if="!isLoggedIn" to="/">ホーム</v-btn>
+
+      <v-btn v-if="isLoggedIn" @click="consoleDebug">debug</v-btn>
+
       <v-btn v-if="isLoggedIn && userId !== 'admin'" to="/document_form"
         >各種書類提出</v-btn
       >
+
       <v-btn v-if="isLoggedIn && userId === 'student'" to="/document_list"
         >各種書類閲覧
       </v-btn>
@@ -27,6 +36,7 @@
       <v-btn v-if="!isLoggedIn" @click="signInWithGoogle">ログイン </v-btn>
       <v-btn v-if="isLoggedIn" @click="handleSignOut">ログアウト</v-btn>
     </v-toolbar-items>
+    -->
   </v-app-bar>
 </template>
 
@@ -39,8 +49,7 @@ import {
   GoogleAuthProvider,
   signInWithRedirect,
 } from "firebase/auth";
-import router from "../router";
-import store from "../store";
+import { Store } from "vuex";
 const isLoggedIn = ref(false);
 
 let auth;
@@ -48,14 +57,6 @@ onMounted(() => {
   auth = getAuth();
   onAuthStateChanged(auth, (user) => {
     isLoggedIn.value = !!user;
-
-    if (user) {
-      store.dispatch("updateUser", {
-        userId: userId,
-        classId: ClassId,
-        DocId: DocId,
-      });
-    }
   });
 });
 
@@ -82,123 +83,25 @@ const signInWithGoogle = () => {
     });
 };
 
-//ハンバーガーメニューの実装
-document.addEventListener("DOMContentLoaded", () => {
-  // トグルボタンを取得
-  const $navbarBurgers = Array.prototype.slice.call(
-    document.querySelectorAll(".navbar-burger"),
-    0
-  );
+const consoleDebug = () => {
+  console.log("store user state");
+  console.log("====================");
+  console.log(Store.state.userPos);
+  console.log("====================");
 
-  // トグルボタンが存在する場合
-  if ($navbarBurgers.length > 0) {
-    // トグルボタンにクリックイベントを設定
-    $navbarBurgers.forEach((el) => {
-      el.addEventListener("click", () => {
-        // data-targetの属性値からナビゲーションメニューを取得
-        const target = el.dataset.target;
-        const $target = document.getElementById(target);
+  console.log("isLoggedIn ");
+  console.log("====================");
+  console.log(isLoggedIn.value);
+  console.log("====================");
 
-        // トグルボタンとナビゲーションメニューにis-activeクラスを設定
-        el.classList.toggle("is-active");
-        $target.classList.toggle("is-active");
-      });
-    });
-  }
-});
+  console.log("auth ");
+  console.log("====================");
+  console.log(auth);
+  console.log("====================");
+
+  console.log("userId ");
+  console.log("====================");
+  console.log(userId);
+  console.log("====================");
+};
 </script>
-
-<!-- 旧環境のやつ -->
-<!-- <template>
-  <nav class="navbar" role="navigation" aria-label="main navigation">
-    <div class="navbar-brand">
-      <router-link class="navbar-item" to="/">
-        <img src="#" alt="logo" width="112" height="40" />
-
-        <img src="/vite.svg" width="112" height="28" />
-      </router-link>
-
-      ハンバーガーメニュー
-      <a
-        role="button"
-        class="navbar-burger"
-        aria-label="menu"
-        aria-expanded="false"
-        data-target="navbarBasicExample"
-      >
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-      </a>
-    </div>
-
-     メニュー項目 
-    <div id="navbarBasicExample" class="navbar-menu">
-      <div class="navbar-start">
-        <router-link class="navbar-item" to="/" v-if="!isLoggedIn">
-          Home
-        </router-link>
-
-        <router-link
-          class="navbar-item"
-          to="/document_form"
-          v-if="isLoggedIn && userId !== 'admin'"
-        >
-          各種書類提出
-        </router-link>
-
-        <router-link
-          class="navbar-item"
-          to="/document_list"
-          v-if="isLoggedIn && userId === 'student'"
-        >
-          各種書類閲覧
-        </router-link>
-
-        <router-link
-          class="navbar-item"
-          to="/document_auth"
-          v-if="isLoggedIn && userId === 'teacher'"
-        >
-          書類認可
-        </router-link>
-
-        <router-link
-          class="navbar-item"
-          to="admin_add"
-          v-if="isLoggedIn && userId === 'admin'"
-        >
-          ユーザー登録
-        </router-link>
-
-        <router-link
-          class="navbar-item"
-          to="admin_edit"
-          v-if="isLoggedIn && userId === 'admin'"
-        >
-          ユーザー情報編集
-        </router-link>
-      </div>
-
-      <div class="navbar-end">
-        <div class="navbar-item">
-          <div class="buttons">
-            <a
-              @click="signInWithGoogle"
-              v-if="!isLoggedIn"
-              class="button is-primary"
-            >
-              <strong>Log in</strong>
-            </a>
-            <span class="material-symbols-outlined" v-if="isLoggedIn">
-              notifications
-            </span>
-            <a @click="handleSignOut" v-if="isLoggedIn" class="button is-light">
-              <strong>Sign Out</strong>
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </nav>
-</template> -->

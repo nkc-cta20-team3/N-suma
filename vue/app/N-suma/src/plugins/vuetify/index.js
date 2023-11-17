@@ -1,3 +1,8 @@
+/**
+ * plugins/vuetify/index.js
+ * included in `../index.js`
+ */
+
 import "vuetify/styles";
 import { createVuetify } from "vuetify";
 import * as components from "vuetify/components";
@@ -19,6 +24,7 @@ const NsumaLightTheme = {
 };
 
 /*
+// 背景色のみ変えた試作
 const NsumaDarkTheme = {
   dark: true,
   colors: {
@@ -36,6 +42,7 @@ const NsumaDarkTheme = {
 */
 
 /*
+  // デフォルトのテーマカラー 
   colors: {
     background: '#FFFFFF',
     surface: '#FFFFFF',
@@ -46,6 +53,7 @@ const NsumaDarkTheme = {
     success: '#4CAF50',
     warning: '#FB8C00',
   },
+  // サンプルのテーマカラー
   colors: {
     background: '#FFFFFF',
     surface: '#FFFFFF',

@@ -4,14 +4,11 @@
  */
 
 // Plugins
-import vuetify from './vuetify.js'
-import router from '../router'
-import store from "../store";
+import vuetify from "./vuetify.js";
+import firebase from "./firebase";
+import router from "./router";
+import store from "./store";
 
-export function registerPlugins (app) {
-  app
-    .use(vuetify)
-    .use(router)
-    .use(store)
+export function registerPlugins(app) {
+  app.use(vuetify).use(firebase).use(router).use(store);
 }
-
