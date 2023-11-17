@@ -41,7 +41,6 @@ func NextDocument(c *gin.Context) {
 	request := model.NextDocumentRequest{}
 	response := []model.NextDocumentResponse{}
 	documentArray := []DocumentArray{}
-	slide := 0
 
 	// var testUserID int
 	post := model.Post{}
@@ -72,21 +71,30 @@ func NextDocument(c *gin.Context) {
 	}
 	PostID = post.PostID
 
-	//ずらす書類を決める
-	if request.NextFlag {
-		slide = 1
-	} else {
-		slide = -1
-	}
-
 	if PostID == 1 {
+		pre_id := 0
+		var search_id int
 
 		//書類ID一覧を取得
 		err = db.Table("oa").Select("document_id").Where("user_id = ?", request.UserID).Scan(&documentArray).Error
 
-		for index := 0; index < len(DocumentArray.DocumentID); index++ {
-			// fmt.Println(i)
+		for _, id := range documentArray {
+
+			if request.DocumentID == id.DocumentID && !request.NextFlag {
+				//前の書類IDを取得
+				search_id = pre_id
+			} else if request.DocumentID == id.DocumentID && request.NextFlag {
+				//次の書類IDを取得(下記elseifで検索IDを取得させる)
+				pre_id = -1
+			} else if pre_id == -1 {
+				search_id = id.DocumentID
+			} else {
+				pre_id = id.DocumentID
+			}
 		}
+
+		fmt.Println("search_id:", search_id)
+		fmt.Println(documentArray)
 
 		db.Table("oa").
 			Select(
@@ -105,38 +113,8 @@ func NextDocument(c *gin.Context) {
 			Joins("JOIN user on oa.user_id = user.user_id").
 			Joins("JOIN division AS dv ON oa.division_id = dv.division_id").
 			Joins("JOIN classification AS cs ON user.class_id = cs.class_id").
-			Where("document_id = ?", re)
-		Order("oa.request_at ASC").
+			Where("document_id = ?", search_id).
 			First(&response)
-
-		//学生の処理
-		db.Table("oa").
-			Select(
-				"oa.document_id",
-				"oa.request_at",
-				"oa.start_time",
-				"oa.start_flame",
-				"oa.end_time",
-				"oa.end_flame",
-				"oa.location",
-				"oa.student_comment",
-				"oa.teacher_comment",
-				"user.user_number",
-				"cs.class_abbr",
-				"dv.division_name").
-			Joins("JOIN user on oa.user_id = user.user_id").
-			Joins("JOIN division AS dv ON oa.division_id = dv.division_id").
-			Joins("JOIN classification AS cs ON user.class_id = cs.class_id").
-			Where("user.user_id = ?", request.UserID).
-			Where("oa.status = ?", PostID).
-			Order("oa.request_at ASC").
-			First(&response)
-		if db.Error != nil {
-			fmt.Print("SQL ERROR!")
-			c.JSON(http.StatusBadRequest, gin.H{
-				"message": "SQL ERROR",
-			})
-		}
 		//戻り値
 		c.JSON(http.StatusOK, gin.H{
 			"message": response,
