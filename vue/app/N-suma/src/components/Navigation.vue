@@ -49,7 +49,7 @@ import {
   GoogleAuthProvider,
   signInWithRedirect,
 } from "firebase/auth";
-import { Store } from "vuex";
+
 const isLoggedIn = ref(false);
 
 let auth;
@@ -85,8 +85,6 @@ const signInWithGoogle = () => {
 
 const consoleDebug = () => {
   console.log("store user state");
-  console.log("====================");
-  console.log(Store.state.userPos);
   console.log("====================");
 
   console.log("isLoggedIn ");
