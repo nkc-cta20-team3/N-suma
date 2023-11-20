@@ -1,6 +1,6 @@
 /**
- * plugins/firebase/index.js
- * included in `../index.js`
+ * firebase/index.js
+ * included in `plugins/index.js`
  */
 
 // Import the functions you need from the SDKs you need

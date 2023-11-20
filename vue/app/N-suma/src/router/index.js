@@ -1,6 +1,6 @@
 /**
- * plugins/router/index.js
- * included in `../index.js`
+ * router/index.js
+ * included in `plugins/index.js`
  */
 
 import { createRouter, createWebHistory } from "vue-router";
