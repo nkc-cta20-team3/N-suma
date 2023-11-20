@@ -12,11 +12,11 @@
     "bulma": "^0.9.4",
     "firebase": "^9.22.1",
     "firebase-tools": "^12.2.1",
+    "pinia": "^2.1.7",
     "vite-plugin-vuetify": "^1.0.2",
     "vue": "^3.2.47",
     "vue-router": "4",
-    "vuetify": "^3.3.23",
-    "vuex": "^4.1.0"
+    "vuetify": "^3.3.23"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.1.0",
