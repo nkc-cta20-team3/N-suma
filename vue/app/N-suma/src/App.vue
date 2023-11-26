@@ -1,14 +1,9 @@
 <template>
-  <v-app>
-    <Navigation />
-    <!--
-    <router-view />
-    -->
-  </v-app>
+  <router-view />
 </template>
 
 <script setup>
-import Navigation from "@/components/Navigation.vue";
+// TODO: add global actions here
 </script>
 
 <style>

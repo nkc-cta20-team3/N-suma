@@ -8,49 +8,36 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
 import { auth, provider } from "@/plugins/firebase";
-import {
-  onAuthStateChanged,
-  signInWithRedirect,
-  signOut,
-} from "firebase/auth";
+import { onAuthStateChanged, signInWithRedirect, signOut } from "firebase/auth";
 
-export const useStore = defineStore("user", () => {
-  const user = ref(null);
-  const role = ref(null);
-  const isLogin = ref(false);
+export const useStore = defineStore("user", {
+  state: () => {
+    const user = null;
+    const role = null;
+    const isLogin = false;
 
-  onAuthStateChanged(auth, (u) => {
-    // 取得したユーザー情報を格納する
-    // ユーザーがログインしていない場合はnullを返す
-    user.value = u;
-
-    // ユーザー情報が取得できた場合に、役職を取得するAPIを呼び出す
-    //ここで取得した役職をstoreに格納し、ログイン状態を管理する
-    if (u) {
-      // TODO: getRole()を実装する
-      // role.value = getRole(u)
-      role.value = "admin";
-
-      isLogin.value = true;
-    } else {
-      role.value = null;
-      isLogin.value = false;
-    }
-  });
-
-  async function login() {
-    await signInWithRedirect(auth, provider);
-  }
-
-  async function logout() {
-    await signOut(auth);
-  }
-
-  return {
-    user,
-    role,
-    isLogin,
-    login,
-    logout,
-  };
+    return {
+      user,
+      role,
+      isLogin,
+    };
+  },
+  getters: {
+    // ユーザー情報を取得する
+    getUser: (state) => state.user,
+    // 役職を取得する
+    getRole: (state) => state.role,
+    // ログイン状態を取得する
+    getIsLogin: (state) => state.isLogin,
+  },
+  actions: {
+    // ログインする
+    async login() {
+      await signInWithRedirect(auth, provider);
+    },
+    // ログアウトする
+    async logout() {
+      await signOut(auth);
+    },
+  },
 });

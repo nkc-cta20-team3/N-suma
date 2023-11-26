@@ -9,78 +9,58 @@ import { useStore } from "@/stores/user";
 const router = createRouter({
   history: createWebHistory(),
   routes: [
-    { path: "/", component: () => import("@/views/index.vue") },
-    /*
     {
-      path: "/document_list",
-      component: () => import("@/views/document_list.vue"),
+      path: "/",
+      component: () => import("@/layouts/Default.vue"),
+      children: [
+        {
+          path: "",
+          component: () => import("@/views/Index.vue"),
+        },
+      ],
+    },
+    {
+      path: "/app",
+      component: () => import("@/layouts/Default.vue"),
+      children: [
+        {
+          path: "admin",
+          component: () => import("@/layouts/Main.vue"),
+          children: [
+            {
+              path: "",
+              component: () => import("@/views/Admin.vue"),
+            },
+          ],
+          // meta: { requiresAuth: true },
+        },
+      ],
       meta: { requiresAuth: true },
     },
     {
-      path: "/document_form",
-      component: () => import("@/views/document_form.vue"),
-      meta: { requiresAuth: true },
+      path: "/:pathMatch(.*)*",
+      redirect: "/",
     },
-    {
-      path: "/document_auth",
-      component: () => import("@/views/document_auth.vue"),
-      meta: { requiresAuth: true },
-    },
-    {
-      path: "/document_accept",
-      component: () => import("@/views/document_accept.vue"),
-      meta: { requiresAuth: true },
-    },
-    {
-      path: "/admin_add",
-      component: () => import("@/views/admin_add.vue"),
-      meta: { requiresAuth: true },
-    },
-    {
-      path: "/admin_edit",
-      component: () => import("@/views/admin_edit.vue"),
-      meta: { requiresAuth: true },
-    },
-    {
-      path: "/admin_update",
-      component: () => import("@/views/admin_update.vue"),
-      meta: { requiresAuth: true },
-    },
-    {
-      path: "/practice",
-      component: () => import("@/views/practice.vue"),
-      meta: { requiresAuth: true },
-    },*/
   ],
 });
 
-router.beforeEach(async (to, from, next) => {
+//appにアクセスしたときにログインしていなければログインページに飛ばす
+router.beforeEach((to, from, next) => {
   const store = useStore();
 
-  if (to.matched.some((record) => record.meta.requiresAuth)) {
-    // TODO: storeからユーザー情報を取得する
-    if (store.isLogin) {
-      /*
-      if (to.meta.requiresAdmin && userId !== "admin") {
-        alert("管理者権限が必要です");
-        next({ path: "/" });
-      } else if (to.meta.requiresStudent && userId !== "student") {
-        alert("学生権限が必要です");
-        next({ path: "/" });
-      } else if (to.meta.requiresTeacher && userId !== "teacher") {
-        alert("教員権限が必要です");
-        next({ path: "/" });
-      } else {
-        next();
-      }
-      */
-      next();
-    } else {
-      alert("ログインし直してください");
-      next({ path: "/" });
-    }
+  // storeのisLoginを取得。storeの情報を取得しきるまで待つ。
+  const isLogin = store.isLogin;
+
+  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
+
+  if (requiresAuth && !isLogin) {
+    console.log(isLogin);
+    alert("ログインしてください");
+    next({ path: "/" });
+    return;
   } else {
     next();
+    return;
   }
 });
 
