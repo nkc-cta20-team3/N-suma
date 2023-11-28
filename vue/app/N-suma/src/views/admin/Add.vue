@@ -135,7 +135,12 @@ const state = ref({
 
 // TODO: 役職が未定義のユーザー一覧を取得する(uuidとemailの組)
 const uuids = ["1", "2", "3", "4"];
-const emails = ["11", "22", "33", "44"];
+const emails = [
+  "11@example.com",
+  "22@example.com",
+  "33@example.com",
+  "44@example.com",
+];
 
 const classes = ["CTA20", "CTB20", "CTC20", "CTD20", "CTE20", "CTF20"];
 const roles = ["担任", "学生"];
@@ -162,13 +167,13 @@ function emailSelected(e) {
 
 async function onSubmit() {
   const validResult = await mainForm.value.validate();
-
-  if (validResult.valid) {
-    // ユーザーを登録する処理を記述する
-    console.log("ユーザーを登録しました");
-  } else {
+  if (!validResult.valid) {
     console.log("ユーザーを登録できませんでした");
+    return;
   }
+
+  // TODO:ユーザーを登録する処理を記述する
+  console.log("ユーザーを登録しました");
 }
 
 onMounted(() => {
