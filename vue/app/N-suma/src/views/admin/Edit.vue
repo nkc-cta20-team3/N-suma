@@ -77,42 +77,38 @@
 </template>
 
 <script setup>
+import { ref } from "vue";
 
+const delete_dialog = ref(false);
+const update_dialog = ref(false);
 
-export default {
+function delete_showAlertDialog() {
+  // ユーザー削除の処理
+  delete_dialog.value = true;
+}
 
-  data() {
-    return {
-      delete_dialog: false,
-      update_dialog: false,
-    };
-  },
-  methods: {
-    // ユーザー削除の処理
-    delete_showAlertDialog() {
-      this.delete_dialog = true;
-    },
-    delete_registerUser() {
-      console.log("ユーザーを削除しました");
-      this.delete_dialog = false;
-    },
-    delete_cancelRegistration() {
-      console.log("削除をキャンセルしました");
-      this.delete_dialog = false;
-    },
+function delete_registerUser() {
+  console.log("ユーザーを削除しました");
+  this.delete_dialog = false;
+}
 
-    // ユーザー更新の処理
-    update_showAlertDialog() {
-      this.update_dialog = true;
-    },
-    update_registerUser() {
-      console.log("ユーザーを更新しました");
-      this.update_dialog = false;
-    },
-    update_cancelRegistration() {
-      console.log("更新をキャンセルしました");
-      this.update_dialog = false;
-    },
-  },
-};
+function delete_cancelRegistration() {
+  console.log("削除をキャンセルしました");
+  this.delete_dialog = false;
+}
+
+function update_showAlertDialog() {
+  // ユーザー更新の処理
+  this.update_dialog = true;
+}
+
+function update_registerUser() {
+  console.log("ユーザーを更新しました");
+  this.update_dialog = false;
+}
+
+function update_cancelRegistration() {
+  console.log("更新をキャンセルしました");
+  this.update_dialog = false;
+}
 </script>
