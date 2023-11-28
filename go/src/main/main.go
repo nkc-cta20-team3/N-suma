@@ -97,9 +97,10 @@ func main() {
 		routes3.POST("/test", student.TestAPI)
 
 		//学生用
-		routes.POST("/nd", student.NextDocument)  //公欠届切り替え
-		routes.POST("/ral", student.ReadAuthList) //未認可リスト取得
-		routes.POST("/rd", student.ReadDocument)  //公欠届詳細取得
+		routes.POST("/nd", student.NextDocument)   //公欠届切り替え
+		routes.POST("/ral", student.ReadAuthList)  //未認可リスト取得
+		routes.POST("/rd", student.ReadDocument)   //公欠届詳細取得
+		routes.POST("/cd", student.CreateDocument) //公欠届作成
 	}
 
 	g.Run(":8080")
