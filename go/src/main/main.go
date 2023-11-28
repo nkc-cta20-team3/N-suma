@@ -8,6 +8,7 @@ import (
 
 	// ローカルモジュールのインポート
 	"main/api"
+	"main/api/student"
 	"main/apiHello"
 )
 
@@ -88,6 +89,11 @@ func main() {
 		routes2.GET("/name", apiHello.Name)
 		routes2.GET("/time", apiHello.Time)
 		routes2.POST("/sum", apiHello.Sum)
+	}
+
+	routes3 := g.Group("/api/student")
+	{
+		routes3.POST("/test", student.TestAPI)
 	}
 
 	g.Run(":8080")
