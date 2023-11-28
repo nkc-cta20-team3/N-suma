@@ -102,6 +102,7 @@ func main() {
 		routes.POST("/rd", student.ReadDocument)      //公欠届詳細取得
 		routes.POST("/cd", student.CreateDocument)    //公欠届作成
 		routes.POST("/rsd", student.ResubmitDocument) //公欠届再提出
+		routes.POST("/ca", student.CheckAlarm)        //通知取得
 	}
 
 	g.Run(":8080")
