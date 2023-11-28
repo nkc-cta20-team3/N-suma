@@ -8,6 +8,7 @@ import (
 
 	// ローカルモジュールのインポート
 	"main/api"
+	"main/api/admin"
 	"main/api/student"
 	"main/api/teacher"
 	"main/apiHello"
@@ -118,6 +119,16 @@ func main() {
 		routes4.POST("/ra", teacher.RejectAuth)    //公欠届却下
 		routes4.POST("/ca", teacher.CheckAlarm)    //通知取得
 		routes4.POST("/al", teacher.ReadAlarm)     //通知詳細取得
+	}
+
+	routes5 := g.Group("/api/admin")
+	{
+		routes5.POST("/cu", admin.CreateUser)    //ユーザ作成
+		routes5.POST("/uu", admin.UpdateUser)    //ユーザ編集
+		routes5.POST("/rul", admin.ReadUserList) //ユーザリスト取得
+		routes5.POST("/ru", admin.ReadUser)      //ユーザ詳細取得
+		routes5.POST("/su", admin.SortUser)      //ユーザソート
+		routes5.POST("/du", admin.DeleteUser)    //ユーザ削除
 	}
 
 	g.Run(":8080")
