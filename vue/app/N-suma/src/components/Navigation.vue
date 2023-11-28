@@ -15,12 +15,8 @@
 
       <!-- Admin Button -->
       <template v-if="store.role == 'admin'">
-        <!-- TODO:適切なルートを設定する -->
-        <v-btn to="/app/admin">admin</v-btn>
-        <v-btn to="/app/admin">admin</v-btn>
-        <v-btn to="/app/admin">admin</v-btn>
-        <v-btn to="/app/admin">admin</v-btn>
-        <v-btn to="/app/admin">admin</v-btn>
+        <v-btn to="/app/admin/add">ユーザー登録</v-btn>
+        <v-btn to="/app/admin/list">ユーザー情報編集</v-btn>
       </template>
 
       <!-- Student Button -->

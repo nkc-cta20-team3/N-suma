@@ -28,11 +28,21 @@ const router = createRouter({
           component: () => import("@/layouts/Main.vue"),
           children: [
             {
-              path: "",
-              component: () => import("@/views/Admin.vue"),
+              path: "add",
+              component: () => import("@/views/admin/Add.vue"),
+            },
+            {
+              path: "list",
+              component: () => import("@/views/admin/List.vue"),
+            },
+            {
+              path: "edit",
+              component: () => import("@/views/admin/Edit.vue"),
+              // props: true,
+              // props: (route) => ({ id: route.query.id }),
             },
           ],
-          // meta: { requiresAuth: true },
+          meta: { requiresAdmin: true },
         },
       ],
       meta: { requiresAuth: true },
