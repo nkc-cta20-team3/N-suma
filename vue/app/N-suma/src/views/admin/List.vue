@@ -1,44 +1,4 @@
 <template>
-  <!-- 検索バー -->
-  <v-row justify="center">
-    <v-col cols="13" sm="10" md="8" lg="6">
-      <v-card ref="form">
-        <v-container>
-          <v-row justify="center">
-            <!-- テキストボックス -->
-            <v-col cols="8">
-              <v-text-field
-                label="学籍番号"
-                v-model="studentId"
-                ref="student_number"
-              ></v-text-field>
-            </v-col>
-
-            <!-- 検索ボタン -->
-            <v-col cols="1" class="d-flex justify-end align-center">
-              <v-btn @click="buttonClick" icon>
-                <v-icon>mdi-arrow-down-bold-circle</v-icon>
-              </v-btn>
-            </v-col>
-
-            <!-- 役職メニュー -->
-            <v-col cols="2">
-              <v-autocomplete
-                ref="section"
-                v-model="section"
-                :items="sections"
-                label="区分"
-                placeholder="選択"
-                required
-                persistent-hint
-              ></v-autocomplete>
-            </v-col>
-          </v-row>
-        </v-container>
-      </v-card>
-    </v-col>
-  </v-row>
-
   <!-- 表示一覧 -->
   <v-row justify="center">
     <v-col>
@@ -47,38 +7,99 @@
           <v-list :items="item1" item-title="name" item-value="id"></v-list>
         </v-card>
       </router-link>
-      <v-card class="mx-auto" max-width="700">
+      <v-card>
         <v-list :items="item2" item-title="name" item-value="id"></v-list>
       </v-card>
     </v-col>
   </v-row>
+
+  <v-container>
+    <v-row justify="center">
+      <!-- 検索バー -->
+      <v-col cols="12" sm="10" md="8" lg="6">
+        <template class="d-flex flex-row justify-end text-black">
+          <!-- 役職選択 -->
+          <v-select
+            v-model="role"
+            :items="roles"
+            label="役職"
+            persistent-hint
+            class="pr-2"
+          ></v-select>
+
+          <!-- 学籍番号入力 -->
+          <v-text-field
+            v-model="number"
+            label="学籍番号"
+            persistent-hint
+            placeholder="20201001"
+            persistent-placeholder
+            class="pr-2"
+          ></v-text-field>
+          <!-- 検索ボタン -->
+          <v-btn @click="buttonClick" icon>
+            <!-- font url : https://pictogrammers.com/library/mdi/icon/magnify/ -->
+            <v-icon>mdi mdi-magnify</v-icon>
+          </v-btn>
+        </template>
+      </v-col>
+
+      <v-col cols="12" sm="10" md="8" lg="6">
+        <v-list lines="one" v-for="item in items" :key="item.id">
+          <v-hover v-slot:default="{ hover }">
+            <v-expand-transition>
+              <v-overlay absolute :opacity="0.2" :value="hover">
+                <v-btn color="white" class="black--text"> Show Message </v-btn>
+              </v-overlay>
+            </v-expand-transition>
+            <v-list-item class="border">
+              <v-list-item-title>{{ item.name }}</v-list-item-title>
+            </v-list-item>
+          </v-hover>
+        </v-list>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script setup>
 import { onMounted, ref } from "vue";
 
+const roles = ["担任", "学生"];
+
+const mainForm = ref(null);
+const number = ref(null);
+const role = ref(null);
+
 const studentId = ref(null);
 const section = ref(null);
 const sections = ref(["担任", "学生"]);
-const item1 = ref([
+const items = ref([
+  {
+    name: "学生1",
+    id: 1,
+  },
+  {
+    name: "学生1",
+    id: 1,
+  },
   {
     name: "学生1",
     id: 1,
   },
 ]);
-const item2 = ref([
-  {
-    name: "学生2",
-    id: 2,
-  },
-]);
 
-function buttonClick() {
+async function buttonClick() {
   console.log("button clicked");
+
+  const validResult = await mainForm.value.validate();
+  if (!validResult.valid) {
+    console.log("ユーザーを登録できませんでした");
+    return;
+  }
 }
 
 onMounted(() => {
   console.log("mounted");
 });
-
 </script>
