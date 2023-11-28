@@ -98,14 +98,25 @@ func main() {
 		routes3.POST("/test", student.TestAPI)
 
 		//学生用
-		routes.POST("/nd", student.NextDocument)      //公欠届切り替え
-		routes.POST("/ral", student.ReadAuthList)     //未認可リスト取得
-		routes.POST("/rd", student.ReadDocument)      //公欠届詳細取得
-		routes.POST("/cd", student.CreateDocument)    //公欠届作成
-		routes.POST("/rsd", student.ResubmitDocument) //公欠届再提出
-		routes.POST("/ca", student.CheckAlarm)        //通知取得
-		routes.POST("/rdv", student.ReadDivision)     //区分取得
-		routes.POST("/al", student.ReadAlarm)         //通知詳細取得
+		routes3.POST("/nd", student.NextDocument)      //公欠届切り替え
+		routes3.POST("/ral", student.ReadAuthList)     //未認可リスト取得
+		routes3.POST("/rd", student.ReadDocument)      //公欠届詳細取得
+		routes3.POST("/cd", student.CreateDocument)    //公欠届作成
+		routes3.POST("/rsd", student.ResubmitDocument) //公欠届再提出
+		routes3.POST("/ca", student.CheckAlarm)        //通知取得
+		routes3.POST("/rdv", student.ReadDivision)     //区分取得
+		routes3.POST("/al", student.ReadAlarm)         //通知詳細取得
+	}
+
+	routes4 := g.Group("/api/teacher")
+	{
+		routes4.POST("/nd", teacher.NextDocument)  //公欠届切り替え
+		routes4.POST("/ral", teacher.ReadAuthList) //未認可リスト取得
+		routes4.POST("/rd", teacher.ReadDocument)  //公欠届詳細取得
+		routes4.POST("/ua", teacher.UpdateAuth)    //公欠届認可
+		routes4.POST("/ra", teacher.RejectAuth)    //公欠届却下
+		routes4.POST("/ca", teacher.CheckAlarm)    //通知取得
+		routes4.POST("/al", teacher.ReadAlarm)     //通知詳細取得
 	}
 
 	g.Run(":8080")
