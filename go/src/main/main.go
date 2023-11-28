@@ -9,6 +9,7 @@ import (
 	// ローカルモジュールのインポート
 	"main/api"
 	"main/api/student"
+	"main/api/teacher"
 	"main/apiHello"
 )
 
