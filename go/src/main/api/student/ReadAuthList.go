@@ -66,8 +66,8 @@ func ReadAuthList(c *gin.Context) {
 			Joins("JOIN user ON oa.user_id = user.user_id").
 			Joins("JOIN division AS dv ON oa.division_id = dv.division_id").
 			Joins("JOIN classification AS cs ON user.class_id = cs.class_id").
-			Where("oa.status = ?", post).
 			Where("oa.user_id = ?", request.UserID).
+			Where("user.user_flag = true").
 			Scan(&response)
 		if db.Error != nil {
 			fmt.Print("STUDENT DATA CATCH ERROR!")
