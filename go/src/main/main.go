@@ -91,6 +91,7 @@ func main() {
 		routes2.POST("/sum", apiHello.Sum)
 	}
 
+	//学生がアクセスできるAPI
 	routes3 := g.Group("/api/student")
 	{
 		//お試し用
@@ -103,6 +104,7 @@ func main() {
 		routes.POST("/cd", student.CreateDocument)    //公欠届作成
 		routes.POST("/rsd", student.ResubmitDocument) //公欠届再提出
 		routes.POST("/ca", student.CheckAlarm)        //通知取得
+		routes.POST("/rdv", student.ReadDivision)     //区分取得
 	}
 
 	g.Run(":8080")
