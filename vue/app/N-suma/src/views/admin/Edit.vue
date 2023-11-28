@@ -1,114 +1,184 @@
 <template>
-  <v-row justify="center">
-    <v-col cols="12" sm="10" md="8" lg="6">
-      <v-card ref="form">
-        <v-card-text>
-          <v-text-field
-            ref="name"
-            v-model="name"
-            :rules="[() => !!name || '必須']"
-            :error-messages="errorMessages"
-            label="氏名"
-            placeholder=""
-            required
-          ></v-text-field>
-          <v-text-field
-            ref="student_number"
-            v-model="student_number"
-            :rules="[() => !!student_number || '必須']"
-            :error-messages="errorMessages"
-            label="学籍番号"
-            placeholder=""
-            required
-          ></v-text-field>
-          <v-text-field
-            ref="indispensable"
-            v-model="indispensable"
-            :rules="[() => !!indispensable || '必須']"
-            :error-messages="errorMessages"
-            label="クラス略称"
-            placeholder=""
-            required
-          ></v-text-field>
-          <v-text-field
-            ref="position"
-            v-model="position"
-            :rules="[() => !!position || '必須']"
-            :error-messages="errorMessages"
-            label="役職"
-            placeholder=""
-            required
-          ></v-text-field>
-        </v-card-text>
-        <v-divider class="mt-12"></v-divider>
-        <!-- ボタン処理 -->
-        <v-card-actions>
-          <!-- 更新ボタン -->
-          <v-container fluid>
-            <v-btn color="green" @click="update_showAlertDialog">更新</v-btn>
-            <v-dialog v-model="update_dialog" max-width="400">
-              <v-card>
-                <v-card-title>ユーザーを更新しますか？</v-card-title>
-                <v-card-actions>
-                  <v-btn @click="update_registerUser">更新</v-btn>
-                  <v-btn @click="update_cancelRegistration">キャンセル</v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
-          </v-container>
+  <v-container>
+    <v-row justify="center">
+      <v-col cols="12" sm="10" md="8" lg="6">
+        <!-- 入力フォーム -->
+        <v-form ref="mainForm">
+          <!-- UUID選択 -->
+          <v-select
+            v-model="state.uuid"
+            label="uuid"
+            :disabled="true"
+          ></v-select>
 
-          <!-- 削除ボタン -->
-          <v-container fluid>
-            <v-btn color="red" @click="delete_showAlertDialog">削除</v-btn>
-            <v-dialog v-model="delete_dialog" max-width="400">
-              <v-card>
-                <v-card-title>ユーザーを削除しますか？</v-card-title>
-                <v-card-actions>
-                  <v-btn @click="delete_registerUser">削除</v-btn>
-                  <v-btn @click="delete_cancelRegistration">キャンセル</v-btn>
-                </v-card-actions>
-              </v-card>
+          <!-- Eメール選択 -->
+          <v-select
+            v-model="state.email"
+            label="Eメール"
+            :disabled="true"
+          ></v-select>
+
+          <!-- 氏名入力 -->
+          <v-text-field
+            v-model="state.name"
+            label="氏名"
+            persistent-hint
+            placeholder="田中太郎"
+            persistent-placeholder
+            :rules="requiredRule"
+          ></v-text-field>
+
+          <!-- 学籍番号入力 -->
+          <v-text-field
+            v-model="state.number"
+            label="学籍番号"
+            persistent-hint
+            placeholder="20201001"
+            persistent-placeholder
+            :rules="numberRules"
+          ></v-text-field>
+
+          <!-- TODO&MEMO:クラス略称の一覧が入手できた場合、ハードコーディングしてしまった方がよさそう -->
+          <!-- クラス略称選択 -->
+          <v-select
+            v-model="state.class"
+            :items="classes"
+            label="クラス略称"
+            persistent-hint
+            placeholder="CTA20"
+            persistent-placeholder
+            :rules="requiredRule"
+          ></v-select>
+
+          <!-- 役職選択 -->
+          <v-select
+            v-model="state.role"
+            :items="roles"
+            label="役職"
+            persistent-hint
+            placeholder="学生"
+            persistent-placeholder
+            :rules="requiredRule"
+          ></v-select>
+
+          <!-- 各種ボタン -->
+          <template class="d-flex flex-row justify-end text-black">
+            <!-- 更新ボタン -->
+            <v-dialog transition="dialog-top-transition" width="auto">
+              <template v-slot:activator="{ props }">
+                <v-btn height="40" width="150" v-bind="props">更新</v-btn>
+              </template>
+              <template v-slot:default="{ isActive }">
+                <v-card>
+                  <v-card-text>
+                    <div>ユーザーを更新しますか?</div>
+                  </v-card-text>
+                  <v-card-actions class="justify-center">
+                    <v-btn
+                      height="40"
+                      width="150"
+                      @click="isActive.value = false"
+                      >キャンセル</v-btn
+                    >
+                    <v-btn
+                      height="40"
+                      width="150"
+                      @click="
+                        () => {
+                          isActive.value = false;
+                          onUpdate();
+                        }
+                      "
+                      >更新</v-btn
+                    >
+                  </v-card-actions>
+                </v-card>
+              </template>
             </v-dialog>
-          </v-container>
-        </v-card-actions>
-      </v-card>
-    </v-col>
-  </v-row>
+            <!-- 削除ボタン -->
+            <v-dialog transition="dialog-top-transition" width="auto">
+              <template v-slot:activator="{ props }">
+                <v-btn height="40" width="150" v-bind="props">削除</v-btn>
+              </template>
+              <template v-slot:default="{ isActive }">
+                <v-card>
+                  <v-card-text>
+                    <div>ユーザーを削除しますか?</div>
+                  </v-card-text>
+                  <v-card-actions class="justify-center">
+                    <v-btn
+                      height="40"
+                      width="150"
+                      @click="isActive.value = false"
+                      >キャンセル</v-btn
+                    >
+                    <v-btn
+                      height="40"
+                      width="150"
+                      @click="
+                        () => {
+                          isActive.value = false;
+                          onDelete();
+                        }
+                      "
+                      >削除</v-btn
+                    >
+                  </v-card-actions>
+                </v-card>
+              </template>
+            </v-dialog>
+          </template>
+        </v-form>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 
-const delete_dialog = ref(false);
-const update_dialog = ref(false);
+const mainForm = ref(null);
 
-function delete_showAlertDialog() {
-  // ユーザー削除の処理
-  delete_dialog.value = true;
-}
+const state = ref({
+  uuid: "1",
+  email: "11@example.com",
+  name: "",
+  number: "",
+  class: "",
+  role: "",
+});
 
-function delete_registerUser() {
-  console.log("ユーザーを削除しました");
-  this.delete_dialog = false;
-}
+const classes = ["CTA20", "CTB20", "CTC20", "CTD20", "CTE20", "CTF20"];
+const roles = ["担任", "学生"];
 
-function delete_cancelRegistration() {
-  console.log("削除をキャンセルしました");
-  this.delete_dialog = false;
-}
+const requiredRule = [(v) => !!v || "必須"];
 
-function update_showAlertDialog() {
-  // ユーザー更新の処理
-  this.update_dialog = true;
-}
+const numberRules = [
+  (v) => v.length == 8 || "学籍番号は8桁です",
+  (v) => /^\d+$/.test(v) || "学籍番号は半角数字です",
+  (v) => !!v || "必須",
+];
 
-function update_registerUser() {
+async function onUpdate() {
+  const validResult = await mainForm.value.validate();
+  if (!validResult.valid) {
+    console.log("ユーザーを更新できませんでした");
+  }
+  // TODO:ユーザーを更新する処理を記述する
   console.log("ユーザーを更新しました");
-  this.update_dialog = false;
 }
 
-function update_cancelRegistration() {
-  console.log("更新をキャンセルしました");
-  this.update_dialog = false;
+async function onDelete() {
+  const validResult = await mainForm.value.validate();
+  if (!validResult.valid) {
+    console.log("ユーザーを削除できませんでした");
+    return;
+  }
+  // TODO:ユーザーを削除する処理を記述する
+  console.log("ユーザーを削除しました");
 }
+
+onMounted(() => {
+  // TODO:ユーザー情報(uuid&email)をpropsから取得する処理を記述する。存在しない場合、listに遷移する。
+});
 </script>
