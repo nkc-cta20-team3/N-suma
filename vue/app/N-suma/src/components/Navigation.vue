@@ -1,6 +1,6 @@
 <template>
-  <v-app-bar app color="primary">
-    <!-- ロゴ -->
+  <v-app-bar color="primary">
+    <!-- Logo -->
     <v-img
       class="bg-orange-lighten-4"
       src="/logo.svg"
@@ -8,15 +8,44 @@
       max-height="40"
     ></v-img>
 
-    <template v-slot:append>
-      <!-- メニュー項目 -->
-      <v-toolbar-items>
-        <v-btn to="/app/admin">管理画面</v-btn>
-        <v-btn @click="consoleDebug">debug</v-btn>
-        <v-btn v-if="!store.isLogin" @click="store">ログイン</v-btn>
-        <v-btn v-if="store.isLogin" @click="logout">ログアウト</v-btn>
-      </v-toolbar-items>
-    </template>
+    <!-- Menu -->
+    <v-toolbar-items>
+      <!-- Home Button -->
+      <v-btn to="/">home</v-btn>
+
+      <!-- Admin Button -->
+      <template v-if="store.role == 'admin'">
+        <!-- TODO:適切なルートを設定する -->
+        <v-btn to="/app/admin">admin</v-btn>
+        <v-btn to="/app/admin">admin</v-btn>
+        <v-btn to="/app/admin">admin</v-btn>
+        <v-btn to="/app/admin">admin</v-btn>
+        <v-btn to="/app/admin">admin</v-btn>
+      </template>
+
+      <!-- Student Button -->
+      <template v-if="store.role == 'student'">
+        <!-- TODO:適切なルートを設定する -->
+        <v-btn to="/app/user">user</v-btn>
+        <v-btn to="/app/user">user</v-btn>
+        <v-btn to="/app/user">user</v-btn>
+      </template>
+
+      <!-- Teacher Button -->
+      <template v-if="store.role == 'teacher'">
+        <!-- TODO:適切なルートを設定する -->
+        <v-btn to="/app/teacher">teacher</v-btn>
+        <v-btn to="/app/teacher">teacher</v-btn>
+        <v-btn to="/app/teacher">teacher</v-btn>
+      </template>
+
+      <!-- Debug Button -->
+      <!-- <v-btn @click="consoleDebug">debug</v-btn> -->
+
+      <!-- Login Button -->
+      <v-btn v-if="!store.isLogin" @click="store.login">ログイン</v-btn>
+      <v-btn v-if="store.isLogin" @click="store.logout">ログアウト</v-btn>
+    </v-toolbar-items>
   </v-app-bar>
 </template>
 
@@ -29,8 +58,7 @@ const consoleDebug = () => {
   console.log("====================");
   console.log("isLogin: ", store.isLogin);
   console.log("role: ", store.role);
-  if (store.user) console.log("user: ", store.user.uid);
+  console.log("user: ", store.user ? store.user.uid : "null");
   console.log("====================\n");
 };
-
 </script>
