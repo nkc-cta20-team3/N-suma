@@ -45,23 +45,27 @@ const router = createRouter({
 });
 
 //appにアクセスしたときにログインしていなければログインページに飛ばす
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const store = useStore();
 
-  // storeのisLoginを取得。storeの情報を取得しきるまで待つ。
-  const isLogin = store.isLogin;
-
   const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
+  const requiresAdmin = to.matched.some((record) => record.meta.requiresAdmin);
+  const requiresStudent = to.matched.some(
+    (record) => record.meta.requiresStudent
+  );
+  const requiresTeacher = to.matched.some(
+    (record) => record.meta.requiresTeacher
+  );
 
+  const isLogin = await store.getLoginState();
   if (requiresAuth && !isLogin) {
-    console.log(isLogin);
     alert("ログインしてください");
     next({ path: "/" });
     return;
-  } else {
-    next();
-    return;
   }
+
+  next();
+  return;
 });
 
 export default router;
