@@ -93,7 +93,11 @@ func main() {
 
 	routes3 := g.Group("/api/student")
 	{
+		//お試し用
 		routes3.POST("/test", student.TestAPI)
+
+		//学生用
+		routes.POST("/nd", student.NextDocument) //公欠届切り替え
 	}
 
 	g.Run(":8080")
