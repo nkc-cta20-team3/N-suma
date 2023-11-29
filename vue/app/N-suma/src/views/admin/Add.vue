@@ -3,7 +3,7 @@
     <v-row justify="center">
       <v-col cols="12" sm="10" md="8" lg="6">
         <!-- 入力フォーム -->
-        <v-form @submit.prevent="onSubmit">
+        <v-form ref="mainForm">
           <!-- UUID選択 -->
           <v-select
             v-model="state.uuid"
@@ -20,7 +20,7 @@
             persistent-hint
             placeholder="aaaa1234@example.com"
             persistent-placeholder
-            :rules="[(v) => !!v || '必須']"
+            :rules="requiredRules"
             @update:modelValue="emailSelected"
           ></v-select>
 
@@ -31,7 +31,7 @@
             persistent-hint
             placeholder="田中太郎"
             persistent-placeholder
-            :rules="[(v) => !!v || '必須']"
+            :rules="requiredRules"
           ></v-text-field>
 
           <!-- 学籍番号入力 -->
@@ -44,15 +44,16 @@
             :rules="numberRules"
           ></v-text-field>
 
-          <!-- クラス略称入力 -->
-          <v-text-field
+          <!-- クラス略称選択 -->
+          <v-select
             v-model="state.class"
+            :items="clases"
             label="クラス略称"
             persistent-hint
             placeholder="CTA20"
             persistent-placeholder
-            :rules="classRules"
-          ></v-text-field>
+            :rules="requiredRules"
+          ></v-select>
 
           <!-- 役職選択 -->
           <v-select
@@ -62,14 +63,19 @@
             persistent-hint
             placeholder="学生"
             persistent-placeholder
-            :rules="[(v) => !!v || '必須']"
+            :rules="requiredRules"
           ></v-select>
 
           <!-- 登録ボタン -->
           <template class="d-flex flex-row justify-end text-black">
             <v-dialog transition="dialog-top-transition" width="auto">
               <template v-slot:activator="{ props }">
-                <v-btn height="40" width="150" v-bind="props" type="submit"
+                <v-btn
+                  height="40"
+                  width="150"
+                  v-bind="props"
+                  type="submit"
+                  color="green"
                   >登録</v-btn
                 >
               </template>
@@ -83,12 +89,19 @@
                       height="40"
                       width="150"
                       @click="isActive.value = false"
+                      color="red"
                       >キャンセル</v-btn
                     >
                     <v-btn
                       height="40"
                       width="150"
-                      @click="isActive.value = false"
+                      @click="
+                        () => {
+                          isActive.value = false;
+                          onSubmit();
+                        }
+                      "
+                      color="green"
                       >登録</v-btn
                     >
                   </v-card-actions>
@@ -105,6 +118,27 @@
 <script setup>
 import { onMounted, ref } from "vue";
 
+const roles = ["学生", "担任"];
+const clases = [
+  "CTA20",
+  "CTB20",
+  "CTA21",
+  "CTB21",
+  "CTA22",
+  "CTB22",
+  "CTA23",
+  "CTB23",
+];
+
+const requiredRules = [(v) => !!v || "必須"];
+
+const numberRules = [
+  (v) => !!v || "必須",
+  (v) => v.length == 8 || "学籍番号は8桁です",
+  (v) => /^\d+$/.test(v) || "学籍番号は半角数字です",
+];
+
+const mainForm = ref(null);
 const state = ref({
   uuid: "",
   email: "",
@@ -117,27 +151,18 @@ const state = ref({
 // TODO: 役職が未定義のユーザー一覧を取得する(uuidとemailの組)
 const uuids = ["1", "2", "3", "4"];
 const emails = ["11", "22", "33", "44"];
-const roles = ["担任", "学生"];
-
-const numberRules = [
-  (v) => !!v || "必須",
-  (v) => v.length == 8 || "学籍番号は8桁です",
-  (v) => /^\d+$/.test(v) || "学籍番号は半角数字です",
-];
-
-// TODO:クラス略称は5桁なのか確認する
-// それか、クラス略称をDBから取得する？
-const classRules = [
-  (v) => !!v || "必須",
-  (v) => v.length == 5 || "クラス略称は5桁です",
-  (v) => /^[A-Z0-9]+$/.test(v) || "クラス略称は大文字半角英字と半角数字です",
-];
 
 function emailSelected(e) {
   state.value.uuid = uuids[emails.indexOf(e)];
 }
 
-function onSubmit() {
+async function onSubmit() {
+  const validResult = await mainForm.value.validate();
+  if (!validResult.valid) {
+    console.log("入力エラー");
+    return;
+  }
+
   // ユーザーを登録する処理を記述する
   console.log("ユーザーを登録しました");
 }
