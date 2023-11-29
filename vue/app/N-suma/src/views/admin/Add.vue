@@ -168,7 +168,7 @@ async function onSubmit() {
     return;
   }
 
-  // ユーザーを登録する処理を記述する
+  // TODO: ユーザーを登録する処理を記述する
   console.log("ユーザーを登録しました");
 }
 

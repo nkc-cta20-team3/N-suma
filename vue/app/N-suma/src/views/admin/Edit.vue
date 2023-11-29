@@ -195,7 +195,7 @@ async function onUpdate() {
     return;
   }
 
-  // ユーザーを更新する処理を記述する
+  // TODO:ユーザーを更新する処理を記述する
   console.log("ユーザーを更新しました");
 }
 
@@ -206,7 +206,7 @@ async function onDelete() {
     return;
   }
 
-  // ユーザーを削除する処理を記述する
+  // TODO:ユーザーを削除する処理を記述する
   console.log("ユーザーを削除しました");
 }
 
@@ -217,6 +217,6 @@ onMounted(() => {
   state.value.uuid = router.currentRoute.value.params.id;
   state.value.email = "11@example.com";
 
-  // TODO: ユーザーの詳細な取得し設定する
+  // TODO: ユーザーの詳細な情報を取得し設定する
 });
 </script>
