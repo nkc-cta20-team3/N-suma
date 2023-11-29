@@ -38,6 +38,12 @@
       <!-- Debug Button -->
       <!-- <v-btn @click="consoleDebug">debug</v-btn> -->
 
+      <!-- 通知ボタン -->
+      <v-btn @click="onClickBell" icon>
+        <!-- icon url : https://pictogrammers.com/library/mdi/icon/bell-outline/ -->
+        <v-icon alt=" icon" :icon="mdiBellOutline"></v-icon>
+      </v-btn>
+
       <!-- Login Button -->
       <v-btn v-if="!store.isLogin" @click="store.login">ログイン</v-btn>
       <v-btn v-if="store.isLogin" @click="store.logout">ログアウト</v-btn>
@@ -46,15 +52,27 @@
 </template>
 
 <script setup>
+import { mdiBellOutline } from "@mdi/js";
 import { useStore } from "@/stores/user";
+import { onMounted } from "vue";
 const store = useStore();
 
-const consoleDebug = () => {
+function consoleDebug() {
   console.log("debug logs");
   console.log("====================");
   console.log("isLogin: ", store.isLogin);
   console.log("role: ", store.role);
   console.log("user: ", store.user ? store.user.uid : "null");
   console.log("====================\n");
-};
+}
+
+function onClickBell() {
+  console.log("通知ボタンが押されました");
+  //TODO: 通知ボタンが押された時の処理を記述する
+  // ダイアログボックス形式で通知の一覧を取得するのが良さそう？
+}
+
+onMounted(() => {
+  // TODO: 通知がないかを確認するAPIを叩く処理を記述する
+});
 </script>
