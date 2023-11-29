@@ -97,13 +97,11 @@
 </template>
 
 <script setup>
+import { onMounted, ref } from "vue";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
+import { requiredRules, divisions } from "@/utils";
 
-import { onMounted, ref } from "vue";
-
-const requiredRules = [(v) => !!v || "必須"];
-const divisions = ["国家試験 / FE", "国家試験 / AP"];
 const format = "yyyy-MM-dd HH:mm";
 
 const mainForm = ref(null);

@@ -157,26 +157,7 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import router from "@/router";
-
-const roles = ["学生", "担任"];
-const clases = [
-  "CTA20",
-  "CTB20",
-  "CTA21",
-  "CTB21",
-  "CTA22",
-  "CTB22",
-  "CTA23",
-  "CTB23",
-];
-
-const requiredRules = [(v) => !!v || "必須"];
-
-const numberRules = [
-  (v) => !!v || "必須",
-  (v) => v.length == 8 || "学籍番号は8桁です",
-  (v) => /^\d+$/.test(v) || "学籍番号は半角数字です",
-];
+import { roles, clases, requiredRules, numberRules } from "@/utils";
 
 const mainForm = ref(null);
 const state = ref({

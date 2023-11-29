@@ -118,26 +118,7 @@
 
 <script setup>
 import { onMounted, ref } from "vue";
-
-const roles = ["学生", "担任"];
-const clases = [
-  "CTA20",
-  "CTB20",
-  "CTA21",
-  "CTB21",
-  "CTA22",
-  "CTB22",
-  "CTA23",
-  "CTB23",
-];
-
-const requiredRules = [(v) => !!v || "必須"];
-
-const numberRules = [
-  (v) => !!v || "必須",
-  (v) => v.length == 8 || "学籍番号は8桁です",
-  (v) => /^\d+$/.test(v) || "学籍番号は半角数字です",
-];
+import { roles, clases, requiredRules, numberRules } from "@/utils";
 
 const mainForm = ref(null);
 const state = ref({
@@ -150,13 +131,8 @@ const state = ref({
 });
 
 // TODO: 役職が未定義のユーザー一覧を取得する(uuidとemailの組)
-const uuids = ["1", "2", "3", "4"];
-const emails = [
-  "11@example.com",
-  "22@example.com",
-  "33@example.com",
-  "44@example.com",
-];
+var uuids = [];
+var emails = [];
 
 function emailSelected(e) {
   state.value.uuid = uuids[emails.indexOf(e)];
@@ -176,5 +152,12 @@ async function onSubmit() {
 onMounted(() => {
   console.log("mounted");
   // TODO: 役職が未定義のユーザー一覧を取得する(uuidとemailの組)
+  uuids = ["1", "2", "3", "4"];
+  emails = [
+    "11@example.com",
+    "22@example.com",
+    "33@example.com",
+    "44@example.com",
+  ];
 });
 </script>

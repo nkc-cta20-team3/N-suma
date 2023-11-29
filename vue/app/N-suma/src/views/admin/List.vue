@@ -62,8 +62,7 @@
 import { mdiMagnify } from "@mdi/js";
 import { onMounted, ref } from "vue";
 import router from "@/router";
-
-const roles = ["学生", "担任"];
+import { roles } from "@/utils";
 
 const items = ref([]);
 const role = ref("");
