@@ -58,6 +58,7 @@
 <script setup>
 import { mdiMagnify } from "@mdi/js";
 import { onMounted, ref } from "vue";
+import router from "@/router";
 
 const roles = ["学生", "担任"];
 
@@ -71,7 +72,7 @@ function onSearch() {
 
 function onItemClick(item) {
   console.log(item);
-  this.$router.push({
+  router.push({
     name: "adminEdit",
     params: { id: item.id },
   });

@@ -156,6 +156,7 @@
 
 <script setup>
 import { onMounted, ref } from "vue";
+import router from "@/router";
 
 const roles = ["学生", "担任"];
 const clases = [
@@ -212,7 +213,8 @@ async function onDelete() {
 onMounted(() => {
   console.log("mounted");
   // TODO: routerのpropsからユーザー情報を取得する(uuidとemailの組)
-  state.value.uuid = "1";
+
+  state.value.uuid = router.currentRoute.value.params.id;
   state.value.email = "11@example.com";
 
   // TODO: ユーザーの詳細な取得し設定する
