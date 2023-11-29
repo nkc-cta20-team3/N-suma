@@ -1,7 +1,7 @@
 <template>
   <v-container>
+    <!-- 検索バー -->
     <v-row justify="center">
-      <!-- 検索バー -->
       <v-col cols="12" sm="10" md="8" lg="6" class="pt-10">
         <template class="d-flex flex-row justify-end text-black">
           <!-- 役職選択 -->
@@ -33,8 +33,10 @@
           </v-btn>
         </template>
       </v-col>
+    </v-row>
 
-      <!-- 書類一覧 -->
+    <!-- 書類一覧 -->
+    <v-row justify="center">
       <v-col cols="12" sm="10" md="8" lg="6">
         <v-list>
           <v-list-item
