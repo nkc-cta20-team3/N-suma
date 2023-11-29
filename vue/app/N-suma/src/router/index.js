@@ -36,13 +36,28 @@ const router = createRouter({
               component: () => import("@/views/admin/List.vue"),
             },
             {
-              path: "edit",
+              path: "edit/:id",
               component: () => import("@/views/admin/Edit.vue"),
-              // props: true,
-              // props: (route) => ({ id: route.query.id }),
+              props: true,
+            },
+            {
+              path: "",
+              redirect: "/",
+            },
+            {
+              path: "/:pathMatch(.*)*",
+              redirect: "/",
             },
           ],
           meta: { requiresAdmin: true },
+        },
+        {
+          path: "",
+          redirect: "/",
+        },
+        {
+          path: "/:pathMatch(.*)*",
+          redirect: "/",
         },
       ],
       meta: { requiresAuth: true },
