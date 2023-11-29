@@ -150,7 +150,12 @@ const state = ref({
 
 // TODO: 役職が未定義のユーザー一覧を取得する(uuidとemailの組)
 const uuids = ["1", "2", "3", "4"];
-const emails = ["11", "22", "33", "44"];
+const emails = [
+  "11@example.com",
+  "22@example.com",
+  "33@example.com",
+  "44@example.com",
+];
 
 function emailSelected(e) {
   state.value.uuid = uuids[emails.indexOf(e)];
