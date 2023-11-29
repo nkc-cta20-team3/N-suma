@@ -19,7 +19,7 @@
           <v-card width="100%"> 公欠開始/終了時刻 </v-card>
           <template class="d-flex flex-row text-black">
             <VueDatePicker
-              v-model="state.startDate"
+              v-model="date"
               :preview-format="format"
               :format="format"
               :enable-time-picker="true"
@@ -56,12 +56,7 @@
           <template class="d-flex flex-row justify-end text-black">
             <v-dialog transition="dialog-top-transition" width="auto">
               <template v-slot:activator="{ props }">
-                <v-btn
-                  height="40"
-                  width="150"
-                  v-bind="props"
-                  type="submit"
-                  color="success"
+                <v-btn height="40" width="150" v-bind="props" color="success"
                   >提出</v-btn
                 >
               </template>
@@ -120,13 +115,23 @@ const state = ref({
   location: "",
   comment: "",
 });
+const date = ref(null);
 
 async function onSubmit() {
+  // 日付の入力チェック
+  if (!date.value || !date.value[0] || !date.value[1]) {
+    console.log("日付入力不足");
+    // TODO: エラーを画面に表示する処理を記述する？
+    return;
+  }
+  // 日付以外の入力チェック
   const validResult = await mainForm.value.validate();
   if (!validResult.valid) {
     console.log("入力エラー");
     return;
   }
+  state.value.startDate = date.value[0];
+  state.value.endDate = date.value[1];
 
   // TODO: データを送信する処理を記述する
   console.log("提出しました");
@@ -134,9 +139,5 @@ async function onSubmit() {
 
 onMounted(() => {
   console.log("mounted");
-
-  var date = new Date();
-  state.value.date =
-    date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
 });
 </script>
