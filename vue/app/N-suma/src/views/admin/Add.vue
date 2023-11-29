@@ -75,7 +75,7 @@
                   width="150"
                   v-bind="props"
                   type="submit"
-                  color="green"
+                  color="success"
                   >登録</v-btn
                 >
               </template>
@@ -89,7 +89,7 @@
                       height="40"
                       width="150"
                       @click="isActive.value = false"
-                      color="red"
+                      color="warning"
                       >キャンセル</v-btn
                     >
                     <v-btn
@@ -101,7 +101,7 @@
                           onSubmit();
                         }
                       "
-                      color="green"
+                      color="success"
                       >登録</v-btn
                     >
                   </v-card-actions>
