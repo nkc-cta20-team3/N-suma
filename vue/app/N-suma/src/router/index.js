@@ -88,6 +88,21 @@ const router = createRouter({
           meta: { requiresStudent: true },
         },
         {
+          path: "teacher",
+          component: () => import("@/layouts/Main.vue"),
+          children: [
+            {
+              path: "",
+              redirect: "/",
+            },
+            {
+              path: "/:pathMatch(.*)*",
+              redirect: "/",
+            },
+          ],
+          meta: { requiresTeacher: true },
+        },
+        {
           path: "",
           redirect: "/",
         },
