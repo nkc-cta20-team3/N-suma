@@ -1,22 +1,8 @@
 <template>
-  <!-- 表示一覧 -->
-  <v-row justify="center">
-    <v-col>
-      <router-link to="/admin_update">
-        <v-card class="mx-auto" max-width="700">
-          <v-list :items="item1" item-title="name" item-value="id"></v-list>
-        </v-card>
-      </router-link>
-      <v-card>
-        <v-list :items="item2" item-title="name" item-value="id"></v-list>
-      </v-card>
-    </v-col>
-  </v-row>
-
   <v-container>
+    <!-- 検索バー -->
     <v-row justify="center">
-      <!-- 検索バー -->
-      <v-col cols="12" sm="10" md="8" lg="6">
+      <v-col cols="12" sm="10" md="8" lg="6" class="pt-10">
         <template class="d-flex flex-row justify-end text-black">
           <!-- 役職選択 -->
           <v-select
@@ -24,38 +10,48 @@
             :items="roles"
             label="役職"
             persistent-hint
-            class="pr-2"
+            placeholder="学生"
+            persistent-placeholder
+            class="mr-2"
           ></v-select>
 
           <!-- 学籍番号入力 -->
           <v-text-field
+            v-if="role === '学生'"
             v-model="number"
             label="学籍番号"
             persistent-hint
             placeholder="20201001"
             persistent-placeholder
-            class="pr-2"
+            :counter="8"
+            class="mr-2"
           ></v-text-field>
+
           <!-- 検索ボタン -->
-          <v-btn @click="buttonClick" icon>
-            <!-- font url : https://pictogrammers.com/library/mdi/icon/magnify/ -->
-            <v-icon>mdi mdi-magnify</v-icon>
+          <v-btn @click="onSearch" icon>
+            <!-- icon url : https://pictogrammers.com/library/mdi/icon/magnify/ -->
+            <v-icon alt="search icon" :icon="mdiMagnify"></v-icon>
           </v-btn>
         </template>
       </v-col>
+    </v-row>
 
+    <!-- 書類一覧 -->
+    <v-row justify="center">
       <v-col cols="12" sm="10" md="8" lg="6">
-        <v-list lines="one" v-for="item in items" :key="item.id">
-          <v-hover v-slot:default="{ hover }">
-            <v-expand-transition>
-              <v-overlay absolute :opacity="0.2" :value="hover">
-                <v-btn color="white" class="black--text"> Show Message </v-btn>
-              </v-overlay>
-            </v-expand-transition>
-            <v-list-item class="border">
-              <v-list-item-title>{{ item.name }}</v-list-item-title>
-            </v-list-item>
-          </v-hover>
+        <v-list>
+          <v-list-item
+            v-for="item in items"
+            :key="item.id"
+            @click="onItemClick(item)"
+            :elevation="2"
+            height="60"
+            class="mb-2"
+          >
+            <v-list-item-title>
+              {{ item.class }} : {{ item.name }}
+            </v-list-item-title>
+          </v-list-item>
         </v-list>
       </v-col>
     </v-row>
@@ -63,43 +59,35 @@
 </template>
 
 <script setup>
+import { mdiMagnify } from "@mdi/js";
 import { onMounted, ref } from "vue";
+import router from "@/router";
 
-const roles = ["担任", "学生"];
+const roles = ["学生", "担任"];
 
-const mainForm = ref(null);
-const number = ref(null);
-const role = ref(null);
+const items = ref([]);
+const role = ref("");
+const number = ref("");
 
-const studentId = ref(null);
-const section = ref(null);
-const sections = ref(["担任", "学生"]);
-const items = ref([
-  {
-    name: "学生1",
-    id: 1,
-  },
-  {
-    name: "学生1",
-    id: 1,
-  },
-  {
-    name: "学生1",
-    id: 1,
-  },
-]);
+function onSearch() {
+  console.log("検索");
+}
 
-async function buttonClick() {
-  console.log("button clicked");
-
-  const validResult = await mainForm.value.validate();
-  if (!validResult.valid) {
-    console.log("ユーザーを登録できませんでした");
-    return;
-  }
+function onItemClick(item) {
+  console.log(item);
+  router.push({
+    name: "adminEdit",
+    params: { id: item.id },
+  });
 }
 
 onMounted(() => {
   console.log("mounted");
+  // TODO: 書類の一覧を取得し、itemsに格納する
+  items.value = [
+    { id: 1, class: "CTA20", name: "山田太郎" },
+    { id: 2, class: "CTB20", name: "鈴木花子" },
+    { id: 3, class: "CTA21", name: "佐藤次郎" },
+  ];
 });
 </script>

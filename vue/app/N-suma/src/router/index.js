@@ -36,13 +36,64 @@ const router = createRouter({
               component: () => import("@/views/admin/List.vue"),
             },
             {
-              path: "edit",
+              name: "adminEdit",
+              path: "edit/:id",
               component: () => import("@/views/admin/Edit.vue"),
-              // props: true,
-              // props: (route) => ({ id: route.query.id }),
+              props: true,
+            },
+            {
+              path: "",
+              redirect: "/",
+            },
+            {
+              path: "/:pathMatch(.*)*",
+              redirect: "/",
             },
           ],
           meta: { requiresAdmin: true },
+        },
+        {
+          path: "student",
+          component: () => import("@/layouts/Main.vue"),
+          children: [
+            {
+              path: "form",
+              component: () => import("@/views/student/Form.vue"),
+            },
+            {
+              path: "list",
+              component: () => import("@/views/student/List.vue"),
+            },
+            {
+              name: "studentView",
+              path: "view/:id",
+              component: () => import("@/views/student/View.vue"),
+              props: true,
+            },
+            {
+              name: "studentReForm",
+              path: "reform/:id",
+              component: () => import("@/views/student/ReForm.vue"),
+              props: true,
+            },
+            {
+              path: "",
+              redirect: "/",
+            },
+            {
+              path: "/:pathMatch(.*)*",
+              redirect: "/",
+            },
+          ],
+          meta: { requiresStudent: true },
+        },
+        {
+          path: "",
+          redirect: "/",
+        },
+        {
+          path: "/:pathMatch(.*)*",
+          redirect: "/",
         },
       ],
       meta: { requiresAuth: true },
@@ -70,6 +121,16 @@ router.beforeEach(async (to, from, next) => {
   const isLogin = await store.getLoginState();
   if (requiresAuth && !isLogin) {
     alert("ログインしてください");
+    next({ path: "/" });
+    return;
+  }
+
+  if (
+    (requiresAdmin && store.role != "admin") ||
+    (requiresStudent && store.role != "student") ||
+    (requiresTeacher && store.role != "teacher")
+  ) {
+    alert("権限がありません");
     next({ path: "/" });
     return;
   }
