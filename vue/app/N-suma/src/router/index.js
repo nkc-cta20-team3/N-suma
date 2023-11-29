@@ -36,6 +36,7 @@ const router = createRouter({
               component: () => import("@/views/admin/List.vue"),
             },
             {
+              name: "adminEdit",
               path: "edit/:id",
               component: () => import("@/views/admin/Edit.vue"),
               props: true,
