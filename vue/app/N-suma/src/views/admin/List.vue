@@ -1,84 +1,89 @@
 <template>
-  <!-- 検索バー -->
-  <v-row justify="center">
-    <v-col cols="13" sm="10" md="8" lg="6">
-      <v-card ref="form">
-        <v-container>
-          <v-row justify="center">
-            <!-- テキストボックス -->
-            <v-col cols="8">
-              <v-text-field
-                label="学籍番号"
-                v-model="studentId"
-                ref="student_number"
-              ></v-text-field>
-            </v-col>
+  <v-container>
+    <v-row justify="center">
+      <!-- 検索バー -->
+      <v-col cols="12" sm="10" md="8" lg="6" class="pt-10">
+        <template class="d-flex flex-row justify-end text-black">
+          <!-- 役職選択 -->
+          <v-select
+            v-model="role"
+            :items="roles"
+            label="役職"
+            persistent-hint
+            placeholder="学生"
+            persistent-placeholder
+            class="mr-2"
+          ></v-select>
 
-            <!-- 検索ボタン -->
-            <v-col cols="1" class="d-flex justify-end align-center">
-              <v-btn @click="buttonClick" icon>
-                <v-icon>mdi-arrow-down-bold-circle</v-icon>
-              </v-btn>
-            </v-col>
+          <!-- 学籍番号入力 -->
+          <v-text-field
+            v-if="role === '学生'"
+            v-model="number"
+            label="学籍番号"
+            persistent-hint
+            placeholder="20201001"
+            persistent-placeholder
+            class="mr-2"
+          ></v-text-field>
 
-            <!-- 役職メニュー -->
-            <v-col cols="2">
-              <v-autocomplete
-                ref="section"
-                v-model="section"
-                :items="sections"
-                label="区分"
-                placeholder="選択"
-                required
-                persistent-hint
-              ></v-autocomplete>
-            </v-col>
-          </v-row>
-        </v-container>
-      </v-card>
-    </v-col>
-  </v-row>
+          <!-- 検索ボタン -->
+          <v-btn @click="onSearch" icon>
+            <!-- icon url : https://pictogrammers.com/library/mdi/icon/magnify/ -->
+            <v-icon alt="search icon" :icon="mdiMagnify"></v-icon>
+          </v-btn>
+        </template>
+      </v-col>
 
-  <!-- 表示一覧 -->
-  <v-row justify="center">
-    <v-col>
-      <router-link to="/admin_update">
-        <v-card class="mx-auto" max-width="700">
-          <v-list :items="item1" item-title="name" item-value="id"></v-list>
-        </v-card>
-      </router-link>
-      <v-card class="mx-auto" max-width="700">
-        <v-list :items="item2" item-title="name" item-value="id"></v-list>
-      </v-card>
-    </v-col>
-  </v-row>
+      <!-- 書類一覧 -->
+      <v-col cols="12" sm="10" md="8" lg="6">
+        <v-list>
+          <v-list-item
+            v-for="item in items"
+            :key="item.id"
+            @click="onItemClick(item)"
+            :elevation="2"
+            height="60"
+            class="mb-2"
+          >
+            <v-list-item-title>
+              {{ item.class }} : {{ item.name }}
+            </v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script setup>
+import { mdiMagnify } from "@mdi/js";
 import { onMounted, ref } from "vue";
 
-const studentId = ref(null);
-const section = ref(null);
-const sections = ref(["担任", "学生"]);
-const item1 = ref([
-  {
-    name: "学生1",
-    id: 1,
-  },
-]);
-const item2 = ref([
-  {
-    name: "学生2",
-    id: 2,
-  },
-]);
+const roles = ["学生", "担任"];
 
-function buttonClick() {
-  console.log("button clicked");
+const items = ref([]);
+const role = ref("");
+const number = ref("");
+
+function onSearch() {
+  console.log("検索");
+}
+
+function onItemClick(item) {
+  console.log(item);
+  this.$router.push({
+    name: "adminEdit",
+    params: { id: item.id },
+  });
 }
 
 onMounted(() => {
   console.log("mounted");
+  // TODO: 書類の一覧を取得し、itemsに格納する
+  items.value = [
+    { id: 1, class: "CTA20", name: "山田太郎" },
+    { id: 2, class: "CTB20", name: "鈴木花子" },
+    { id: 3, class: "CTA21", name: "佐藤次郎" },
+  ];
 });
-
 </script>
