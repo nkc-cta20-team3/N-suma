@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@mdi/js": "^7.3.67",
+    "@vuepic/vue-datepicker": "^7.3.0",
     "bulma": "^0.9.4",
     "firebase": "^9.22.1",
     "firebase-tools": "^12.2.1",

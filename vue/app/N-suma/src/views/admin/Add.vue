@@ -42,6 +42,7 @@
             placeholder="20201001"
             persistent-placeholder
             :rules="numberRules"
+            :counter="8"
           ></v-text-field>
 
           <!-- クラス略称選択 -->

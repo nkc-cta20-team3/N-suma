@@ -23,6 +23,7 @@
             persistent-hint
             placeholder="20201001"
             persistent-placeholder
+            :counter="8"
             class="mr-2"
           ></v-text-field>
 
