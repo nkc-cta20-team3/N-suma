@@ -4,6 +4,8 @@
     <v-img
       class="bg-orange-lighten-4"
       src="/logo.svg"
+      min-width="112"
+      min-height="40"
       max-width="112"
       max-height="40"
     ></v-img>
