@@ -16,21 +16,19 @@
       <v-btn to="/">home</v-btn>
 
       <!-- Admin Button -->
-      <template v-if="store.role == 'admin'">
+      <template v-if="store.role === 'admin'">
         <v-btn to="/app/admin/add">ユーザー登録</v-btn>
         <v-btn to="/app/admin/list">ユーザー情報編集</v-btn>
       </template>
 
       <!-- Student Button -->
-      <template v-if="store.role == 'student'">
-        <!-- TODO:適切なルートを設定する -->
-        <v-btn to="/app/user">user</v-btn>
-        <v-btn to="/app/user">user</v-btn>
-        <v-btn to="/app/user">user</v-btn>
+      <template v-if="store.role === 'student'">
+        <v-btn to="/app/student/form">書類提出</v-btn>
+        <v-btn to="/app/student/list">書類閲覧</v-btn>
       </template>
 
       <!-- Teacher Button -->
-      <template v-if="store.role == 'teacher'">
+      <template v-if="store.role === 'teacher'">
         <!-- TODO:適切なルートを設定する -->
         <v-btn to="/app/teacher">teacher</v-btn>
         <v-btn to="/app/teacher">teacher</v-btn>
