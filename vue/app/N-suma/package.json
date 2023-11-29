@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@mdi/js": "^7.3.67",
     "bulma": "^0.9.4",
     "firebase": "^9.22.1",
     "firebase-tools": "^12.2.1",
