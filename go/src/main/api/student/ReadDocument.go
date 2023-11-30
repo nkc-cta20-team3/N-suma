@@ -21,7 +21,7 @@ func ReadDocument(c *gin.Context) {
 	request := model.ReadDocumentRequest{}
 	response := model.ReadDocumentResponse{}
 
-	result := model.ReadDocument{}
+	result := model.Document{}
 
 	//POSTで受け取った値を格納する
 	if err := c.ShouldBindJSON(&request); err != nil {
