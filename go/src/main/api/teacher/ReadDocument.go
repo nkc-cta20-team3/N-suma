@@ -94,7 +94,7 @@ func ReadDocument(c *gin.Context) {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": errMsg})
 			return
 		} else if errors.Is(err, gorm.ErrRecordNotFound) {
-			c.JSON(http.StatusBadRequest, gin.H{"document": "書類が見つかりませんでした"})
+			c.JSON(http.StatusBadRequest, gin.H{"document": "DOCUMENT NOT EXIST"})
 			return
 		}
 
@@ -105,7 +105,7 @@ func ReadDocument(c *gin.Context) {
 	} else {
 		// fmt.Println("権限がありません")
 
-		c.JSON(http.StatusBadRequest, gin.H{"document": "権限がありません"})
+		c.JSON(http.StatusBadRequest, gin.H{"document": "POST ERROR"})
 		return
 	}
 }
