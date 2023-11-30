@@ -92,6 +92,26 @@ const router = createRouter({
           component: () => import("@/layouts/Main.vue"),
           children: [
             {
+              path: "list",
+              component: () => import("@/views/teacher/List.vue"),
+            },
+            {
+              path: "unapproval",
+              component: () => import("@/views/teacher/UnApprovalList.vue"),
+            },
+            {
+              name: "teacherView",
+              path: "view/:id",
+              component: () => import("@/views/teacher/View.vue"),
+              props: true,
+            },
+            {
+              name: "teacherForm",
+              path: "form/:id",
+              component: () => import("@/views/teacher/Form.vue"),
+              props: true,
+            },
+            {
               path: "",
               redirect: "/",
             },
