@@ -3,6 +3,7 @@ package student
 import (
 	"errors"
 	"net/http"
+	"time"
 
 	"main/infra"
 	"main/model"
@@ -20,6 +21,8 @@ func ReadDocument(c *gin.Context) {
 	request := model.ReadDocumentRequest{}
 	response := model.ReadDocumentResponse{}
 
+	result := model.ReadDocument{}
+
 	//POSTで受け取った値を格納する
 	if err := c.ShouldBindJSON(&request); err != nil {
 		// エラーな場合、ステータス400と、エラー情報を返す
@@ -35,23 +38,6 @@ func ReadDocument(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": errMsg})
 		return
 	}
-
-	/*
-		type ReadDocumentResponse struct {
-			DocumentID int `json:"document_id"`
-			RequestDate time.Time `json:"request_date"`
-			StudentID int `json:"student_id"`
-			ClassName string `json:"class_name"`
-			StudentName string `json:"student_name"`
-			StartDate time.Time `json:"absence_start_date"`
-			StartFlame int `json:"start_flame"`
-			EndDate time.Time `json:"end_date"`
-			EndFlame int `json:"end_flame"`
-			Location string `json:"location"`
-			StudentComment string `json:"student_comment"`
-			TeacherComment string `json:"teacher_comment"`
-		}
-	*/
 
 	//引数定義
 	post := model.Post{}
@@ -88,7 +74,7 @@ func ReadDocument(c *gin.Context) {
 			Joins("JOIN classification AS cs ON user.class_id = cs.class_id").
 			Where("document_id = ?", request.DocumentID).
 			Where("oa.user_id = ?", request.UserID).
-			First(&response).Error
+			First(&result).Error
 		if db.Error != nil {
 			errMsg := "データベースからデータを取得できませんでした"
 			c.JSON(http.StatusInternalServerError, gin.H{"error": errMsg})
@@ -99,7 +85,6 @@ func ReadDocument(c *gin.Context) {
 		}
 
 		//書類ステータス取得
-
 		document := DocumentStatus{}
 		err = db.Table("oa").Select("status").Where("document_id = ?", request.DocumentID).First(&document).Error
 
@@ -114,12 +99,36 @@ func ReadDocument(c *gin.Context) {
 			}
 		}
 
-		// log.Println(response)
+		//日付変換処理
+		requestAt := timeToString(result.RequestAt)
+		startTime := timeToString(result.StartTime)
+		endTime := timeToString(result.EndTime)
+		response = model.ReadDocumentResponse{
+			DocumentID:     result.DocumentID,
+			RequestAt:      requestAt,
+			StartTime:      startTime,
+			StartFlame:     result.StartFlame,
+			EndTime:        endTime,
+			EndFlame:       result.EndFlame,
+			Location:       result.Location,
+			StudentComment: result.StudentComment,
+			TeacherComment: result.TeacherComment,
+			UserNumber:     result.UserNumber,
+			ClassName:      result.ClassName,
+			UserName:       result.UserName,
+		}
 
+		//値を返却
 		c.JSON(http.StatusOK, gin.H{"document": response})
+
 	} else {
 
 		c.JSON(http.StatusBadRequest, gin.H{"document": "POST ERROR"})
 		return
 	}
+}
+
+func timeToString(t time.Time) string {
+	str := t.Format("2006-01-02 15:04:05")
+	return str
 }
