@@ -13,14 +13,27 @@ import (
 type SQLresult struct {
 	StartTime time.Time `json:"start_time"`
 }
+
+type Request struct {
+	Time string `json:"time"`
+}
 type Response struct {
-	StartTime string `json:"start_time"`
+	StartTime   string `json:"start_time"`
+	RequestTime string `json:"request_time"`
 }
 
 func TestDate(c *gin.Context) {
 
 	result := SQLresult{}
+	request := Request{}
 	response := Response{}
+
+	//引数受け取り
+	if err := c.ShouldBindJSON(&request); err != nil {
+		// エラーな場合、ステータス400と、エラー情報を返す
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 
 	//データベース接続
 	db := infra.DBInitGorm()
@@ -40,12 +53,15 @@ func TestDate(c *gin.Context) {
 		fmt.Println("error")
 	}
 
+	//Goで扱う時間型(Time.time)
 	fmt.Println(result.StartTime)
 
+	//文字列型
 	str := timeToString(result.StartTime)
 	fmt.Println(str)
 
 	response.StartTime = str
+	response.RequestTime = request.Time
 
 	// parsedTime, err := time.Parse(time.RFC3339, response.StartTime)
 	// if err != nil {
