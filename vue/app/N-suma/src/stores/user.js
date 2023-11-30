@@ -12,14 +12,15 @@ import router from "@/router";
 
 export const useStore = defineStore("user", {
   state: () => {
-    const user = null;
-    const role = null;
-    const isLogin = false;
-
+    const user = null; // ユーザー情報
+    const role = null; // 役職
+    const isLogin = false; // ログイン状態
+    const token = null; // JWT token
     return {
       user,
       role,
       isLogin,
+      token,
     };
   },
   getters: {
