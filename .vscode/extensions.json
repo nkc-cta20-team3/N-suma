@@ -7,11 +7,11 @@
 		"pkief.material-icon-theme",
 		"esbenp.prettier-vscode",
 		"dbaeumer.vscode-eslint",
-		"vue.volar",
 		"42crunch.vscode-openapi",
 		"mermade.openapi-lint",
 		"arjun.swagger-viewer",
-		"naumovs.color-highlight"
+		"naumovs.color-highlight",
+		"vue.volar"
 	],
 	// List of extensions recommended by VS Code that should not be recommended for users of this workspace.
 	"unwantedRecommendations": [

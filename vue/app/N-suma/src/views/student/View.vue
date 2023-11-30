@@ -21,6 +21,7 @@
         <RowCard title="学生コメント" :text="state.studentComment" />
         <RowCard title="教員コメント" :text="state.teacherComment" />
       </v-col>
+      
       <!-- ひとつ後の書類を閲覧するボタン -->
       <v-col cols="1">
         <v-btn @click="onClick" height="100%" elevation="0" size="small">
