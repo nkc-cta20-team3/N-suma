@@ -39,7 +39,11 @@
       <!-- <v-btn @click="consoleDebug">debug</v-btn> -->
 
       <!-- 通知ボタン -->
-      <v-btn @click.stop="dialog = true" icon>
+      <v-btn
+        @click.stop="dialog = true"
+        icon
+        v-if="store.role === 'student' || store.role === 'teacher'"
+      >
         <!-- icon url : https://pictogrammers.com/library/mdi/icon/bell-outline/ -->
         <v-icon alt=" icon" :icon="mdiBellOutline"></v-icon>
       </v-btn>
@@ -88,6 +92,7 @@ onMounted(() => {
   // TODO: 通知がないかを確認するAPIを叩く処理を記述する
   isNotification.value = true;
 
+  // MEMO: 叩くAPIは、学生か教員かで挙動が変わる
   // TODO: 通知がある場合は、notificationに通知の内容を格納する
   if (isNotification.value) {
     notification.value = [
