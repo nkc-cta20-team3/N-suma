@@ -60,7 +60,11 @@
       <v-container v-else>
         <v-row justify="center">
           <v-col cols="12" v-for="item in notification" :key="item.title">
-            <RowCard :id="item.id" :title="item.title" :text="item.text" />
+            <RowCard
+              @click="onItemClick(item.id)"
+              :title="item.title"
+              :text="item.text"
+            />
           </v-col>
         </v-row>
       </v-container>
@@ -72,7 +76,9 @@
 import { onMounted, ref } from "vue";
 import { mdiBellOutline } from "@mdi/js";
 import RowCard from "@/components/NavigationRowCard.vue";
+import router from "@/router";
 import { useStore } from "@/stores/user";
+
 const store = useStore();
 
 const dialog = ref(false);
@@ -86,6 +92,15 @@ function consoleDebug() {
   console.log("role: ", store.role);
   console.log("user: ", store.user ? store.user.uid : "null");
   console.log("====================\n");
+}
+
+function onItemClick(id) {
+  dialog.value = false;
+  // console.log(props.id);
+  router.push({
+    name: "studentReForm",
+    params: { id: id },
+  });
 }
 
 onMounted(() => {
