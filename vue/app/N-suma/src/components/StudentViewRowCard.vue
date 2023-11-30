@@ -8,7 +8,7 @@
     </v-card>
   </v-row>
   <v-dialog width="70%" v-model="dialog" scrollable>
-    <v-card @click.stop="dialog = true">
+    <v-card>
       <v-card-text>{{ props.text }}</v-card-text>
     </v-card>
   </v-dialog>
