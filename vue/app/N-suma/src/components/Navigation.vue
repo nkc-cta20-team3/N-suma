@@ -39,7 +39,7 @@
       <!-- <v-btn @click="consoleDebug">debug</v-btn> -->
 
       <!-- 通知ボタン -->
-      <v-btn @click="onClickBell" icon>
+      <v-btn @click.stop="dialog = true" icon>
         <!-- icon url : https://pictogrammers.com/library/mdi/icon/bell-outline/ -->
         <v-icon alt=" icon" :icon="mdiBellOutline"></v-icon>
       </v-btn>
@@ -49,13 +49,31 @@
       <v-btn v-if="store.isLogin" @click="store.logout">ログアウト</v-btn>
     </v-toolbar-items>
   </v-app-bar>
+  <!-- 通知ポップアップ -->
+  <v-dialog width="70%" v-model="dialog" scrollable>
+    <v-card>
+      <v-card-title v-if="!isNotification">通知はありません</v-card-title>
+      <v-container v-else>
+        <v-row justify="center">
+          <v-col cols="12" v-for="item in notification" :key="item.title">
+            <RowCard :id="item.id" :title="item.title" :text="item.text" />
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script setup>
+import { onMounted, ref } from "vue";
 import { mdiBellOutline } from "@mdi/js";
+import RowCard from "@/components/NavigationRowCard.vue";
 import { useStore } from "@/stores/user";
-import { onMounted } from "vue";
 const store = useStore();
+
+const dialog = ref(false);
+const isNotification = ref(false);
+const notification = ref([]);
 
 function consoleDebug() {
   console.log("debug logs");
@@ -66,13 +84,29 @@ function consoleDebug() {
   console.log("====================\n");
 }
 
-function onClickBell() {
-  console.log("通知ボタンが押されました");
-  //TODO: 通知ボタンが押された時の処理を記述する
-  // ダイアログボックス形式で通知の一覧を取得するのが良さそう？
-}
-
 onMounted(() => {
   // TODO: 通知がないかを確認するAPIを叩く処理を記述する
+  isNotification.value = true;
+
+  // TODO: 通知がある場合は、notificationに通知の内容を格納する
+  if (isNotification.value) {
+    notification.value = [
+      {
+        id: 1,
+        title: "通知1",
+        text: "通知1の内容",
+      },
+      {
+        id: 2,
+        title: "通知2",
+        text: "通知2の内容",
+      },
+      {
+        id: 3,
+        title: "通知3",
+        text: "通知3の内容",
+      },
+    ];
+  }
 });
 </script>
