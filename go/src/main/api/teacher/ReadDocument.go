@@ -68,11 +68,8 @@ func ReadDocument(c *gin.Context) {
 				"oa.location",
 				"oa.student_comment",
 				"oa.teacher_comment",
-				"user.user_number",
-				"cs.class_name",
-				"user.user_name").
-			Joins("JOIN user ON oa.user_id = user.user_id").
-			Joins("JOIN classification AS cs ON user.class_id = cs.class_id").
+				"dv.division_name").
+			Joins("JOIN division dv ON oa.division_id = dv.division_id").
 			Where("document_id = ?", request.DocumentID).
 			First(&result).Error
 		if db.Error != nil {
@@ -100,9 +97,7 @@ func ReadDocument(c *gin.Context) {
 			Location:       result.Location,
 			StudentComment: result.StudentComment,
 			TeacherComment: result.TeacherComment,
-			UserNumber:     result.UserNumber,
-			ClassName:      result.ClassName,
-			UserName:       result.UserName,
+			DivisionName:   result.DivisionName,
 		}
 
 		//値を返却
