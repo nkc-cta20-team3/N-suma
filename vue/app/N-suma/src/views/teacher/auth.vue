@@ -7,8 +7,6 @@
         <RowCard title="公欠区分" text="公欠区分" />
         <RowCard title="申請時間" text="申請時間" />
         <RowCard title="場所" text="場所" />
-        <RowCard title="必要欠席時間" text="必要欠席時間" />
-        <RowCard title="学生コメント" text="学生コメント" />
 
         <!-- 教員側入力フォーム -->
         <v-form ref="mainForm">
@@ -23,7 +21,7 @@
             class="mt-4"
           ></v-text-field>
 
-          <!-- 教員コメント入力 -->
+          <!--学生コメント-->
           <v-text-field
             v-model="state.comment"
             label="学生コメント"
@@ -35,8 +33,20 @@
             :disabled="true"
           ></v-text-field>
 
-          <!-- 認可ボタン -->
+          <!-- 教員コメント入力 ※エラー・必要欠席時間とコメントが同期している-->
+
+          <v-text-field
+            v-model="state.absence"
+            label="教員コメント"
+            persistent-hint
+            placeholder="確認しました。"
+            persistent-placeholder
+            :rules="requiredRules"
+            :counter="200"
+          ></v-text-field>
+
           <template class="d-flex flex-row justify-end text-black">
+            <!-- 認可ボタン -->
             <v-dialog transition="dialog-top-transition" width="auto">
               <template v-slot:activator="{ props }">
                 <v-btn height="40" width="150" v-bind="props" color="success"
@@ -67,6 +77,42 @@
                       "
                       color="success"
                       >認可</v-btn
+                    >
+                  </v-card-actions>
+                </v-card>
+              </template>
+            </v-dialog>
+            <!-- 却下ボタン -->
+            <v-dialog transition="dialog-top-transition" width="auto">
+              <template v-slot:activator="{ props }">
+                <v-btn height="40" width="150" v-bind="props" color="warning"
+                  >却下</v-btn
+                >
+              </template>
+              <template v-slot:default="{ isActive }">
+                <v-card>
+                  <v-card-text>
+                    <div>却下しますか？</div>
+                  </v-card-text>
+                  <v-card-actions class="justify-center">
+                    <v-btn
+                      height="40"
+                      width="150"
+                      @click="isActive.value = false"
+                      color="warning"
+                      >キャンセル</v-btn
+                    >
+                    <v-btn
+                      height="40"
+                      width="150"
+                      @click="
+                        () => {
+                          isActive.value = false;
+                          onSubmit();
+                        }
+                      "
+                      color="success"
+                      >却下</v-btn
                     >
                   </v-card-actions>
                 </v-card>

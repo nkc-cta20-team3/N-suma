@@ -96,6 +96,11 @@ const router = createRouter({
               component: () => import("@/views/teacher/List.vue"),
             },
             {
+              name: "auth",
+              path: "auth",
+              component: () => import("@/views/teacher/auth.vue"),
+            },
+            {
               path: "unapproval",
               component: () => import("@/views/teacher/UnApprovalList.vue"),
             },
