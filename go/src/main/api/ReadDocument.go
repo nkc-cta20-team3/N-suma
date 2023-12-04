@@ -11,6 +11,10 @@ import (
 	"gorm.io/gorm"
 )
 
+type DocumentStatus struct {
+	Status int
+}
+
 func ReadDocument(c *gin.Context) {
 
 	request := model.ReadDocumentRequest{}
@@ -92,6 +96,22 @@ func ReadDocument(c *gin.Context) {
 		} else if errors.Is(err, gorm.ErrRecordNotFound) {
 			c.JSON(http.StatusBadRequest, gin.H{"document": "書類が見つかりませんでした"})
 			return
+		}
+
+		//書類ステータス取得
+
+		document := DocumentStatus{}
+		err = db.Table("oa").Select("status").Where("document_id = ?", request.DocumentID).First(&document).Error
+
+		//認可済みまたは却下状態かどうかを判別
+		if document.Status == 2 || document.Status == -1 {
+			//既読処理
+			read_flag := false
+			err = db.Table("oa").Where("document_id = ?", request.DocumentID).Updates(model.UpdateDocument{ReadFlag: &read_flag}).Error
+			if err != nil {
+				//エラーハンドリング
+				c.JSON(http.StatusInternalServerError, gin.H{"document": "READ UPDATE ERROR"})
+			}
 		}
 
 		// log.Println(response)

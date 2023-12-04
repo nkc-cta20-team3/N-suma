@@ -1,28 +1,36 @@
 package api
 
 import (
+	"errors"
 	"fmt"
 	"main/infra"
 	"main/model"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
+// ReadAlarmで使用する構造体
 // type ReadAlarmRequest struct {
-// 	UserID int `json:"user_id"` //ユーザID
+// 	UserID int `json:"user_id"`
 // }
-// type TakePostID struct {
-// 	PostID int `json:"post_id"` //役職ID
+// type StudentReadAlarmResponse struct {
+// 	DocumentID int       `json:"document_id"`
+// 	RequestAt  time.Time `json:"request_at"`
+// 	Status     int       `json:"status"`
+// }
+// type TeacherReadAlarmResponse struct {
+// 	DocumentID int    `json:"document_id"`
+// 	UserName   string `json:"user_name"`
+// 	ClassAbbr  string `json:"class_abbr"`
 // }
 
 func ReadAlarm(c *gin.Context) {
-
-	//必要な変数定義
 	request := model.ReadAlarmRequest{}
-	take_post_id := model.TakePostID{}
-	var AlarmFlag = false
-	var count int64
+	studentResponse := []model.StudentReadAlarmResponse{}
+	teacherResponse := []model.TeacherReadAlarmResponse{}
+	post := model.Post{}
 
 	//POSTで受け取った値を格納する
 	if err := c.ShouldBindJSON(&request); err != nil {
@@ -31,54 +39,64 @@ func ReadAlarm(c *gin.Context) {
 		return
 	}
 
-	//DB接続
 	db := infra.DBInitGorm()
 
-	//役職を識別
-	// db.Table("user").Select("post_id").Where("user_id = ?", request.UserID).Order("post_id DESC").First(&take_post_id)
-	db.Table("user").Select("post_id").Where("user_id = ?", request.UserID).Order("post_id DESC").First(&take_post_id)
+	db.Table("user").Select("post_id").Where("user_id = ?", request.UserID).Scan(&post)
 
-	//ロールごとの処理分け
-	if take_post_id.PostID == 1 {
-		//学生→再提出or(認可完了and未読)
-		unreadQuery := db.Table("oa").Select("document_id").Where("status = 2 AND read_flag = 1")
-		resubmitQuery := db.Table("oa").Select("document_id").Where("status = -1")
+	if post.PostID == 1 {
+		//学生の処理
 
-		if err := unreadQuery.Count(&count).Error; err != nil {
-			//エラーハンドリング
-		} else if count > 0 {
-			//認可済みかつ未読の書類がある
-			AlarmFlag = true
-			fmt.Println("UNREAD DOCUMENT EXIST")
+		err := db.Table("oa").
+			Select("document_id,request_at,status").
+			Where("user_id = ? AND ((status = ? AND read_flag = ?) OR status = ?)", request.UserID, 2, 1, -1).
+			Scan(&studentResponse).Error
+
+		if err != nil {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				// 行が見つからなかった場合の処理
+				fmt.Println("行が見つかりませんでした")
+				c.JSON(http.StatusBadRequest, gin.H{"message": "TABLE NOT FOUND"})
+				return
+			} else {
+				//その他のエラーハンドリング
+				c.JSON(http.StatusBadRequest, gin.H{"message": "OTHER ERROR"})
+				return
+			}
 		}
-		count = 0
-		if err := resubmitQuery.Count(&count).Error; err != nil {
-			//エラーハンドリング
-		} else if count > 0 {
-			//再提出の書類がある
-			AlarmFlag = true
-			fmt.Println("RESUBMIT DOCUMENT EXIST")
+		c.JSON(http.StatusOK, gin.H{"document": studentResponse})
+		return
+	} else if post.PostID == 2 {
+		//教員の処理
+		err := db.Debug().Table("oa").
+			Select(
+				"oa.document_id",
+				"user.user_name",
+				"cs.class_abbr").
+			Joins("JOIN user ON oa.user_id = user.user_id").
+			Joins("JOIN classification AS cs ON user.class_id = cs.class_id").
+			Where("status = ?", 1).
+			Scan(&teacherResponse).Error
+
+		// err := db.Table("oa").
+		// 	Select("document_id,request_at,status").
+		// 	Where("user_id = ? AND ((status = ? AND read_flag = ?) OR status = ?)", request.UserID, 2, 1, -1).
+		// 	Scan(&studentResponse).Error
+		if err != nil {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				// 行が見つからなかった場合の処理
+				fmt.Println("行が見つかりませんでした")
+				c.JSON(http.StatusBadRequest, gin.H{"message": "TABLE NOT FOUND"})
+				return
+			} else {
+				//その他のエラーハンドリング
+				c.JSON(http.StatusBadRequest, gin.H{"message": "OTHER ERROR"})
+				return
+			}
 		}
-
-	} else if take_post_id.PostID == 2 {
-		//教員→未認可リストの存在有無
-		db.Table("oa").
-			Select("document_id").
-			Where("oa.status = ?", take_post_id.PostID-1).
-			Count(&count)
-
-		//ここから通知があったときの戻り値フラグをONにする
-		if count > 0 {
-			AlarmFlag = true
-			fmt.Println("UNAUTH DOCUMENT EXIST")
-		}
-
+		c.JSON(http.StatusOK, gin.H{"document": teacherResponse})
+		return
 	} else {
-		//エラー
 		c.JSON(http.StatusBadRequest, gin.H{"document": "POST ERROR"})
 		return
 	}
-
-	//結果を返却
-	c.JSON(http.StatusOK, gin.H{"document": AlarmFlag})
 }
