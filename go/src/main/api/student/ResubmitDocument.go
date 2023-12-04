@@ -1,4 +1,4 @@
-package api
+package student
 
 import (
 	"net/http"

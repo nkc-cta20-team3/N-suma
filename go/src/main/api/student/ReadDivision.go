@@ -1,4 +1,4 @@
-package api
+package student
 
 import (
 	"errors"
@@ -11,20 +11,20 @@ import (
 	"gorm.io/gorm"
 )
 
-// DeleteUserで使用する構造体
-//
-//	type DeleteUserRequest struct {
-//		AccessUserID int `json:"access_user_id"`
-//		TargetUserID int `json:"target_user_id"`
-//	}
-//
-//	type DeleteUserResponse struct {
-//		Flag bool
-//	}
+// ReadDivisionで使用する構造体
+// type ReadDivisionRequest struct {
+// 	UserID int `json:"user_id"`
+// }
 
-func DeleteUser(c *gin.Context) {
-	request := model.DeleteUserRequest{}
-	// response := model.DeleteUserResponse{}
+// type ReadDivisionResponse struct {
+// 	DivisionID   int    `json:"division_id"`
+// 	DivisionName string `json:"division_name"`
+// }
+
+func ReadDivision(c *gin.Context) {
+
+	request := model.ReadDivisionRequest{}
+	response := []model.ReadDivisionResponse{}
 	post := model.Post{}
 
 	//POSTで受け取った値を格納する
@@ -37,23 +37,14 @@ func DeleteUser(c *gin.Context) {
 	//DB接続
 	db := infra.DBInitGorm()
 
-	db.Table("user").Select("post_id").Where("user_id = ?", request.AccessUserID).Scan(&post)
+	//役職ID取得
+	db.Table("user").Select("post_id").Where("user_id = ?", request.UserID).Scan(&post)
 
-	if post.PostID == 0 {
-		//管理者のみ実行できる
+	if post.PostID == 1 {
+		//学生のみアクセス可能
+		err := db.Table("division").Select("division_id,division_name").Find(&response).Error
 
-		//削除(無効化)用準備
-		type UpdateUser struct {
-			UserFlag *bool `json:"user_flag"`
-		}
-		userflag := false
-		update := UpdateUser{UserFlag: &userflag}
-
-		//
-		err := db.Table("user").
-			Where("user_id = ?", request.TargetUserID).
-			Updates(update).Error
-
+		//エラーハンドリング
 		if err != nil {
 			if errors.Is(err, gorm.ErrRecordNotFound) {
 				// 行が見つからなかった場合の処理
@@ -65,11 +56,11 @@ func DeleteUser(c *gin.Context) {
 				c.JSON(http.StatusBadRequest, gin.H{"message": "OTHER ERROR"})
 				return
 			}
+
 		}
-		c.JSON(http.StatusOK, gin.H{"document": true})
+		c.JSON(http.StatusOK, gin.H{"document": response})
 		return
 	} else {
-		//管理者でない場合
 		c.JSON(http.StatusBadRequest, gin.H{"document": "POST ERROR"})
 		return
 	}

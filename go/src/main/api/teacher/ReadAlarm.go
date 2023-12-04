@@ -1,4 +1,4 @@
-package api
+package teacher
 
 import (
 	"errors"
@@ -28,7 +28,6 @@ import (
 
 func ReadAlarm(c *gin.Context) {
 	request := model.ReadAlarmRequest{}
-	studentResponse := []model.StudentReadAlarmResponse{}
 	teacherResponse := []model.TeacherReadAlarmResponse{}
 	post := model.Post{}
 
@@ -43,29 +42,7 @@ func ReadAlarm(c *gin.Context) {
 
 	db.Table("user").Select("post_id").Where("user_id = ?", request.UserID).Scan(&post)
 
-	if post.PostID == 1 {
-		//学生の処理
-
-		err := db.Table("oa").
-			Select("document_id,request_at,status").
-			Where("user_id = ? AND ((status = ? AND read_flag = ?) OR status = ?)", request.UserID, 2, 1, -1).
-			Scan(&studentResponse).Error
-
-		if err != nil {
-			if errors.Is(err, gorm.ErrRecordNotFound) {
-				// 行が見つからなかった場合の処理
-				fmt.Println("行が見つかりませんでした")
-				c.JSON(http.StatusBadRequest, gin.H{"message": "TABLE NOT FOUND"})
-				return
-			} else {
-				//その他のエラーハンドリング
-				c.JSON(http.StatusBadRequest, gin.H{"message": "OTHER ERROR"})
-				return
-			}
-		}
-		c.JSON(http.StatusOK, gin.H{"document": studentResponse})
-		return
-	} else if post.PostID == 2 {
+	if post.PostID == 2 {
 		//教員の処理
 		err := db.Debug().Table("oa").
 			Select(
