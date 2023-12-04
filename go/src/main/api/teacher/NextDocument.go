@@ -1,4 +1,4 @@
-package api
+package teacher
 
 import (
 	"errors"
@@ -39,8 +39,10 @@ type DocumentArray struct {
 func NextDocument(c *gin.Context) {
 	//必要な変数(引数・戻り値)の定義
 	request := model.NextDocumentRequest{}
-	response := []model.NextDocumentResponse{}
+	response := model.NextDocumentResponse{}
 	documentArray := []DocumentArray{}
+
+	result := model.Document{}
 
 	// var testUserID int
 	post := model.Post{}
@@ -71,57 +73,7 @@ func NextDocument(c *gin.Context) {
 	}
 	PostID = post.PostID
 
-	if PostID == 1 {
-		pre_id := 0
-		var search_id int
-
-		//書類ID一覧を取得
-		err = db.Table("oa").Select("document_id").Where("user_id = ?", request.UserID).Scan(&documentArray).Error
-
-		for _, id := range documentArray {
-
-			if request.DocumentID == id.DocumentID && !request.NextFlag {
-				//前の書類IDを取得
-				search_id = pre_id
-				break
-			} else if request.DocumentID == id.DocumentID && request.NextFlag {
-				//次の書類IDを取得(下記elseifで検索IDを取得させる)
-				pre_id = -1
-			} else if pre_id == -1 {
-				search_id = id.DocumentID
-				break
-			} else {
-				//次のループに行くとき
-				pre_id = id.DocumentID
-			}
-		}
-
-		//切り替え対象書類取得
-		db.Table("oa").
-			Select(
-				"oa.document_id",
-				"oa.request_at",
-				"oa.start_time",
-				"oa.start_flame",
-				"oa.end_time",
-				"oa.end_flame",
-				"oa.location",
-				"oa.student_comment",
-				"oa.teacher_comment",
-				"user.user_number",
-				"cs.class_abbr",
-				"dv.division_name").
-			Joins("JOIN user on oa.user_id = user.user_id").
-			Joins("JOIN division AS dv ON oa.division_id = dv.division_id").
-			Joins("JOIN classification AS cs ON user.class_id = cs.class_id").
-			Where("document_id = ?", search_id).
-			First(&response)
-		//戻り値
-		c.JSON(http.StatusOK, gin.H{
-			"message": response,
-		})
-
-	} else if PostID == 2 {
+	if PostID == 2 {
 		//教員処理
 		pre_id := 0
 		var search_id int
@@ -160,30 +112,45 @@ func NextDocument(c *gin.Context) {
 				"oa.location",
 				"oa.student_comment",
 				"oa.teacher_comment",
-				"user.user_number",
-				"cs.class_abbr",
 				"dv.division_name").
-			Joins("JOIN user on oa.user_id = user.user_id").
 			Joins("JOIN division AS dv ON oa.division_id = dv.division_id").
-			Joins("JOIN classification AS cs ON user.class_id = cs.class_id").
 			Where("document_id = ?", search_id).
-			Order("oa.request_at ASC").
-			First(&response)
+			First(&result)
 		if db.Error != nil {
 			fmt.Print("SQL ERROR!")
 			c.JSON(http.StatusBadRequest, gin.H{
 				"message": "SQL ERROR",
 			})
 		}
+
+		requestAt := timeToString(result.RequestAt)
+		startTime := timeToString(result.StartTime)
+		endTime := timeToString(result.EndTime)
+
+		response = model.NextDocumentResponse{
+			DocumentID:     result.DocumentID,
+			RequestAt:      requestAt,
+			StartTime:      startTime,
+			StartFlame:     result.StartFlame,
+			EndTime:        endTime,
+			EndFlame:       result.EndFlame,
+			Location:       result.Location,
+			StudentComment: result.StudentComment,
+			TeacherComment: result.TeacherComment,
+			DivisionName:   result.DivisionName,
+		}
+
 		//戻り値
 		c.JSON(http.StatusOK, gin.H{
 			"message": response,
 		})
+		return
 
 	} else {
 		//教員でも学生でもなかったとき(不正なデータ)
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": "POST ERROR",
 		})
+		return
 	}
 }

@@ -1,4 +1,4 @@
-package api
+package admin
 
 import (
 	"errors"
@@ -11,21 +11,19 @@ import (
 	"gorm.io/gorm"
 )
 
-// ReadUserで使用する構造体
-// type ReadUserRequest struct {
-// 	AccessUserID int `json:"access_user_id"`
-// 	TargetUserID int `json:"target_user_id"`
+// SortUserで使用する構造体
+// type SortUserRequest struct {
+// 	UserID       int    `json:"user_id"`
+// 	SearchString string `json:"search_string"`
 // }
-// type ReadUserResponse struct {
-// 	UserName   string `json:"user_name"`
-// 	UserNumber int    `json:"user_number"`
-// 	ClassAbbr  string `json:"class_abbr"`
-// 	PostID     int    `json:"post_id"`
+// type SortUserResponse struct {
+// 	UserID    int    `json:"user_id"`
+// 	ClassAbbr string `json:"class_abbr"`
 // }
 
-func ReadUser(c *gin.Context) {
-	request := model.ReadUserRequest{}
-	response := model.ReadUserResponse{}
+func SortUser(c *gin.Context) {
+	request := model.SortUserRequest{}
+	response := []model.SortUserResponse{}
 	post := model.Post{}
 
 	//POSTで受け取った値を格納する
@@ -38,15 +36,16 @@ func ReadUser(c *gin.Context) {
 	//DB接続
 	db := infra.DBInitGorm()
 
-	db.Table("user").Select("post_id").Where("user_id = ?", request.AccessUserID).Scan(&post)
+	db.Table("user").Select("post_id").Where("user_id = ?", request.UserID).Scan(&post)
 
 	if post.PostID == 0 {
 		//管理者のみ実行できる
+
 		err := db.Table("user").
-			Select("user.user_name,user.user_number,cs.class_abbr,user.post_id").
+			Select("user.user_id,cs.class_abbr").
 			Joins("LEFT OUTER JOIN classification cs ON user.class_id = cs.class_id").
 			Where("user_flag = true").
-			Where("user_id = ?", request.TargetUserID).
+			Where("user_number LIKE ?", "%"+request.SearchString+"%").
 			Scan(&response).Error
 
 		if err != nil {
@@ -64,6 +63,7 @@ func ReadUser(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"document": response})
 		return
 	} else {
+		//管理者でない場合
 		c.JSON(http.StatusBadRequest, gin.H{"document": "POST ERROR"})
 		return
 	}

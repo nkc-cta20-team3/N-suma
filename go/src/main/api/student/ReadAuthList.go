@@ -1,4 +1,4 @@
-package api
+package student
 
 import (
 	"fmt"
@@ -66,33 +66,13 @@ func ReadAuthList(c *gin.Context) {
 			Joins("JOIN user ON oa.user_id = user.user_id").
 			Joins("JOIN division AS dv ON oa.division_id = dv.division_id").
 			Joins("JOIN classification AS cs ON user.class_id = cs.class_id").
-			Where("oa.status = ?", post).
 			Where("oa.user_id = ?", request.UserID).
+			Where("user.user_flag = true").
 			Scan(&response)
 		if db.Error != nil {
 			fmt.Print("STUDENT DATA CATCH ERROR!")
 		}
 
-	} else if post == 2 {
-
-		//教員の場合
-		db.Table("oa").
-			Select(
-				"cs.class_name",
-				"user.user_name",
-				"dv.division_name",
-				"oa.document_id",
-				"oa.status").
-			Joins("JOIN user ON oa.user_id = user.user_id").
-			Joins("JOIN division AS dv ON oa.division_id = dv.division_id").
-			Joins("JOIN classification AS cs ON user.class_id = cs.class_id").
-			Where("oa.status = ?", post-1).
-			Scan(&response)
-		// 実行予定のSQL
-		// SELECT cs.class_name, user.user_name, dv.division_name, oa.document_id FROM oa JOIN user ON oa.user_id = user.user_id JOIN division AS dv ON oa.division_id = dv.division_id JOIN classification AS cs ON user.class_id = cs.class_id WHERE oa.status = 2;
-		if db.Error != nil {
-			fmt.Print("HIGHER TEACHER DATA CATCH ERROR!")
-		}
 	} else {
 		//不適切な役職の場合(含：管理者)
 		c.JSON(http.StatusOK, gin.H{"document": "POST ERROR"})
@@ -104,24 +84,3 @@ func ReadAuthList(c *gin.Context) {
 	return
 
 }
-
-//担任教員であるとき
-//担任クラスのみ出力する
-// db.Table("oa").
-// 	Select(
-// 		"cs.class_name",
-// 		"user.user_name",
-// 		"dv.division_name",
-// 		"oa.document_id",
-// 		"oa.status").
-// 	Joins("JOIN user ON oa.user_id = user.user_id").
-// 	Joins("JOIN division AS dv ON oa.division_id = dv.division_id").
-// 	Joins("JOIN classification AS cs ON user.class_id = cs.class_id").
-// 	Where("oa.status = ?", post-1).
-// 	Where("cs.class_id = ?", take_class_id.ClassID).
-// 	Scan(&response)
-// // 実行予定のSQL
-// // SELECT cs.class_name, user.user_name, dv.division_name, oa.document_id FROM oa JOIN user ON oa.user_id = user.user_id JOIN division AS dv ON oa.division_id = dv.division_id JOIN classification AS cs ON user.class_id = cs.class_id WHERE oa.status = 1 AND cs.class_id = 117;
-// if db.Error != nil {
-// 	fmt.Print("CLASS TEACHER DATA CATCH ERROR!")
-// }

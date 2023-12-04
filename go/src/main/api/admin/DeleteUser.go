@@ -1,4 +1,4 @@
-package api
+package admin
 
 import (
 	"errors"
@@ -11,19 +11,20 @@ import (
 	"gorm.io/gorm"
 )
 
-// SortUserで使用する構造体
-// type SortUserRequest struct {
-// 	UserID       int    `json:"user_id"`
-// 	SearchString string `json:"search_string"`
-// }
-// type SortUserResponse struct {
-// 	UserID    int    `json:"user_id"`
-// 	ClassAbbr string `json:"class_abbr"`
-// }
+// DeleteUserで使用する構造体
+//
+//	type DeleteUserRequest struct {
+//		AccessUserID int `json:"access_user_id"`
+//		TargetUserID int `json:"target_user_id"`
+//	}
+//
+//	type DeleteUserResponse struct {
+//		Flag bool
+//	}
 
-func SortUser(c *gin.Context) {
-	request := model.SortUserRequest{}
-	response := []model.SortUserResponse{}
+func DeleteUser(c *gin.Context) {
+	request := model.DeleteUserRequest{}
+	// response := model.DeleteUserResponse{}
 	post := model.Post{}
 
 	//POSTで受け取った値を格納する
@@ -36,17 +37,22 @@ func SortUser(c *gin.Context) {
 	//DB接続
 	db := infra.DBInitGorm()
 
-	db.Table("user").Select("post_id").Where("user_id = ?", request.UserID).Scan(&post)
+	db.Table("user").Select("post_id").Where("user_id = ?", request.AccessUserID).Scan(&post)
 
 	if post.PostID == 0 {
 		//管理者のみ実行できる
 
+		//削除(無効化)用準備
+		type UpdateUser struct {
+			UserFlag *bool `json:"user_flag"`
+		}
+		userflag := false
+		update := UpdateUser{UserFlag: &userflag}
+
+		//
 		err := db.Table("user").
-			Select("user.user_id,cs.class_abbr").
-			Joins("LEFT OUTER JOIN classification cs ON user.class_id = cs.class_id").
-			Where("user_flag = true").
-			Where("user_number LIKE ?", "%"+request.SearchString+"%").
-			Scan(&response).Error
+			Where("user_id = ?", request.TargetUserID).
+			Updates(update).Error
 
 		if err != nil {
 			if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -60,7 +66,7 @@ func SortUser(c *gin.Context) {
 				return
 			}
 		}
-		c.JSON(http.StatusOK, gin.H{"document": response})
+		c.JSON(http.StatusOK, gin.H{"document": true})
 		return
 	} else {
 		//管理者でない場合

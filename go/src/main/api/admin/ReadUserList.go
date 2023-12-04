@@ -1,4 +1,4 @@
-package api
+package admin
 
 import (
 	"errors"
@@ -11,20 +11,18 @@ import (
 	"gorm.io/gorm"
 )
 
-// ReadDivisionで使用する構造体
-// type ReadDivisionRequest struct {
+// ReadUserListで使用する構造体
+// type ReadUserListRequest struct {
 // 	UserID int `json:"user_id"`
 // }
-
-// type ReadDivisionResponse struct {
-// 	DivisionID   int    `json:"division_id"`
-// 	DivisionName string `json:"division_name"`
+// type ReadUserListResponse struct {
+// 	UserID    int    `json:"user_id"`
+// 	ClassAbbr string `json:"class_abbr"`
 // }
 
-func ReadDivision(c *gin.Context) {
-
-	request := model.ReadDivisionRequest{}
-	response := []model.ReadDivisionResponse{}
+func ReadUserList(c *gin.Context) {
+	request := model.ReadUserListRequest{}
+	response := []model.ReadUserListResponse{}
 	post := model.Post{}
 
 	//POSTで受け取った値を格納する
@@ -37,14 +35,16 @@ func ReadDivision(c *gin.Context) {
 	//DB接続
 	db := infra.DBInitGorm()
 
-	//役職ID取得
 	db.Table("user").Select("post_id").Where("user_id = ?", request.UserID).Scan(&post)
 
-	if post.PostID == 1 {
-		//学生のみアクセス可能
-		err := db.Table("division").Select("division_id,division_name").Find(&response).Error
+	if post.PostID == 0 {
+		//管理者のみ実行できる
+		err := db.Table("user").
+			Select("user.user_id,user.user_name,cs.class_abbr").
+			Joins("LEFT OUTER JOIN classification cs ON user.class_id = cs.class_id").
+			Where("user_flag = true").
+			Scan(&response).Error
 
-		//エラーハンドリング
 		if err != nil {
 			if errors.Is(err, gorm.ErrRecordNotFound) {
 				// 行が見つからなかった場合の処理
@@ -56,7 +56,6 @@ func ReadDivision(c *gin.Context) {
 				c.JSON(http.StatusBadRequest, gin.H{"message": "OTHER ERROR"})
 				return
 			}
-
 		}
 		c.JSON(http.StatusOK, gin.H{"document": response})
 		return
@@ -64,4 +63,5 @@ func ReadDivision(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"document": "POST ERROR"})
 		return
 	}
+
 }
