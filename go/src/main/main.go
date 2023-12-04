@@ -6,11 +6,27 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 
+	// gin-swaggerをインポート
+	ginSwagger "github.com/swaggo/gin-swagger" 
+	swaggerFiles "github.com/swaggo/files" 
+	// docsのディレクトリを指定
+	_ "main/docs"
+	
 	// ローカルモジュールのインポート
 	"main/api"
 	"main/apiHello"
 )
 
+
+// @title N-suma-API
+// @version 1.0.0
+// @description N-suma用にGo側で実装するAPI
+// @contact name:4年A組3班 Nスマ開発チーム 
+// @contact url: 'https://github.com/nkc-cta20-team3/N-suma' 
+// @contact email:dev@example
+// @license name:MIT
+// @license url: 'https://opensource.org/licenses/MIT'
+// @host localhost:8080
 func main() {
 
 	//
@@ -79,15 +95,22 @@ func main() {
 		// routes.POST("/dd", api.DeleteDocument)
 	}
 
-	// ルーティング
-	routes2 := g.Group("/hello")
-	{
+  // SwaggerGo用のサンプルコード
+	hello := g.Group("/hello")
+	{	
 		// 動作確認用
 		// curl -X GET http://localhost:8080/hello
-		routes2.GET("", apiHello.Hello)
-		routes2.GET("/name", apiHello.Name)
-		routes2.GET("/time", apiHello.Time)
-		routes2.POST("/sum", apiHello.Sum)
+		hello.GET("", apiHello.Hello)
+		hello.GET("/name", apiHello.Name)
+		hello.GET("/time", apiHello.Time)
+		hello.POST("/sum", apiHello.Sum)
+	}
+
+	
+	// swagger uiにアクセスするためのルーティング
+	swaggerui := g.Group("/swagger")
+	{	
+		swaggerui.GET("/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	}
 
 	g.Run(":8080")

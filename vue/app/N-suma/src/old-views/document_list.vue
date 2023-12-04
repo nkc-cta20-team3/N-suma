@@ -1,15 +1,5 @@
 <template>
   <v-app id="inspire">
-    <v-navigation-drawer v-model="drawer" app>
-      <!--  -->
-    </v-navigation-drawer>
-
-    <v-app-bar app>
-      <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
-
-      <v-toolbar-title><Nav>Nスマ</Nav></v-toolbar-title>
-    </v-app-bar>
-
     <v-main>
       <!--  -->
       <v-card class="mx-auto" max-width="586">
@@ -25,6 +15,9 @@
 <script>
 export default {
   data: () => ({
+    components: {
+      Header,
+    },
     item1: [
       {
         name: "Item #1",

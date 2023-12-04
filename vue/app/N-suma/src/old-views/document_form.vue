@@ -1,15 +1,5 @@
 <template>
   <v-app id="inspire">
-    <v-navigation-drawer v-model="drawer" app>
-      <!--  -->
-    </v-navigation-drawer>
-
-    <v-app-bar app>
-      <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
-
-      <v-toolbar-title><Nav>Nスマ</Nav></v-toolbar-title>
-    </v-app-bar>
-
     <v-main>
       <!--  -->
 
@@ -32,6 +22,7 @@
                 :rules="[() => !!StartTime || '必須']"
                 :error-messages="errorMessages"
                 label="公欠開始時間"
+                type="date"
                 placeholder=""
                 required
               ></v-text-field>
@@ -41,13 +32,14 @@
                 :rules="[() => !!EndTime || '必須']"
                 :error-messages="errorMessages"
                 label="公欠終了時間"
+                type="date"
                 placeholder=""
                 required
               ></v-text-field>
               <v-text-field
                 ref="location"
                 v-model="location"
-                :rules="[() => location || '必須']"
+                :rules="[() => !!location || '必須']"
                 :error-messages="errorMessages"
                 label="実施場所"
                 placeholder=""
@@ -97,14 +89,16 @@
 <script>
 export default {
   data: () => ({
+    components: {
+      Header,
+    },
     sections: ["就活", "資格試験", "弔事"],
     errorMessages: "",
-    name: null,
-    address: null,
-    city: null,
-    state: null,
-    zip: null,
-    country: null,
+    section: null,
+    StartTime: null,
+    EndTime: null,
+    location: null,
+    comment: null,
     formHasErrors: false,
   }),
 

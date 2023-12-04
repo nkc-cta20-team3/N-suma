@@ -11,15 +11,24 @@ import (
 )
 
 // GETメソッドで動作し、ステータス200と、HelloWorldを返します
+// @Summary HelloWorldを返す
+// @Tags Hello
+// @Description GETメソッドで動作し、ステータス200と、HelloWorldを返します
+// @Accept json
+// @Produce json
+// @Success 200 {object} messageSuccess
+// @Failure 400 {object} messageError
+// @Router /hello [get]
 func Hello(c *gin.Context) {
 
 	// アクセス元のIPアドレスを取得する
 	fmt.Println(c.ClientIP())
 	log.Println(c.ClientIP())
 
-	c.JSON(http.StatusOK, gin.H{"message": "HelloWorld"})
+	// ステータス200と、HelloWorldを返します
+	message := messageSuccess{Message: "HelloWorld"}
+	c.JSON(http.StatusOK, message)
 	return
-
 }
 
 // /hello/{name}
@@ -81,4 +90,12 @@ func Sum(c *gin.Context) {
 type SumRequest struct {
 	A int `json:"a"`
 	B int `json:"b"`
+}
+
+type messageSuccess struct {
+	Message string `json:"message"`
+}
+
+type messageError struct {
+	Message string `json:"error"`
 }

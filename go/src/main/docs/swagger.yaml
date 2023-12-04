@@ -1,0 +1,38 @@
+definitions:
+  apiHello.messageError:
+    properties:
+      error:
+        type: string
+    type: object
+  apiHello.messageSuccess:
+    properties:
+      message:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: N-suma用にGo側で実装するAPI
+  title: N-suma-API
+  version: 1.0.0
+paths:
+  /hello:
+    get:
+      consumes:
+      - application/json
+      description: GETメソッドで動作し、ステータス200と、HelloWorldを返します
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/apiHello.messageSuccess'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/apiHello.messageError'
+      summary: HelloWorldを返す
+      tags:
+      - Hello
+swagger: "2.0"
