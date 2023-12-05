@@ -275,3 +275,10 @@ type DeleteUserResponse struct {
 type Post struct {
 	PostID int
 }
+
+// クラス略称取得
+type ReadClassResponse struct {
+	ClassID   int    `json:"class_id"`
+	ClassAbbr string `json:"class_abbr"`
+	ClassName string `json:"class_name"`
+}
