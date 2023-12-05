@@ -92,17 +92,18 @@ const router = createRouter({
           component: () => import("@/layouts/Main.vue"),
           children: [
             {
-              path: "list",
-              component: () => import("@/views/teacher/List.vue"),
+              path: "unapproval",
+              component: () => import("@/views/teacher/UnApprovalList.vue"),
             },
             {
               name: "auth",
-              path: "auth",
+              path: "auth/:id",
               component: () => import("@/views/teacher/auth.vue"),
+              props: true,
             },
             {
-              path: "unapproval",
-              component: () => import("@/views/teacher/UnApprovalList.vue"),
+              path: "list",
+              component: () => import("@/views/teacher/List.vue"),
             },
             {
               name: "teacherView",

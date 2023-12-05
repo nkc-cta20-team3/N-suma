@@ -9,7 +9,7 @@
             v-model="number"
             label="学籍番号"
             persistent-hint
-            placeholder="20201001"
+            placeholder="20230001"
             persistent-placeholder
             :counter="8"
             class="mr-2"
@@ -44,10 +44,8 @@
 import { mdiMagnify } from "@mdi/js";
 import { onMounted, ref } from "vue";
 import router from "@/router";
-import { roles } from "@/utils";
 
 const items = ref([]);
-const role = ref("");
 const number = ref("");
 
 function onSearch() {
