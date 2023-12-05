@@ -282,3 +282,7 @@ type ReadClassResponse struct {
 	ClassAbbr string `json:"class_abbr"`
 	ClassName string `json:"class_name"`
 }
+type ReadPostPresponse struct {
+	PostID   int    `json:"post_id"`
+	PostName string `json:"post_name"`
+}

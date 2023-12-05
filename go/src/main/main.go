@@ -97,6 +97,7 @@ func main() {
 		*/
 		routes.POST("/cl", api.CheckLogin) //ログイン確認
 		routes.POST("/rc", api.ReadClass)
+		routes.POST("/rp", api.ReadPost)
 
 		//調査用
 		routes.POST("/td", api.TestDate)
