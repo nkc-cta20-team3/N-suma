@@ -23,18 +23,10 @@
 </template>
 
 <script setup>
-import { mdiMagnify } from "@mdi/js";
 import { onMounted, ref } from "vue";
 import router from "@/router";
-import { roles } from "@/utils";
 
 const items = ref([]);
-const role = ref("");
-const number = ref("");
-
-function onSearch() {
-  console.log("検索");
-}
 
 function onItemClick(item) {
   console.log(item);
