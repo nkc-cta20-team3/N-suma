@@ -57,7 +57,7 @@ function onSearch() {
 function onItemClick(item) {
   console.log(item);
   router.push({
-    name: "auth",
+    name: "teacherView",
     params: { id: item.id },
   });
 }
