@@ -100,7 +100,7 @@
 import { onMounted, ref } from "vue";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
-import { requiredRules, divisions } from "@/utils";
+import { requiredRules, divisions, APICall } from "@/utils";
 
 const format = "yyyy-MM-dd HH:mm";
 
@@ -132,6 +132,11 @@ async function onSubmit() {
   state.value.endDate = date.value[1];
 
   // TODO: データを送信する処理を記述する
+  const url = "/api/admin/cd";
+  APICall("POST", url, state);
+  
+  console.log(json);
+  
   console.log("提出しました");
 }
 

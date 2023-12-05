@@ -117,7 +117,7 @@
 </template>
 <script setup>
 import { onMounted, ref } from "vue";
-import { roles, clases, requiredRules, numberRules,APICall } from "@/utils";
+import { roles, clases, requiredRules, numberRules, APICall } from "@/utils";
 
 const mainForm = ref(null);
 const state = ref({
@@ -145,7 +145,7 @@ async function onSubmit() {
   }
 
  // TODO: ユーザーを登録する処理を記述する
-  const url = "/api/cu";
+  const url = "/api/admin/cu";
   APICall("POST", url, state);
   
   console.log(json);
