@@ -1,4 +1,4 @@
-package api
+package student
 
 import (
 	"net/http"
@@ -69,12 +69,10 @@ func ResubmitDocument(c *gin.Context) {
 		DocumentID:     request.DocumentID,
 		RequestAt:      request.RequestAt,
 		StartTime:      request.StartTime,
-		StartFlame:     request.StartFlame,
 		EndTime:        request.EndTime,
-		EndFlame:       request.EndFlame,
 		Location:       request.Location,
 		Status:         1,
-		ReadFlag:       false,
+		ReadFlag:       true,
 		StudentComment: request.StudentComment,
 		DivisionID:     request.DivisionID,
 	}

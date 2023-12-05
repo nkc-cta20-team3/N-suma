@@ -29,10 +29,8 @@
 
       <!-- Teacher Button -->
       <template v-if="store.role === 'teacher'">
-        <!-- TODO:適切なルートを設定する -->
-        <v-btn to="/app/teacher">teacher</v-btn>
-        <v-btn to="/app/teacher">teacher</v-btn>
-        <v-btn to="/app/teacher">teacher</v-btn>
+        <v-btn to="/app/teacher/unapproval">書類認可</v-btn>
+        <v-btn to="/app/teacher/list">書類閲覧</v-btn>
       </template>
 
       <!-- Debug Button -->
@@ -97,10 +95,19 @@ function consoleDebug() {
 function onItemClick(id) {
   dialog.value = false;
   // console.log(props.id);
-  router.push({
-    name: "studentReForm",
-    params: { id: id },
-  });
+
+  // 学生の場合
+  if (store.role === "student") {
+    router.push({
+      name: "studentReForm",
+      params: { id: id },
+    });
+  } else if (store.role === "teacher") {
+    router.push({
+      name: "teacherForm",
+      params: { id: id },
+    });
+  }
 }
 
 onMounted(() => {

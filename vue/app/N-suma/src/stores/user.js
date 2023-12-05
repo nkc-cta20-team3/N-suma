@@ -52,9 +52,9 @@ export const useStore = defineStore("user", {
               this.user = u;
               // TODO: getRole()を実装する
               //this.role = getRole(u.uid);
-              //this.role = "admin";
               this.role = "admin";
               //this.role = "teacher";
+              //this.role = "student";
               this.isLogin = true;
               //console.log("user is login");
               resolve(true);
