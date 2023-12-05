@@ -115,7 +115,7 @@ import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 import { onBeforeRouteUpdate } from "vue-router";
 import router from "@/router";
-import { requiredRules, divisions } from "@/utils";
+import { requiredRules, divisions, APICall } from "@/utils";
 
 const format = "yyyy-MM-dd HH:mm";
 
@@ -150,6 +150,10 @@ async function onSubmit() {
   state.value.endDate = date.value[1];
 
   // TODO:書類を提出する処理を記述する
+  const create_url = "/api/admin/cd";
+  APICall("POST", create_url, state);
+  
+  console.log(json);
   console.log("提出しました");
 
   // 画面遷移
@@ -164,6 +168,10 @@ onMounted(() => {
 });
 
 // TODO: 画面遷移時に呼ばれる処理を記述する
+const readalarm_url = "/api/admin/al";
+  APICall("POST", readalarm_url, state);
+  
+  console.log(json);
 onBeforeRouteUpdate((to, from, next) => {
   console.log("beforeRouteUpdate");
   // TODO: 画面更新時に呼び出されるため、to.params.idをもとにstateを初期化する
@@ -174,6 +182,11 @@ onBeforeRouteUpdate((to, from, next) => {
 
 function init() {
   // TODO: 書類のidをもとに、APIを叩いて詳細な情報を取得し設定する
+  const resubmit_url = "/api/admin/rsd";
+  APICall("POST", resubmit_url, state);
+  
+  console.log(json);
+
   state.value.division = "国家試験";
   state.value.location = "愛知県名古屋市熱田区神宮";
   state.value.studentComment = "確認よろしくお願いいたします。";
