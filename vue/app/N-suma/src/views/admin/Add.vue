@@ -75,7 +75,7 @@
                   height="40"
                   width="150"
                   v-bind="props"
-                  type="submit"
+                  
                   color="success"
                   >登録</v-btn
                 >
@@ -115,10 +115,9 @@
     </v-row>
   </v-container>
 </template>
-
 <script setup>
 import { onMounted, ref } from "vue";
-import { roles, clases, requiredRules, numberRules } from "@/utils";
+import { roles, clases, requiredRules, numberRules,APICall } from "@/utils";
 
 const mainForm = ref(null);
 const state = ref({
@@ -145,7 +144,12 @@ async function onSubmit() {
     return;
   }
 
-  // TODO: ユーザーを登録する処理を記述する
+ // TODO: ユーザーを登録する処理を記述する
+  const url = "/api/cu";
+  APICall("POST", url, state);
+  
+  console.log(json);
+  
   console.log("ユーザーを登録しました");
 }
 
@@ -160,4 +164,5 @@ onMounted(() => {
     "44@example.com",
   ];
 });
+
 </script>
