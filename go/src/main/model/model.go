@@ -282,7 +282,18 @@ type ReadClassResponse struct {
 	ClassAbbr string `json:"class_abbr"`
 	ClassName string `json:"class_name"`
 }
+
+// 役職一覧取得
 type ReadPostPresponse struct {
 	PostID   int    `json:"post_id"`
 	PostName string `json:"post_name"`
+}
+
+// ログイン者役職取得
+type ReadUserPostRequest struct {
+	UserID int `json:"user_id"`
+}
+
+type ReadUserPostResponse struct {
+	PostID int `json:"post_id"`
 }
