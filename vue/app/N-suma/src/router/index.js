@@ -112,6 +112,7 @@ const router = createRouter({
               props: true,
             },
             {
+              // 現状使用していない
               name: "teacherForm",
               path: "form/:id",
               component: () => import("@/views/teacher/Form.vue"),

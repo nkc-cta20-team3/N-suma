@@ -26,7 +26,6 @@
           ></v-text-field>
 
           <!-- 教員コメント入力 -->
-          <!--※エラー・必要欠席時間とコメントが同期している-->
           <v-text-field
             v-model="state.comment"
             label="教員コメント"
