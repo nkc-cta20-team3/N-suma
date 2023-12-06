@@ -122,7 +122,6 @@ func ReadDocument(c *gin.Context) {
 		return
 	}
 }
-
 func timeToString(t time.Time) string {
 	str := t.Format("2006-01-02 15:04:05")
 	return str

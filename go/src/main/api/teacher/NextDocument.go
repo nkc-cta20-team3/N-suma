@@ -122,7 +122,6 @@ func NextDocument(c *gin.Context) {
 				"message": "SQL ERROR",
 			})
 		}
-
 		requestAt := timeToString(result.RequestAt)
 		startTime := timeToString(result.StartTime)
 		endTime := timeToString(result.EndTime)

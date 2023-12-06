@@ -41,8 +41,9 @@ func CheckAlarm(c *gin.Context) {
 	//ロールごとの処理分け
 	if take_post_id.PostID == 1 {
 		//学生→再提出or(認可完了and未読)
-		unreadQuery := db.Table("oa").Select("document_id").Where("status = 2 AND read_flag = 1")
-		resubmitQuery := db.Table("oa").Select("document_id").Where("status = -1")
+		unreadQuery := db.Table("oa").Select("document_id").Where("status = 2 AND read_flag = 1").Where("user_id = ?", request.UserID)
+		resubmitQuery := db.Table("oa").Select("document_id").Where("status = -1").Where("user_id = ?", request.UserID)
+
 
 		if err := unreadQuery.Count(&count).Error; err != nil {
 			//エラーハンドリング

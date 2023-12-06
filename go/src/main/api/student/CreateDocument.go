@@ -56,7 +56,6 @@ func CreateDocument(c *gin.Context) {
 
 	//学生チェック
 	if post.PostID == 1 && request.StudentComment != "" {
-
 		//正規の処理
 		oa := model.CreateDocument{
 			UserID:         request.UserID,
