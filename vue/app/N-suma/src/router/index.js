@@ -111,13 +111,17 @@ const router = createRouter({
               component: () => import("@/views/teacher/View.vue"),
               props: true,
             },
+            // 現状使用していない
+            // auth.vueに該当するもの
+            /*
             {
-              // 現状使用していない
+              
               name: "teacherForm",
               path: "form/:id",
               component: () => import("@/views/teacher/Form.vue"),
               props: true,
             },
+            */
             {
               path: "",
               redirect: "/",

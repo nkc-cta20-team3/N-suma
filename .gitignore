@@ -1,5 +1,6 @@
-# Ignore all log files
+# Ignore all db files
 db/mysql/
+preview/db/mysql/
 
 # Ignore all temp files
 go/src/main/tmp/
