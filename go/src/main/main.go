@@ -39,13 +39,28 @@ func main() {
 
 		// アクセスを許可したいアクセス元
 		AllowOrigins: []string{
+
+			// ローカルのデプロイ先
 			"http://localhost:5173",
+
+			// awsのデプロイ先
+			"http://n-suma.com",
+			"https://n-suma.com",
+
+			// firebaseのデプロイ先
+			"http://n-suma.firebaseapp.com",
+			"https://n-suma.firebaseapp.com",
+			"http://n-suma.web.app",
+			"https://n-suma.web.app",
+			
 		},
 
-		// アクセスを許可したいHTTPメソッド(以下の例だとPUTやDELETEはアクセスできません)
+		// アクセスを許可したいHTTPメソッド
 		AllowMethods: []string{
-			"POST",
 			"GET",
+			"POST",
+			"PUT",
+			"DELETE",
 		},
 
 		// 許可したいHTTPリクエストヘッダ
