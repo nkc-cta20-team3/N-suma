@@ -132,8 +132,8 @@ async function onSubmit() {
   state.value.endDate = date.value[1];
 
   // TODO: データを送信する処理を記述する
-  const url = "/api/admin/cd";
-  APICall("POST", url, state);
+  const createdocument_url = "/api/student/cd";
+  APICall("POST", createdocument_url, state);
   
   console.log(json);
   

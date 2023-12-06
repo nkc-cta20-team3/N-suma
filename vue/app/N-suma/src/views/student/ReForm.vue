@@ -138,6 +138,7 @@ async function onSubmit() {
   if (!date.value || !date.value[0] || !date.value[1]) {
     console.log("日付入力不足");
     // TODO: エラーを画面に表示する処理を記述する？
+    
     return;
   }
   // 日付以外の入力チェック
@@ -150,8 +151,8 @@ async function onSubmit() {
   state.value.endDate = date.value[1];
 
   // TODO:書類を提出する処理を記述する
-  const create_url = "/api/admin/cd";
-  APICall("POST", create_url, state);
+  const createdocument_url = "/api/student/cd";
+  APICall("POST", createdocument_url, state);
   
   console.log(json);
   console.log("提出しました");
@@ -168,7 +169,7 @@ onMounted(() => {
 });
 
 // TODO: 画面遷移時に呼ばれる処理を記述する
-const readalarm_url = "/api/admin/al";
+const readalarm_url = "/api/student/al";
   APICall("POST", readalarm_url, state);
   
   console.log(json);
@@ -182,8 +183,8 @@ onBeforeRouteUpdate((to, from, next) => {
 
 function init() {
   // TODO: 書類のidをもとに、APIを叩いて詳細な情報を取得し設定する
-  const resubmit_url = "/api/admin/rsd";
-  APICall("POST", resubmit_url, state);
+  const resubmitdocument_url = "/api/student/rsd";
+  APICall("POST", resubmitdocument_url, state);
   
   console.log(json);
 

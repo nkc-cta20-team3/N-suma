@@ -40,6 +40,8 @@ import { onMounted, ref } from "vue";
 import { mdiMenuLeft, mdiMenuRight } from "@mdi/js";
 import router from "@/router";
 import RowCard from "@/components/StudentViewRowCard.vue";
+import{APICall} from "@/utils";
+
 
 const state = ref({
   id: "",
@@ -62,6 +64,11 @@ var absenceTime = "";
 function onClick() {
   // TODO: ひとつ前の書類を閲覧するボタンを押したときの処理を記述する
   // TODO: ひとつ後の書類を閲覧するボタンを押したときの処理を記述する
+  const nextdocument_url = "/api/teacher/nd";
+  APICall("POST", nextdocument_url, state);
+  
+  console.log(json);
+
   console.log("onClick");
 }
 
@@ -70,6 +77,12 @@ onMounted(() => {
   state.value.id = router.currentRoute.value.params.id;
   console.log(state.value.id);
   // TODO: 受け取ったidをもとに、ドキュメントを取得するAPIを叩き、stateに格納する
+  /*
+  const nextdocument_url = "/api/teacher/nd";
+  APICall("POST", nextdocument_url, state);
+  
+  console.log(json);
+  */
   state.value = {
     date: "2021-04-01",
     division: "国家試験 / FE",
@@ -83,10 +96,22 @@ onMounted(() => {
     teacherComment: "把握しました",
   };
   // TODO: 現在の書類の前後の書類を取得し、stateに格納する
+  /*
+  const nextdocument_url = "/api/teacher/nd";
+  APICall("POST", nextdocument_url, state);
+  
+  console.log(json);
+  */
   state.value.prevId = state.value.id - 1;
   state.value.nextId = state.value.id + 1;
 
   // TODO: 表示用に日付と時間を結合する処理を記述する
+  /*
+  const nextdocument_url = "/api/teacher/nd";
+  APICall("POST", nextdocument_url, state);
+  
+  console.log(json);
+  */
   dateTime = state.value.startDate + " ～ " + state.value.endDate;
   absenceTime = state.value.startAbsence + " ～ " + state.value.endAbsence;
 });

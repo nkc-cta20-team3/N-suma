@@ -44,6 +44,7 @@
 import { mdiMagnify } from "@mdi/js";
 import { onMounted, ref } from "vue";
 import router from "@/router";
+import{ APICall } from "@utils"
 
 const items = ref([]);
 const number = ref("");
@@ -63,6 +64,12 @@ function onItemClick(item) {
 onMounted(() => {
   console.log("mounted");
   // TODO: 書類の一覧を取得し、itemsに格納する
+  /*
+  const readdocument_url = "/api/teacher/rd";
+  APICall("POST", readdocument_url, state);
+  
+  console.log(json);
+  */
   items.value = [
     { id: 1, class: "CTA20", name: "山田太郎" },
     { id: 2, class: "CTB20", name: "鈴木花子" },

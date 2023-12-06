@@ -76,6 +76,7 @@ import { mdiBellOutline } from "@mdi/js";
 import RowCard from "@/components/NavigationRowCard.vue";
 import router from "@/router";
 import { useStore } from "@/stores/user";
+import{APICall} from "@/utils";
 
 const store = useStore();
 
@@ -112,8 +113,22 @@ function onItemClick(id) {
 
 onMounted(() => {
   // TODO: 通知がないかを確認するAPIを叩く処理を記述する
+  /*
+  
+  if (store.role === "student") {
+  const student_checkalam_url = "/api/student/ca";
+  APICall("POST", student_checkalam_url);
+  
+  console.log(json);
+  } else if (store.role === "teacher") {
+  const teacher_checkalam_url = "/api/teacher/ca";
+  APICall("POST", teacher_checkalam_url);
+  
+  console.log(json);
+  }
   isNotification.value = true;
 
+  */
   // MEMO: 叩くAPIは、学生か教員かで挙動が変わる
   // TODO: 通知がある場合は、notificationに通知の内容を格納する
   if (isNotification.value) {

@@ -41,8 +41,8 @@ onMounted(() => {
   console.log("mounted");
   // TODO: ユーザーごとの書類の一覧を取得し、itemsに格納する
   /*
-  const url = "/api/admin/ral";
-  APICall("POST", url, state);
+  const readauthlist_url = "/api/student/ral";
+  APICall("POST", readauthlist_url, state);
   
   console.log(json);
 */

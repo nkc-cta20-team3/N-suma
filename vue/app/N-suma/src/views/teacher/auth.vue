@@ -99,7 +99,7 @@
                       @click="
                         () => {
                           isActive.value = false;
-                          onSubmit();
+                          onReject();
                         }
                       "
                       color="success"
@@ -119,7 +119,7 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import RowCard from "@/components/StudentViewRowCard.vue";
-import { requiredRules } from "@/utils";
+import { requiredRules, APICall } from "@/utils";
 import router from "@/router";
 
 const mainForm = ref(null);
@@ -131,6 +131,7 @@ const state = ref({
   comment: "",
 });
 
+//認可処理
 async function onSubmit() {
   // 入力チェック
   const validResult = await mainForm.value.validate();
@@ -140,9 +141,30 @@ async function onSubmit() {
   }
 
   // TODO: データを送信する処理を記述する
+  const updateauth_url = "/api/teacher/ua";
+  APICall("POST", updateauth_url, state);
+  
+  console.log(json);
   console.log("提出しました");
 }
 
+//却下処理
+async function onReject() {
+  // 入力チェック
+  const validResult = await mainForm.value.validate();
+  if (!validResult.valid) {
+    console.log("入力エラー");
+    return;
+  }
+
+  // TODO: データを送信する処理を記述する
+  const rejectauth_url = "/api/teacher/ra";
+  APICall("POST", rejectauth_url, state);
+  
+  console.log(json);
+  
+  console.log("提出しました");
+}
 onMounted(() => {
   console.log("mounted");
 

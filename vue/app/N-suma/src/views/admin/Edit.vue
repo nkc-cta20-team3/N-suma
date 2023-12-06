@@ -175,8 +175,8 @@ async function onUpdate() {
   }
 
   // TODO:ユーザーを更新する処理を記述する
-  const url = "/api/admin/uu";
-  APICall("POST", url, state);
+  const updateuser_url = "/api/admin/uu";
+  APICall("POST", updateuser_url, state);
 
   console.log(json);
   console.log("ユーザーを更新しました");
@@ -190,8 +190,8 @@ async function onDelete() {
   }
 
   // TODO:ユーザーを削除する処理を記述する
-  const url = "/api/admin/du";
-  APICall("POST", url, state);
+  const deleteuser_url = "/api/admin/du";
+  APICall("POST", deleteuser_url, state);
 
   console.log(json);
   console.log("ユーザーを削除しました");
@@ -200,8 +200,8 @@ async function onDelete() {
 onMounted(() => {
   console.log("mounted");
   // TODO: routerのpropsからユーザー情報を取得する(uuidとemailの組)
-  const url2 = "/api/admin/rpi";
-  APICall("POST", url2, state);
+  const readprepareinformation_url = "/api/admin/rpi";
+  APICall("POST", readprepareinformation_url, state);
 
   console.log(json);
 

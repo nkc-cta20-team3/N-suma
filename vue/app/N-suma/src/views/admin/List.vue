@@ -85,8 +85,8 @@ onMounted(() => {
   // TODO: 書類の一覧を取得し、itemsに格納する
   
   /*
-  const url = "/api/admin/rul";
-  APICall("POST", url, state);
+  const readuserlist_url = "/api/admin/rul";
+  APICall("POST", readuserlist_url, state);
 
   console.log(json);
   */
