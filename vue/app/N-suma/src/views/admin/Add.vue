@@ -143,10 +143,20 @@ async function onSubmit() {
     console.log("入力エラー");
     return;
   }
+  console.log(state);
 
  // TODO: ユーザーを登録する処理を記述する
-  const url = "/api/admin/cu";
-  APICall("POST", url, state);
+  APICall("POST", "http://localhost:8080/api/admin/cu", {
+    user_id: state.value.uuid,
+    user_name: state.value.name,
+    user_number: state.value.number,
+    //class_id: state.value.class,
+    post_id: "学生",
+    class_id: "CTA20",
+    mail_address: state.value.email,
+  }).then((res) => {
+    console.log(res);
+  });
   
   console.log(json);
   
