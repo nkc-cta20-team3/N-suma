@@ -71,7 +71,6 @@
                   height="40"
                   width="150"
                   v-bind="props"
-                  type="submit"
                   color="warning"
                   class="mr-2"
                   >削除</v-btn
@@ -113,7 +112,6 @@
                   height="40"
                   width="150"
                   v-bind="props"
-                  type="submit"
                   color="success"
                   >更新</v-btn
                 >
@@ -157,7 +155,7 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import router from "@/router";
-import { roles, clases, requiredRules, numberRules } from "@/utils";
+import { roles, clases, requiredRules, numberRules, APICall } from "@/utils";
 
 const mainForm = ref(null);
 const state = ref({
@@ -177,6 +175,10 @@ async function onUpdate() {
   }
 
   // TODO:ユーザーを更新する処理を記述する
+  const url = "/api/admin/uu";
+  APICall("POST", url, state);
+
+  console.log(json);
   console.log("ユーザーを更新しました");
 }
 
@@ -188,16 +190,28 @@ async function onDelete() {
   }
 
   // TODO:ユーザーを削除する処理を記述する
+  const url = "/api/admin/du";
+  APICall("POST", url, state);
+
+  console.log(json);
   console.log("ユーザーを削除しました");
 }
 
 onMounted(() => {
   console.log("mounted");
   // TODO: routerのpropsからユーザー情報を取得する(uuidとemailの組)
+  const url2 = "/api/admin/rpi";
+  APICall("POST", url2, state);
+
+  console.log(json);
 
   state.value.uuid = router.currentRoute.value.params.id;
   state.value.email = "11@example.com";
 
   // TODO: ユーザーの詳細な情報を取得し設定する
+  const url3 = "/api/admin/ru";
+  APICall("POST", url3, state);
+
+  console.log(json);
 });
 </script>

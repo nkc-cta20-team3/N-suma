@@ -25,6 +25,7 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import router from "@/router";
+import {APICall} from "@/utils";
 
 const items = ref([]);
 
@@ -39,6 +40,12 @@ function onItemClick(item) {
 onMounted(() => {
   console.log("mounted");
   // TODO: ユーザーごとの書類の一覧を取得し、itemsに格納する
+  /*
+  const url = "/api/admin/ral";
+  APICall("POST", url, state);
+  
+  console.log(json);
+*/
   items.value = [
     { id: 1, division: "国家試験 / FE", date: "2021/04/01" },
     { id: 2, division: "国家試験 / SG", date: "2021/04/01" },

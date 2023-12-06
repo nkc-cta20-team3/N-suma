@@ -1,4 +1,4 @@
-package api
+package teacher
 
 import (
 	"log"
@@ -61,9 +61,11 @@ func UpdateAuth(c *gin.Context) {
 
 	if post == 2 && documentStatus == 1 {
 		//教員かつ認可できる書類の場合→認可処理
+		read_flag := true
+
 		db.Table("oa").
 			Where("document_id = ?", request.DocumentID).
-			Updates(model.UpdateDocument{Status: post, TeacherComment: request.TeacherComment, ReadFlag: true})
+			Updates(model.UpdateDocument{Status: post, TeacherComment: request.TeacherComment, ReadFlag: &read_flag})
 		//エラーハンドリング
 		if db.Error != nil {
 			errMsg := "UPDATE ERROR"
