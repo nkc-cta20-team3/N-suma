@@ -3,12 +3,14 @@
     <v-row justify="center">
       <v-col cols="12" sm="10" md="8" lg="6">
         <!-- 提出書類のデータ表示 -->
-        <RowCard title="申請日" text="申請日" />
+        <RowCard title="申請日" :text="state.date" />
         <RowCard title="公欠区分" text="公欠区分" />
         <RowCard title="申請時間" text="申請時間" />
         <RowCard title="場所" text="場所" />
-        <RowCard title="必要欠席時間" text="必要欠席時間" />
-        <RowCard title="学生コメント" text="学生コメント" />
+        <RowCard
+          title="学生コメント"
+          text="確認よろしくお願いいたします。aaaaaaaaaaaaaaaaaaaaaaaaaa"
+        />
 
         <!-- 教員側入力フォーム -->
         <v-form ref="mainForm">
@@ -26,17 +28,16 @@
           <!-- 教員コメント入力 -->
           <v-text-field
             v-model="state.comment"
-            label="学生コメント"
+            label="教員コメント"
             persistent-hint
-            placeholder="確認よろしくお願いいたします。"
+            placeholder="確認しました。"
             persistent-placeholder
             :rules="requiredRules"
             :counter="200"
-            :disabled="true"
           ></v-text-field>
 
-          <!-- 認可ボタン -->
           <template class="d-flex flex-row justify-end text-black">
+            <!-- 認可ボタン -->
             <v-dialog transition="dialog-top-transition" width="auto">
               <template v-slot:activator="{ props }">
                 <v-btn height="40" width="150" v-bind="props" color="success"
@@ -72,6 +73,42 @@
                 </v-card>
               </template>
             </v-dialog>
+            <!-- 却下ボタン -->
+            <v-dialog transition="dialog-top-transition" width="auto">
+              <template v-slot:activator="{ props }">
+                <v-btn height="40" width="150" v-bind="props" color="warning"
+                  >却下</v-btn
+                >
+              </template>
+              <template v-slot:default="{ isActive }">
+                <v-card>
+                  <v-card-text>
+                    <div>却下しますか？</div>
+                  </v-card-text>
+                  <v-card-actions class="justify-center">
+                    <v-btn
+                      height="40"
+                      width="150"
+                      @click="isActive.value = false"
+                      color="warning"
+                      >キャンセル</v-btn
+                    >
+                    <v-btn
+                      height="40"
+                      width="150"
+                      @click="
+                        () => {
+                          isActive.value = false;
+                          onSubmit();
+                        }
+                      "
+                      color="success"
+                      >却下</v-btn
+                    >
+                  </v-card-actions>
+                </v-card>
+              </template>
+            </v-dialog>
           </template>
         </v-form>
       </v-col>
@@ -83,9 +120,13 @@
 import { onMounted, ref } from "vue";
 import RowCard from "@/components/StudentViewRowCard.vue";
 import { requiredRules } from "@/utils";
+import router from "@/router";
 
 const mainForm = ref(null);
 const state = ref({
+  id: "",
+  date: "",
+
   absence: "",
   comment: "",
 });
@@ -104,6 +145,11 @@ async function onSubmit() {
 
 onMounted(() => {
   console.log("mounted");
+
+  state.value.id = router.currentRoute.value.params.id;
+  console.log(state.value.id);
+
+  state.value.date = state.value.id;
 
   // TODO: データを取得する処理を記述する
 });
