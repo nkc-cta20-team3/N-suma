@@ -16,8 +16,10 @@ type DocumentArray struct {
 
 func NextDocument(c *gin.Context) {
 	request := model.NextDocumentRequest{}
-	response := []model.NextDocumentResponse{}
+	response := model.NextDocumentResponse{}
 	documentArray := []DocumentArray{}
+
+	result := model.Document{}
 
 	// var testUserID int
 	post := model.Post{}
@@ -74,7 +76,7 @@ func NextDocument(c *gin.Context) {
 		}
 
 		//切り替え対象書類取得
-		db.Table("oa").
+		err := db.Debug().Table("oa").
 			Select(
 				"oa.document_id",
 				"oa.request_at",
@@ -85,14 +87,39 @@ func NextDocument(c *gin.Context) {
 				"oa.location",
 				"oa.student_comment",
 				"oa.teacher_comment",
-				"user.user_number",
-				"cs.class_abbr",
 				"dv.division_name").
-			Joins("JOIN user on oa.user_id = user.user_id").
-			Joins("JOIN division AS dv ON oa.division_id = dv.division_id").
-			Joins("JOIN classification AS cs ON user.class_id = cs.class_id").
+			Joins("JOIN division dv ON oa.division_id = dv.division_id").
 			Where("document_id = ?", search_id).
-			First(&response)
+			Where("oa.user_id = ?", request.UserID).
+			First(&result).Error
+
+		if db.Error != nil {
+			errMsg := "データベースからデータを取得できませんでした"
+			c.JSON(http.StatusInternalServerError, gin.H{"error": errMsg})
+			return
+		} else if errors.Is(err, gorm.ErrRecordNotFound) {
+			c.JSON(http.StatusBadRequest, gin.H{"document": "書類が見つかりませんでした"})
+			return
+		}
+
+		//日付変換(関数はreaddocument)
+		requestAt := timeToString(result.RequestAt)
+		startTime := timeToString(result.StartTime)
+		endTime := timeToString(result.EndTime)
+
+		response = model.NextDocumentResponse{
+			DocumentID:     result.DocumentID,
+			RequestAt:      requestAt,
+			StartTime:      startTime,
+			StartFlame:     result.StartFlame,
+			EndTime:        endTime,
+			EndFlame:       result.EndFlame,
+			Location:       result.Location,
+			StudentComment: result.StudentComment,
+			TeacherComment: result.TeacherComment,
+			DivisionName:   result.DivisionName,
+		}
+
 		//戻り値
 		c.JSON(http.StatusOK, gin.H{
 			"message": response,

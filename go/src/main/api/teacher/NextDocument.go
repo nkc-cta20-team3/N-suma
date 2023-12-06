@@ -39,8 +39,10 @@ type DocumentArray struct {
 func NextDocument(c *gin.Context) {
 	//必要な変数(引数・戻り値)の定義
 	request := model.NextDocumentRequest{}
-	response := []model.NextDocumentResponse{}
+	response := model.NextDocumentResponse{}
 	documentArray := []DocumentArray{}
+
+	result := model.Document{}
 
 	// var testUserID int
 	post := model.Post{}
@@ -110,30 +112,44 @@ func NextDocument(c *gin.Context) {
 				"oa.location",
 				"oa.student_comment",
 				"oa.teacher_comment",
-				"user.user_number",
-				"cs.class_abbr",
 				"dv.division_name").
-			Joins("JOIN user on oa.user_id = user.user_id").
 			Joins("JOIN division AS dv ON oa.division_id = dv.division_id").
-			Joins("JOIN classification AS cs ON user.class_id = cs.class_id").
 			Where("document_id = ?", search_id).
-			Order("oa.request_at ASC").
-			First(&response)
+			First(&result)
 		if db.Error != nil {
 			fmt.Print("SQL ERROR!")
 			c.JSON(http.StatusBadRequest, gin.H{
 				"message": "SQL ERROR",
 			})
 		}
+		requestAt := timeToString(result.RequestAt)
+		startTime := timeToString(result.StartTime)
+		endTime := timeToString(result.EndTime)
+
+		response = model.NextDocumentResponse{
+			DocumentID:     result.DocumentID,
+			RequestAt:      requestAt,
+			StartTime:      startTime,
+			StartFlame:     result.StartFlame,
+			EndTime:        endTime,
+			EndFlame:       result.EndFlame,
+			Location:       result.Location,
+			StudentComment: result.StudentComment,
+			TeacherComment: result.TeacherComment,
+			DivisionName:   result.DivisionName,
+		}
+
 		//戻り値
 		c.JSON(http.StatusOK, gin.H{
 			"message": response,
 		})
+		return
 
 	} else {
 		//教員でも学生でもなかったとき(不正なデータ)
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": "POST ERROR",
 		})
+		return
 	}
 }

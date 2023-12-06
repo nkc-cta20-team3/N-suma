@@ -26,6 +26,8 @@ func ReadAlarm(c *gin.Context) {
 	studentResponse := []model.StudentReadAlarmResponse{}
 	post := model.Post{}
 
+	result := []model.StudentReadAlarm{}
+
 	//POSTで受け取った値を格納する
 	if err := c.ShouldBindJSON(&request); err != nil {
 		// エラーな場合、ステータス400と、エラー情報を返す
@@ -43,7 +45,7 @@ func ReadAlarm(c *gin.Context) {
 		err := db.Table("oa").
 			Select("document_id,request_at,status").
 			Where("user_id = ? AND ((status = ? AND read_flag = ?) OR status = ?)", request.UserID, 2, 1, -1).
-			Scan(&studentResponse).Error
+			Scan(&result).Error
 
 		if err != nil {
 			if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -57,6 +59,21 @@ func ReadAlarm(c *gin.Context) {
 				return
 			}
 		}
+
+		//日付変換処理
+		for _, t := range result {
+
+			//日付変換処理
+			requestAt := timeToString(t.RequestAt)
+			document := model.StudentReadAlarmResponse{
+				DocumentID: t.DocumentID,
+				RequestAt:  requestAt,
+				Status:     t.Status,
+			}
+			studentResponse = append(studentResponse, document)
+		}
+
+		//戻り値
 		c.JSON(http.StatusOK, gin.H{"document": studentResponse})
 		return
 

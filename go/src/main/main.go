@@ -96,6 +96,9 @@ func main() {
 			routes.POST("/rpi", api.ReadPrepareInformation) //登録用情報取得
 		*/
 		routes.POST("/cl", api.CheckLogin) //ログイン確認
+
+		//調査用
+		routes.POST("/td", api.TestDate)
 	}
 
   // SwaggerGo用のサンプルコード

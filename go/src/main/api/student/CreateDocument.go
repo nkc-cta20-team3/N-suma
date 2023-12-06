@@ -1,7 +1,9 @@
 package student
 
 import (
+	"fmt"
 	"net/http"
+	"time"
 
 	"main/infra"
 	"main/model"
@@ -63,11 +65,28 @@ func CreateDocument(c *gin.Context) {
 			EndTime:        request.EndTime,
 			EndFlame:       0,
 			Location:       request.Location,
-			Status:         0,
+			Status:         1,
 			StudentComment: request.StudentComment,
-			ReadFlag:       false,
+			ReadFlag:       true,
 			DivisionID:     request.DivisionID,
 		}
+
+		/*
+			oa := model.CreateDocument{
+						UserID:         request.UserID,
+						RequestAt:      request_at,
+						StartTime:      start_time,
+						StartFlame:     0,
+						EndTime:        end_time,
+						EndFlame:       0,
+						Location:       request.Location,
+						Status:         0,
+						StudentComment: request.StudentComment,
+						ReadFlag:       false,
+						DivisionID:     request.DivisionID,
+					}
+		*/
+		fmt.Println(oa)
 
 		if err := db.Table("oa").Create(&oa).Error; err != nil {
 			// 更新中にエラーが発生した場合のエラーハンドリング
@@ -88,4 +107,10 @@ func CreateDocument(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"document": "CREATE SUCCESS"})
 	return
 
+}
+
+func stringToTime(t string) time.Time {
+	// YYYY-MM-DDTHH:MM:SSZZZZの形式で渡される文字列tをtime.Time型に変換して返す
+	parsedTime, _ := time.Parse("2006-01-02T15:04:05Z07:00", t)
+	return parsedTime
 }

@@ -3,6 +3,7 @@ package teacher
 import (
 	"errors"
 	"net/http"
+	"time"
 
 	"main/infra"
 	"main/model"
@@ -20,6 +21,8 @@ func ReadDocument(c *gin.Context) {
 	request := model.ReadDocumentRequest{}
 	response := model.ReadDocumentResponse{}
 
+	result := model.Document{}
+
 	//POSTで受け取った値を格納する
 	if err := c.ShouldBindJSON(&request); err != nil {
 		// エラーな場合、ステータス400と、エラー情報を返す
@@ -35,23 +38,6 @@ func ReadDocument(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": errMsg})
 		return
 	}
-
-	/*
-		type ReadDocumentResponse struct {
-			DocumentID int `json:"document_id"`
-			RequestDate time.Time `json:"request_date"`
-			StudentID int `json:"student_id"`
-			ClassName string `json:"class_name"`
-			StudentName string `json:"student_name"`
-			StartDate time.Time `json:"absence_start_date"`
-			StartFlame int `json:"start_flame"`
-			EndDate time.Time `json:"end_date"`
-			EndFlame int `json:"end_flame"`
-			Location string `json:"location"`
-			StudentComment string `json:"student_comment"`
-			TeacherComment string `json:"teacher_comment"`
-		}
-	*/
 
 	//引数定義
 	post := model.Post{}
@@ -82,30 +68,49 @@ func ReadDocument(c *gin.Context) {
 				"oa.location",
 				"oa.student_comment",
 				"oa.teacher_comment",
-				"user.user_number",
-				"cs.class_name",
-				"user.user_name").
-			Joins("JOIN user ON oa.user_id = user.user_id").
-			Joins("JOIN classification AS cs ON user.class_id = cs.class_id").
+				"dv.division_name").
+			Joins("JOIN division dv ON oa.division_id = dv.division_id").
 			Where("document_id = ?", request.DocumentID).
-			First(&response).Error
+			First(&result).Error
 		if db.Error != nil {
 			errMsg := "データベースからデータを取得できませんでした"
 			c.JSON(http.StatusInternalServerError, gin.H{"error": errMsg})
 			return
 		} else if errors.Is(err, gorm.ErrRecordNotFound) {
-			c.JSON(http.StatusBadRequest, gin.H{"document": "DOCUMENT NOT EXIST"})
+			c.JSON(http.StatusBadRequest, gin.H{"document": "書類が見つかりませんでした"})
 			return
 		}
 
 		// log.Println(response)
 
+		//日付変換処理
+		requestAt := timeToString(result.RequestAt)
+		startTime := timeToString(result.StartTime)
+		endTime := timeToString(result.EndTime)
+		response = model.ReadDocumentResponse{
+			DocumentID:     result.DocumentID,
+			RequestAt:      requestAt,
+			StartTime:      startTime,
+			StartFlame:     result.StartFlame,
+			EndTime:        endTime,
+			EndFlame:       result.EndFlame,
+			Location:       result.Location,
+			StudentComment: result.StudentComment,
+			TeacherComment: result.TeacherComment,
+			DivisionName:   result.DivisionName,
+		}
+
+		//値を返却
 		c.JSON(http.StatusOK, gin.H{"document": response})
 		return
 	} else {
 		// fmt.Println("権限がありません")
 
-		c.JSON(http.StatusBadRequest, gin.H{"document": "POST ERROR"})
+		c.JSON(http.StatusBadRequest, gin.H{"document": "権限がありません"})
 		return
 	}
+}
+func timeToString(t time.Time) string {
+	str := t.Format("2006-01-02 15:04:05")
+	return str
 }
