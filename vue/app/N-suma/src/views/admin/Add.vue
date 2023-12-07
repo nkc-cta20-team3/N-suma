@@ -117,7 +117,7 @@
 </template>
 <script setup>
 import { onMounted, ref } from "vue";
-import { roles, clases, requiredRules, numberRules, APICall } from "@/utils";
+import { roles,clases, requiredRules, numberRules, APICall } from "@/utils";
 
 const mainForm = ref(null);
 const state = ref({
@@ -145,14 +145,23 @@ async function onSubmit() {
   }
   console.log(state);
 
- // TODO: ユーザーを登録する処理を記述する
+  //idとnumberを数値に変換
+  state.value.uuid = Number(state.value.uuid);
+  state.value.number = parseInt(state.value.number);
+
+  //学生か教員かでpost_idに入れる値
+  const insert_post_id = roles.indexOf(state.value.role)+1;
+  console.log(insert_post_id);
+
+  //TODO: クラス_idを数値に変化
+
+  //ユーザーを登録する処理
   APICall("POST", "http://localhost:8080/api/admin/cu", {
     user_id: state.value.uuid,
     user_name: state.value.name,
     user_number: state.value.number,
-    //class_id: state.value.class,
-    post_id: "学生",
-    class_id: "CTA20",
+    post_id: insert_post_id,
+    class_id: 117,
     mail_address: state.value.email,
   }).then((res) => {
     console.log(res);
