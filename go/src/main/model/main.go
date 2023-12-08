@@ -178,15 +178,6 @@ type TakePostID struct {
 	PostID int `json:"post_id"` //役職ID
 }
 
-// CreateUserで使用する構造体
-type CreateUserRequest struct {
-	UserID      int    `json:"user_id"`
-	UserName    string `json:"user_name"`
-	UserNumber  int    `json:"user_number"`
-	PostID      int    `json:"post_id"`
-	ClassID     int    `json:"class_id"`
-	MailAddress string `json:"mail_address"`
-}
 
 // UpdateUserで使用する構造体
 type UpdateUserRequest struct {
