@@ -7,3 +7,4 @@ go/src/main/tmp/
 
 # Ignore all .secret files
 *.secret
+secret_*.sql
