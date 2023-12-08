@@ -1,4 +1,4 @@
-package apiHello
+package hello
 
 import (
 	"net/http"
