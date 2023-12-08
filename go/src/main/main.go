@@ -15,11 +15,15 @@ import (
 
 	// ローカルモジュールのインポート
 
-	"main/api"
-	"main/api/admin"
-	"main/api/student"
-	"main/api/teacher"
-	"main/apiHello"
+	// "main/api"
+	apiHello "main/api/hello"
+	apiAdminAdd "main/api/admin/add"
+	apiAdminEdit "main/api/admin/edit"
+	apiAdminList "main/api/admin/list"
+	
+	//"main/api/student"
+	//"main/api/teacher"
+	"main/controller"
 )
 
 // @title N-suma-API
@@ -33,8 +37,9 @@ import (
 // @host localhost:8080
 func main() {
 
-	//
+	
 	g := gin.Default()
+	g.Use(controller.LogMiddleware())
 	g.Use(cors.New(cors.Config{
 
 		// アクセスを許可したいアクセス元
@@ -81,61 +86,55 @@ func main() {
 		MaxAge: 24 * time.Hour,
 	}))
 
-	// ルーティング
-	routes := g.Group("/api")
-	{
-		// apiフォルダ内のapiをルーティング
-
-		// curl -X POST http://localhost:8080/api/ral
-		// curl -X POST -H "Content-Type: application/json" -d "{"user_id" : "1"}" http://localhost:8080/api/ral
-
-		/*
-			routes.POST("/cd", api.CreateDocument)    //公欠届作成
-			routes.POST("/cu", api.CreateUser)        //ユーザ作成
-			routes.POST("/nd", api.NextDocument)      //公欠届切り替え
-			routes.POST("/ca", api.CheckAlarm)        //通知取得
-			routes.POST("/ral", api.ReadAuthList)     //未認可リスト取得
-			routes.POST("/rd", api.ReadDocument)      //公欠届詳細取得
-			routes.POST("/ra", api.RejectAuth)        //公欠届却下
-			routes.POST("/rsd", api.ResubmitDocument) //公欠届再提出
-			routes.POST("/ua", api.UpdateAuth)        //公欠届認可
-			routes.POST("/uu", api.UpdateUser)        //ユーザ編集
-
-			routes.POST("/cl", api.CheckLogin)              //ログイン確認
-			routes.POST("/rdv", api.ReadDivision)           //区分取得
-			routes.POST("/al", api.ReadAlarm)               //通知詳細取得
-			routes.POST("/rul", api.ReadUserList)           //ユーザリスト取得
-			routes.POST("/ru", api.ReadUser)                //ユーザ詳細取得
-			routes.POST("/su", api.SortUser)                //ユーザソート
-			routes.POST("/du", api.DeleteUser)              //ユーザ削除
-			routes.POST("/rpi", api.ReadPrepareInformation) //登録用情報取得
-		*/
-		routes.POST("/cl", api.CheckLogin) //ログイン確認
-		routes.POST("/rc", api.ReadClass)
-		routes.POST("/rp", api.ReadPost)
-		routes.POST("rup", api.ReadUserPost)
-
-		//調査用
-		routes.POST("/td", api.TestDate)
-	}
-
-	// SwaggerGo用のサンプルコード
-	hello := g.Group("/hello")
-	{
-		// 動作確認用
-		// curl -X GET http://localhost:8080/hello
-		hello.GET("", apiHello.Hello)
-		hello.GET("/name", apiHello.Name)
-		hello.GET("/time", apiHello.Time)
-		hello.POST("/sum", apiHello.Sum)
-	}
-
 	// swagger uiにアクセスするためのルーティング
+	// swagger/index.html
 	swaggerui := g.Group("/swagger")
 	{
 		swaggerui.GET("/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	}
 
+	// 導通兼用SwaggerGo用のサンプルコード
+	hello := g.Group("/hello")
+	{
+		hello.GET("/get", apiHello.GetHello)
+		hello.POST("/post", apiHello.PostHello)	
+	}
+
+	// 認証が必要なAPIのルーティング
+	authRouter := g.Group("/")
+	authRouter.Use(controller.AuthMiddleware())
+
+	// 管理者用APIのルーティング
+	admin := authRouter.Group("/admin")
+	// admin.Use(controller.RoleMiddleware("Admin"))
+	{
+		admin.POST("/post", apiHello.PostHello)				// 導通確認用
+	}
+	
+	// ユーザー登録画面用APIのルーティング
+	adminAdd := admin.Group("/add")
+	{
+		adminAdd.POST("/read", apiAdminAdd.ReadPrepareInformation)		// 役職が未登録ユーザーのid,uuid,emailをリストで一覧取得
+		adminAdd.POST("/create", apiAdminAdd.CreateUser)				// ユーザー作成
+	}
+
+	// ユーザー一覧画面用APIのルーティング
+	adminList := admin.Group("/list")
+	{
+		adminList.POST("/read", apiAdminList.ReadUserList)	// ユーザー一覧取得
+		adminList.POST("/sort", apiAdminList.SortUser)		// ユーザー検索
+	}
+
+	// ユーザー編集画面用APIのルーティング
+	adminEdit := admin.Group("/edit")
+	{
+		adminEdit.POST("/read", apiAdminEdit.ReadUser)		// ユーザー詳細取得
+		adminEdit.POST("/update", apiAdminEdit.UpdateUser)	// ユーザー編集
+		adminEdit.POST("/delete", apiAdminEdit.DeleteUser)	// ユーザー削除
+	}
+	
+	
+	/*
 	//学生がアクセスできるAPI
 	routes3 := g.Group("/api/student")
 	{
@@ -161,18 +160,17 @@ func main() {
 		routes4.POST("/ca", teacher.CheckAlarm)    //通知取得
 		routes4.POST("/al", teacher.ReadAlarm)     //通知詳細取得
 	}
+	*/
 
-	routes5 := g.Group("/api/admin")
-	{
-		routes5.POST("/cu", admin.CreateUser)              //ユーザ作成
-		routes5.POST("/uu", admin.UpdateUser)              //ユーザ編集
-		routes5.POST("/rul", admin.ReadUserList)           //ユーザリスト取得
-		routes5.POST("/ru", admin.ReadUser)                //ユーザ詳細取得
-		routes5.POST("/su", admin.SortUser)                //ユーザソート
-		routes5.POST("/du", admin.DeleteUser)              //ユーザ削除
-		routes5.POST("/rpi", admin.ReadPrepareInformation) //登録用情報取得
+	/*
+	routes.POST("/cl", api.CheckLogin) //ログイン確認
+	routes.POST("/rc", api.ReadClass)
+	routes.POST("/rp", api.ReadPost)
+	routes.POST("/rup", api.ReadUserPost)
 
-	}
+	//調査用
+	routes.POST("/td", api.TestDate)
+	*/
 
 	g.Run(":8080")
 }
