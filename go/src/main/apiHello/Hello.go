@@ -2,11 +2,8 @@ package apiHello
 
 import (
 	"net/http"
-	"time"
 
-	"fmt"
-	"log"
-
+	"main/model"
 	"github.com/gin-gonic/gin"
 )
 
@@ -16,86 +13,32 @@ import (
 // @Description GETメソッドで動作し、ステータス200と、HelloWorldを返します
 // @Accept json
 // @Produce json
-// @Success 200 {object} messageSuccess
-// @Failure 400 {object} messageError
-// @Router /hello [get]
-func Hello(c *gin.Context) {
-
-	// アクセス元のIPアドレスを取得する
-	fmt.Println(c.ClientIP())
-	log.Println(c.ClientIP())
-
+// @Success 200 {object} model.MessageSuccess
+// @Failure 400 {object} model.MessageError
+// @Router /hello/get [get]
+func GetHello(c *gin.Context) {
 	// ステータス200と、HelloWorldを返します
-	message := messageSuccess{Message: "HelloWorld"}
+	message := model.MessageSuccess{}
+	message.Message = "HelloWorld. Get Method Success."
 	c.JSON(http.StatusOK, message)
 	return
 }
 
-// /hello/{name}
-//GETメソッドで動作し、ステータス200と、Helloと取得したパスパラメータを結合した文字列を返します
-func Name(c *gin.Context) {
-
-	// パスパラメータを取得します
-	name := c.Param("name")
-
-	// アクセス元のIPアドレスを取得する
-	fmt.Println(c.ClientIP())
-	log.Println(c.ClientIP())
-
-	// ステータス200と、Helloと取得したパスパラメータを結合した文字列を返します
-	c.JSON(http.StatusOK, gin.H{"message": "Hello" + name})
+// POSTメソッドで動作し、ステータス200と、HelloWorldを返します
+// @Summary HelloWorldを返す
+// @Tags Hello
+// @Description POSTメソッドで動作し、ステータス200と、HelloWorldを返します
+// @Accept json
+// @Produce json
+// @Success 200 {object} model.MessageSuccess
+// @Failure 400 {object} model.MessageError
+// @Router /hello/post [post]
+func PostHello(c *gin.Context) {
+	// ステータス200と、HelloWorldを返します
+	message := model.MessageSuccess{}
+	message.Message = "HelloWorld. Post Method Success."
+	c.JSON(http.StatusOK, message)
 	return
 
 }
 
-// GETメソッドで動作し、ステータス200と、現在時刻を返します
-func Time(c *gin.Context) {
-
-	// 現在時刻を取得します
-	time := time.Now()
-
-	// アクセス元のIPアドレスを取得する
-	fmt.Println(c.ClientIP())
-	log.Println(c.ClientIP())
-
-	// ステータス200と、現在時刻を返します
-	c.JSON(http.StatusOK, gin.H{"message": time})
-	return
-
-}
-
-// POSTメソッドで動作し、ステータス200と、POSTされたaとbを合算した値を返します
-func Sum(c *gin.Context) {
-
-	// アクセス元のIPアドレスを取得する
-	fmt.Println(c.ClientIP())
-	log.Println(c.ClientIP())
-
-	// 必要な変数定義
-	request := SumRequest{}
-
-	// 引数受け取り
-	if err := c.ShouldBindJSON(&request); err != nil {
-		// エラーな場合、ステータス400と、エラー情報を返す
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	// ステータス200と、POSTされたaとbを合算した値を返します
-	c.JSON(http.StatusOK, gin.H{"message": request.A + request.B})
-	return
-
-}
-
-type SumRequest struct {
-	A int `json:"a"`
-	B int `json:"b"`
-}
-
-type messageSuccess struct {
-	Message string `json:"message"`
-}
-
-type messageError struct {
-	Message string `json:"error"`
-}
