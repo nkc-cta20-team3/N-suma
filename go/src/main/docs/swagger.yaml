@@ -16,11 +16,30 @@ info:
   title: N-suma-API
   version: 1.0.0
 paths:
-  /hello:
+  /hello/get:
     get:
       consumes:
       - application/json
       description: GETメソッドで動作し、ステータス200と、HelloWorldを返します
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/apiHello.messageSuccess'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/apiHello.messageError'
+      summary: HelloWorldを返す
+      tags:
+      - Hello
+  /hello/post:
+    post:
+      consumes:
+      - application/json
+      description: POSTメソッドで動作し、ステータス200と、HelloWorldを返します
       produces:
       - application/json
       responses:

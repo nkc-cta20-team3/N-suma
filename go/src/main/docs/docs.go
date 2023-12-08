@@ -15,9 +15,38 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/hello": {
+        "/hello/get": {
             "get": {
                 "description": "GETメソッドで動作し、ステータス200と、HelloWorldを返します",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Hello"
+                ],
+                "summary": "HelloWorldを返す",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/apiHello.messageSuccess"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/apiHello.messageError"
+                        }
+                    }
+                }
+            }
+        },
+        "/hello/post": {
+            "post": {
+                "description": "POSTメソッドで動作し、ステータス200と、HelloWorldを返します",
                 "consumes": [
                     "application/json"
                 ],
