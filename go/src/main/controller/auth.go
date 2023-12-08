@@ -9,12 +9,12 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	firebase "firebase.google.com/go"
+	firebase "firebase.google.com/go/v4"
 	"google.golang.org/api/option"
 	
 )
 
-func authMiddleware() gin.HandlerFunc {
+func AuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 
 		// Firebase SDK のセットアップ
