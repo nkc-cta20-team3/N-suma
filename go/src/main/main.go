@@ -115,9 +115,6 @@ func main() {
 	// 管理者用APIのルーティング
 	admin := authRouter.Group("/admin")
 	// admin.Use(controller.RoleMiddleware("Admin"))
-	{
-		admin.POST("/post", apiHello.PostHello)				// 導通確認用
-	}
 	
 	// ユーザー登録画面用APIのルーティング
 	adminAdd := admin.Group("/add")
@@ -130,7 +127,7 @@ func main() {
 	adminList := admin.Group("/list")
 	{
 		adminList.POST("/read", apiAdminList.ReadUserList)	// ユーザー一覧取得
-		adminList.POST("/sort", apiAdminList.SortUser)		// ユーザー検索
+		adminList.POST("/search", apiAdminList.SearchUserList)		// ユーザー検索
 	}
 
 	// ユーザー編集画面用APIのルーティング
@@ -145,6 +142,9 @@ func main() {
 	/*
 	//学生がアクセスできるAPI
 	routes3 := g.Group("/api/student")
+	{
+		admin.POST("/post", apiHello.PostHello)				// 導通確認用
+	}
 	{
 
 		//学生用

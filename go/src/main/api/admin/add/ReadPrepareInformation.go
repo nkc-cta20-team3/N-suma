@@ -14,13 +14,16 @@ import (
 
 func ReadPrepareInformation(c *gin.Context) {
 	
+	responseWrap := model.ResponseWrap{}
+	responseWrap.Message = "success"
 	response := []model.ReadPrepareInformationResponse{}
+	errResponse := model.MessageError{}
 
 	//DB接続とエラーハンドリング
 	db := infra.DBInitGorm()
 	if db.Error != nil {
-		errMsg := "データベース接続エラー"
-		c.JSON(http.StatusInternalServerError, gin.H{"error": errMsg})
+		errResponse.Message = "データベース接続エラー"
+		c.JSON(http.StatusInternalServerError, errResponse)
 		return
 	}
 	
@@ -32,20 +35,22 @@ func ReadPrepareInformation(c *gin.Context) {
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			// 行が見つからなかった場合の処理
-			fmt.Println("行が見つかりませんでした")
-			c.JSON(http.StatusBadRequest, gin.H{"message": "TABLE NOT FOUND"})
+			errResponse.Message = "RECORD NOT FOUND"
+			c.JSON(http.StatusInternalServerError, errResponse)
 			return
 		} else {
 			//その他のエラーハンドリング
+			errResponse.Message = "OTHER ERROR"
 			fmt.Println(err.Error())
-			c.JSON(http.StatusInternalServerError, gin.H{"message": "OTHER ERROR" })
+			c.JSON(http.StatusInternalServerError, errResponse)
 			return
 		}
 	}
 
 	fmt.Println(response)
+	responseWrap.Document = response
 
 	// レスポンスを返す
-	c.JSON(http.StatusOK, gin.H{"message":"success", "document": response})
+	c.JSON(http.StatusOK, responseWrap)
 	return
 }

@@ -42,7 +42,7 @@ func ReadClass(c *gin.Context) {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			// 行が見つからなかった場合の処理
 			errResponse.Message = "RECORD NOT FOUND"
-		c.JSON(http.StatusInternalServerError, errResponse)
+			c.JSON(http.StatusInternalServerError, errResponse)
 			return
 		} else {
 			//その他のエラーハンドリング

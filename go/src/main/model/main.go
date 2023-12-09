@@ -200,15 +200,6 @@ type ReadDivisionResponse struct {
 	DivisionName string `json:"division_name"`
 }
 
-// ReadUserListで使用する構造体
-type ReadUserListRequest struct {
-	UserID int `json:"user_id"`
-}
-type ReadUserListResponse struct {
-	UserID    int    `json:"user_id"`
-	UserName  string `json:"user_name"`
-	ClassAbbr string `json:"class_abbr"`
-}
 
 // ReadAlarmで使用する構造体
 type ReadAlarmRequest struct {
@@ -241,16 +232,6 @@ type ReadUserResponse struct {
 	UserNumber int    `json:"user_number"`
 	ClassAbbr  string `json:"class_abbr"`
 	PostID     int    `json:"post_id"`
-}
-
-// SortUserで使用する構造体
-type SortUserRequest struct {
-	UserID       int    `json:"user_id"`
-	SearchString string `json:"search_string"`
-}
-type SortUserResponse struct {
-	UserID    int    `json:"user_id"`
-	ClassAbbr string `json:"class_abbr"`
 }
 
 // DeleteUserで使用する構造体
