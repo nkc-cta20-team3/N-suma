@@ -3,7 +3,7 @@
     <v-row justify="center">
       <v-col cols="12" sm="10" md="8" lg="6">
         <!-- 入力フォーム -->
-        <v-form ref="mainForm">
+        <v-form ref="mainForm" v-if="emails.length > 0">
           <!-- UUID選択 -->
           <v-select
             v-model="state.uuid"
@@ -71,12 +71,7 @@
           <template class="d-flex flex-row justify-end text-black">
             <v-dialog transition="dialog-top-transition" width="auto">
               <template v-slot:activator="{ props }">
-                <v-btn
-                  height="40"
-                  width="150"
-                  v-bind="props"
-                  type="submit"
-                  color="success"
+                <v-btn height="40" width="150" v-bind="props" color="success"
                   >登録</v-btn
                 >
               </template>
@@ -111,6 +106,7 @@
             </v-dialog>
           </template>
         </v-form>
+        <p v-else class="text-h5 text-center pt-10">新規登録対象のユーザーは存在しません。</p>
       </v-col>
     </v-row>
   </v-container>
@@ -118,24 +114,33 @@
 
 <script setup>
 import { onMounted, ref } from "vue";
-import { roles, clases, requiredRules, numberRules } from "@/utils";
+import {
+  roles,
+  clases,
+  requiredRules,
+  numberRules,
+  APICallonJWT,
+} from "@/utils";
 
 const mainForm = ref(null);
 const state = ref({
-  uuid: "",
-  email: "",
+  id: "",
   name: "",
   number: "",
-  class: "",
   role: "",
+  class: "",
+  email: "",
 });
 
-// TODO: 役職が未定義のユーザー一覧を取得する(uuidとemailの組)
+// ユーザー一覧を格納する変数
+var userids = [];
 var uuids = [];
-var emails = [];
+var emails = ref([]);
 
 function emailSelected(e) {
-  state.value.uuid = uuids[emails.indexOf(e)];
+  var index = emails.value.indexOf(e);
+  state.value.id = userids[index];
+  state.value.uuid = uuids[index];
 }
 
 async function onSubmit() {
@@ -145,19 +150,31 @@ async function onSubmit() {
     return;
   }
 
-  // TODO: ユーザーを登録する処理を記述する
-  console.log("ユーザーを登録しました");
+  // ユーザーを登録する処理
+  APICallonJWT("http://localhost:8080/admin/add/create", {
+    user_id: state.value.id,
+    user_name: state.value.name,
+    user_number: Number(state.value.number),
+    post_id: state.value.role == "学生" ? 1 : 2,
+    // TODO:実装する
+    // user_class: state.value.class,
+    class_id: 132,
+  }).then((res) => {
+    res.message == "success"
+      ? console.log("ユーザーを登録しました")
+      : console.log("ユーザーの登録に失敗しました");
+  });
 }
 
 onMounted(() => {
-  console.log("mounted");
-  // TODO: 役職が未定義のユーザー一覧を取得する(uuidとemailの組)
-  uuids = ["1", "2", "3", "4"];
-  emails = [
-    "11@example.com",
-    "22@example.com",
-    "33@example.com",
-    "44@example.com",
-  ];
+  // 役職が未定義のユーザー一覧を取得する(uuidとemailの組)
+  APICallonJWT("http://localhost:8080/admin/add/read", {}).then((res) => {
+    // console.log(res);
+    res.document.forEach((user) => {
+      userids.push(user.user_id);
+      uuids.push(user.user_uuid);
+      emails.value.push(user.mail_address);
+    });
+  });
 });
 </script>
