@@ -104,8 +104,8 @@ func main() {
 	// 認証不要なAPIのルーティング
 	router := g.Group("/utils")
 	{
-		router.POST("/read/class", apiUtils.ReadClass)		// クラス一覧取得
-		router.POST("/read/post", apiUtils.ReadPost)		// 役職一覧取得
+		router.GET("/read/class", apiUtils.ReadClass)		// クラス一覧取得
+		router.GET("/read/post", apiUtils.ReadPost)			// 役職一覧取得
 	}
 
 	// 認証が必要なAPIのルーティング

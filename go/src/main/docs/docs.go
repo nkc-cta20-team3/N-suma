@@ -32,13 +32,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/apiHello.messageSuccess"
+                            "$ref": "#/definitions/model.MessageSuccess"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/apiHello.messageError"
+                            "$ref": "#/definitions/model.MessageError"
                         }
                     }
                 }
@@ -61,13 +61,71 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/apiHello.messageSuccess"
+                            "$ref": "#/definitions/model.MessageSuccess"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/apiHello.messageError"
+                            "$ref": "#/definitions/model.MessageError"
+                        }
+                    }
+                }
+            }
+        },
+        "/utils/read/class": {
+            "get": {
+                "description": "GETメソッドで動作し、ステータス200と、DBのクラス一覧を返します",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Utils"
+                ],
+                "summary": "クラス一覧を返す",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.MessageSuccess"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/model.MessageError"
+                        }
+                    }
+                }
+            }
+        },
+        "/utils/read/post": {
+            "get": {
+                "description": "GETメソッドで動作し、ステータス200と、DBの役職一覧を返します",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Utils"
+                ],
+                "summary": "役職一覧を返す",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.ResponseWrap"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/model.MessageError"
                         }
                     }
                 }
@@ -75,7 +133,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "apiHello.messageError": {
+        "model.MessageError": {
             "type": "object",
             "properties": {
                 "error": {
@@ -83,9 +141,18 @@ const docTemplate = `{
                 }
             }
         },
-        "apiHello.messageSuccess": {
+        "model.MessageSuccess": {
             "type": "object",
             "properties": {
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.ResponseWrap": {
+            "type": "object",
+            "properties": {
+                "document": {},
                 "message": {
                     "type": "string"
                 }
