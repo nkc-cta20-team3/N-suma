@@ -38,7 +38,7 @@ func ReadPrepareInformation(c *gin.Context) {
 		} else {
 			//その他のエラーハンドリング
 			fmt.Println(err.Error())
-			c.JSON(http.StatusBadRequest, gin.H{"message": "OTHER ERROR" })
+			c.JSON(http.StatusInternalServerError, gin.H{"message": "OTHER ERROR" })
 			return
 		}
 	}
