@@ -17,6 +17,7 @@ import (
 
 	// "main/api"
 	apiHello "main/api/hello"
+	apiUtils "main/api/utils"
 	apiAdminAdd "main/api/admin/add"
 	apiAdminEdit "main/api/admin/edit"
 	apiAdminList "main/api/admin/list"
@@ -98,6 +99,13 @@ func main() {
 	{
 		hello.GET("/get", apiHello.GetHello)
 		hello.POST("/post", apiHello.PostHello)	
+	}
+
+	// 認証不要なAPIのルーティング
+	router := g.Group("/utils")
+	{
+		router.POST("/read/class", apiUtils.ReadClass)		// クラス一覧取得
+		router.POST("/read/post", apiUtils.ReadPost)		// 役職一覧取得
 	}
 
 	// 認証が必要なAPIのルーティング

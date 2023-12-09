@@ -3,24 +3,20 @@ package api
 import (
 	"errors"
 	"fmt"
+	"net/http"
+
 	"main/infra"
 	"main/model"
-	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
 
-// type ReadClassResponse struct {
-// 	ClassID   int    `json:"class_id"`
-// 	ClassAbbr string `json:"class_abbr"`
-// 	ClassName string `json:"class_name"`
-// }
+func ReadPost(c *gin.Context) {
 
-func ReadClass(c *gin.Context) {
+	response := []model.ReadPostPresponse{}
 
-	response := []model.ReadClassResponse{}
-
+	//DB接続とエラーハンドリング
 	db := infra.DBInitGorm()
 	if db.Error != nil {
 		errMsg := "データベース接続エラー"
@@ -28,8 +24,8 @@ func ReadClass(c *gin.Context) {
 		return
 	}
 
-	err := db.Table("classification").Select("class_id,class_abbr,class_name").Scan(&response).Error
-
+	// 役職一覧を取得
+	err := db.Table("post").Select("post_id,post_name").Scan(&response).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			// 行が見つからなかった場合の処理
@@ -38,11 +34,15 @@ func ReadClass(c *gin.Context) {
 			return
 		} else {
 			//その他のエラーハンドリング
-			c.JSON(http.StatusBadRequest, gin.H{"message": "OTHER ERROR"})
+			fmt.Println(err.Error())
+			c.JSON(http.StatusInternalServerError, gin.H{"message": "OTHER ERROR" })
 			return
 		}
-
 	}
+	
+	fmt.Println(response)
+
+	// レスポンスを返す
 	c.JSON(http.StatusOK, gin.H{"document": response})
 	return
 
