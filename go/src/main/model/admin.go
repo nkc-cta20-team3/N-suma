@@ -35,3 +35,32 @@ type SearchUserListResponse struct {
 	UserName  string `json:"user_name"`
 	ClassAbbr string `json:"class_abbr"`
 }
+
+// ReadUserRequest は、ユーザー情報を取得する際に使用する構造体
+type ReadUserRequest struct {
+	TargetUserID int `json:"user_id"`
+}
+
+// ReadUserResponse は、ユーザー情報を取得する際にデータを読み取るのに使用する構造体
+type ReadUserResponse struct {
+	UserUUID  	string 	`json:"user_uuid"`
+	MailAddress string 	`json:"mail_address"`
+	UserName   	string 	`json:"user_name"`
+	UserNumber 	int    	`json:"user_number"`
+	ClassName  	string 	`json:"class_name"`
+	PostName    int    	`json:"post_name"`
+}
+
+// UpdateUserで使用する構造体
+type UpdateUserRequest struct {
+	UserID       int    `json:"user_id"`
+	UserName     string `json:"user_name"`
+	UserNumber   int    `json:"user_number"`
+	ClassID      int    `json:"class_id"`
+	PostID       int    `json:"post_id"`
+}
+
+// DeleteUserで使用する構造体
+type DeleteUserRequest struct {
+	TargetUserID int `json:"user_id"`
+}
