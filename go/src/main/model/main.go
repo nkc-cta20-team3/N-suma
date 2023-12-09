@@ -179,17 +179,6 @@ type TakePostID struct {
 }
 
 
-// UpdateUserで使用する構造体
-type UpdateUserRequest struct {
-	UserID       int    `json:"user_id"`
-	UpdateUserID int    `json:"update_user_id"`
-	UserName     string `json:"user_name"`
-	UserNumber   int    `json:"user_number"`
-	PostID       int    `json:"post_id"`
-	ClassID      int    `json:"class_id"`
-	MailAddress  string `json:"mail_address"`
-}
-
 // ReadDivisionで使用する構造体
 type ReadDivisionRequest struct {
 	UserID int `json:"user_id"`
@@ -222,26 +211,6 @@ type TeacherReadAlarmResponse struct {
 	ClassAbbr  string `json:"class_abbr"`
 }
 
-// ReadUserで使用する構造体
-type ReadUserRequest struct {
-	AccessUserID int `json:"access_user_id"`
-	TargetUserID int `json:"target_user_id"`
-}
-type ReadUserResponse struct {
-	UserName   string `json:"user_name"`
-	UserNumber int    `json:"user_number"`
-	ClassAbbr  string `json:"class_abbr"`
-	PostID     int    `json:"post_id"`
-}
-
-// DeleteUserで使用する構造体
-type DeleteUserRequest struct {
-	AccessUserID int `json:"access_user_id"`
-	TargetUserID int `json:"target_user_id"`
-}
-type DeleteUserResponse struct {
-	Flag bool
-}
 
 // 役職ID取得用
 type Post struct {
