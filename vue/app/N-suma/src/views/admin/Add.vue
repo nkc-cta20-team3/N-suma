@@ -151,7 +151,7 @@ async function onSubmit() {
   }
 
   // ユーザーを登録する処理
-  APICallonJWT("http://localhost:8080/admin/add/create", {
+  APICallonJWT("admin/add/create", {
     user_id: state.value.id,
     user_name: state.value.name,
     user_number: Number(state.value.number),
@@ -168,7 +168,7 @@ async function onSubmit() {
 
 onMounted(() => {
   // 役職が未定義のユーザー一覧を取得する(uuidとemailの組)
-  APICallonJWT("http://localhost:8080/admin/add/read", {}).then((res) => {
+  APICallonJWT("admin/add/read", {}).then((res) => {
     // console.log(res);
     res.document.forEach((user) => {
       userids.push(user.user_id);

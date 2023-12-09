@@ -30,7 +30,7 @@ const APICall = async (method, url, data) => {
 };
 const APICallonJWT = async (url, data) => {
   const store = useStore();
-  const res = await fetch(url, {
+  const res = await fetch(import.meta.env.VITE_API_URL + url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
