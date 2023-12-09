@@ -26,7 +26,7 @@ type ReadUserListResponse struct {
 // SearchUserListRequest は、ユーザーを検索する際に使用する構造体
 type SearchUserListRequest struct {
 	PostID      int    `json:"post_id"`
-	UserNumber  *int    `json:"user_number"`
+	UserNumber  string    `json:"user_number"`
 }
 
 // SearchUserListResponse は、ユーザーを検索した結果を受け取る際に使用する構造体

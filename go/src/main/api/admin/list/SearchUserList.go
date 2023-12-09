@@ -38,7 +38,7 @@ func SearchUserList(c *gin.Context) {
 	}
 	
 	// ユーザーを検索
-	if(request.UserNumber == nil){
+	if(request.UserNumber == ""){
 		err := db.Table("user").
 			Select("user.user_id,user.user_name,cs.class_abbr").
 			Joins("LEFT OUTER JOIN classification cs ON user.class_id = cs.class_id").
@@ -62,7 +62,7 @@ func SearchUserList(c *gin.Context) {
 		err := db.Table("user").
 			Select("user.user_id,user.user_name,cs.class_abbr").
 			Joins("LEFT OUTER JOIN classification cs ON user.class_id = cs.class_id").
-			Where("user_number LIKE %?%", request.UserNumber).
+			Where("user_number LIKE ?", "%"+request.UserNumber+"%").
 			Where("post_id = ?", request.PostID).
 			Scan(&response).Error
 		if err != nil {
