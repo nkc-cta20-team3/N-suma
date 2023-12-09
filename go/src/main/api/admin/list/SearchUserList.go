@@ -17,7 +17,7 @@ func SearchUserList(c *gin.Context) {
 	request := model.SearchUserListRequest{}
 	responseWrap := model.ResponseWrap{}
 	responseWrap.Message = "success"
-	response := []model.ReadPrepareInformationResponse{}
+	response := []model.SearchUserListResponse{}
 	errResponse := model.MessageError{}
 
 	//POSTで受け取った値を格納する
