@@ -45,13 +45,12 @@
             :counter="8"
           ></v-text-field>
 
-          <!-- クラス略称選択 -->
+          <!-- 所属クラス選択 -->
           <v-select
             v-model="state.class"
             :items="clases"
-            label="クラス略称"
+            label="所属クラス"
             persistent-hint
-            placeholder="CTA20"
             persistent-placeholder
             :rules="requiredRules"
           ></v-select>
@@ -62,7 +61,6 @@
             :items="roles"
             label="役職"
             persistent-hint
-            placeholder="学生"
             persistent-placeholder
             :rules="requiredRules"
           ></v-select>
@@ -106,7 +104,9 @@
             </v-dialog>
           </template>
         </v-form>
-        <p v-else class="text-h5 text-center pt-10">新規登録対象のユーザーは存在しません。</p>
+        <p v-else class="text-h5 text-center pt-10">
+          新規登録対象のユーザーは存在しません。
+        </p>
       </v-col>
     </v-row>
   </v-container>
@@ -114,12 +114,13 @@
 
 <script setup>
 import { onMounted, ref } from "vue";
+import { onBeforeRouteUpdate } from "vue-router";
+import router from "@/router";
 import {
-  roles,
-  clases,
   requiredRules,
   numberRules,
   APICallonJWT,
+  APICallonGET,
 } from "@/utils";
 
 const mainForm = ref(null);
@@ -136,6 +137,14 @@ const state = ref({
 var userids = [];
 var uuids = [];
 var emails = ref([]);
+
+// クラス一覧を格納する変数
+var clases = [];
+var claseids = [];
+
+// 役職一覧を格納する変数
+var roles = [];
+var roleids = [];
 
 function emailSelected(e) {
   var index = emails.value.indexOf(e);
@@ -155,18 +164,27 @@ async function onSubmit() {
     user_id: state.value.id,
     user_name: state.value.name,
     user_number: Number(state.value.number),
-    post_id: state.value.role == "学生" ? 1 : 2,
-    // TODO:実装する
-    // user_class: state.value.class,
-    class_id: 132,
+    post_id: roleids[roles.indexOf(state.value.role)],
+    class_id: claseids[clases.indexOf(state.value.class)],
   }).then((res) => {
     res.message == "success"
-      ? console.log("ユーザーを登録しました")
-      : console.log("ユーザーの登録に失敗しました");
+      ? alert("ユーザーを登録しました")
+      : alert("ユーザーの登録に失敗しました");
+    // 画面遷移
+    router.push("/app/admin/list");
   });
 }
 
 onMounted(() => {
+  init();
+});
+
+onBeforeRouteUpdate((to, from, next) => {
+  init();
+  next();
+});
+
+function init() {
   // 役職が未定義のユーザー一覧を取得する(uuidとemailの組)
   APICallonJWT("admin/add/read", {}).then((res) => {
     // console.log(res);
@@ -176,5 +194,23 @@ onMounted(() => {
       emails.value.push(user.mail_address);
     });
   });
-});
+
+  // クラス一覧を取得する
+  APICallonGET("utils/read/class").then((res) => {
+    // console.log(res);
+    res.document.forEach((class_) => {
+      clases.push(class_.class_name);
+      claseids.push(class_.class_id);
+    });
+  });
+
+  // ロール一覧を取得する
+  APICallonGET("utils/read/post").then((res) => {
+    // console.log(res);
+    res.document.forEach((post) => {
+      roles.push(post.post_name);
+      roleids.push(post.post_id);
+    });
+  });
+}
 </script>

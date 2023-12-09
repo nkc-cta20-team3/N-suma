@@ -17,13 +17,12 @@ const numberRules = [
   (v) => /^\d+$/.test(v) || "学籍番号は半角数字です",
 ];
 const divisions = ["国家試験 / FE", "国家試験 / AP"];
-const APICall = async (method, url, data) => {
-  const res = await fetch(url, {
-    method: method,
+const APICallonGET = async (url) => {
+  const res = await fetch(import.meta.env.VITE_API_URL + url, {
+    method: "GET",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(data),
   });
   const json = await res.json();
   return json;
@@ -48,6 +47,6 @@ export {
   requiredRules,
   numberRules,
   divisions,
-  APICall,
+  APICallonGET,
   APICallonJWT,
 };
