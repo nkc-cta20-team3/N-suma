@@ -41,6 +41,7 @@ func SortUser(c *gin.Context) {
 	if post.PostID == 0 {
 		//管理者のみ実行できる
 
+	
 		err := db.Table("user").
 			Select("user.user_id,cs.class_abbr").
 			Joins("LEFT OUTER JOIN classification cs ON user.class_id = cs.class_id").
