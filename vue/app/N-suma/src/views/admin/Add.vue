@@ -34,8 +34,19 @@
             :rules="requiredRules"
           ></v-text-field>
 
+          <!-- 役職選択 -->
+          <v-select
+            v-model="state.role"
+            :items="roles"
+            label="役職"
+            persistent-hint
+            persistent-placeholder
+            :rules="requiredRules"
+          ></v-select>
+
           <!-- 学籍番号入力 -->
           <v-text-field
+            v-if="state.role == '学生'"
             v-model="state.number"
             label="学籍番号"
             persistent-hint
@@ -50,16 +61,6 @@
             v-model="state.class"
             :items="clases"
             label="所属クラス"
-            persistent-hint
-            persistent-placeholder
-            :rules="requiredRules"
-          ></v-select>
-
-          <!-- 役職選択 -->
-          <v-select
-            v-model="state.role"
-            :items="roles"
-            label="役職"
             persistent-hint
             persistent-placeholder
             :rules="requiredRules"
@@ -163,7 +164,7 @@ async function onSubmit() {
   APICallonJWT("admin/add/create", {
     user_id: state.value.id,
     user_name: state.value.name,
-    user_number: Number(state.value.number),
+    user_number: state.role.value != "学生" ? null : Number(state.value.number),
     post_id: roleids[roles.indexOf(state.value.role)],
     class_id: claseids[clases.indexOf(state.value.class)],
   }).then((res) => {

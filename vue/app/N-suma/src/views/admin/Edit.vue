@@ -5,20 +5,20 @@
         <!-- 入力フォーム -->
         <v-form ref="mainForm">
           <!-- UUID選択 -->
-          <v-select
+          <v-text-field
             v-model="state.uuid"
             label="uuid"
             persistent-hint
             :disabled="true"
-          ></v-select>
+          ></v-text-field>
 
           <!-- Eメール選択 -->
-          <v-select
+          <v-text-field
             v-model="state.email"
             label="Eメール"
             persistent-hint
             :disabled="true"
-          ></v-select>
+          ></v-text-field>
 
           <!-- 氏名入力 -->
           <v-text-field
@@ -30,8 +30,20 @@
             :rules="requiredRules"
           ></v-text-field>
 
+          <!-- 役職選択 -->
+          <v-select
+            v-model="state.role"
+            :items="roles"
+            label="役職"
+            persistent-hint
+            placeholder="学生"
+            persistent-placeholder
+            :rules="requiredRules"
+          ></v-select>
+
           <!-- 学籍番号入力 -->
           <v-text-field
+            v-if="state.role == '学生'"
             v-model="state.number"
             label="学籍番号"
             persistent-hint
@@ -40,24 +52,23 @@
             :rules="numberRules"
           ></v-text-field>
 
-          <!-- クラス略称選択 -->
+          <!-- 所属クラス選択 -->
           <v-select
             v-model="state.class"
             :items="clases"
-            label="クラス略称"
+            label="所属クラス"
             persistent-hint
             placeholder="CTA20"
             persistent-placeholder
             :rules="requiredRules"
           ></v-select>
 
-          <!-- 役職選択 -->
+          <!-- アカウントの状態 -->
           <v-select
-            v-model="state.role"
-            :items="roles"
-            label="役職"
+            v-model="state.status"
+            :items="status"
+            label="アカウントの状態"
             persistent-hint
-            placeholder="学生"
             persistent-placeholder
             :rules="requiredRules"
           ></v-select>
@@ -156,18 +167,35 @@
 
 <script setup>
 import { onMounted, ref } from "vue";
+import { onBeforeRouteUpdate } from "vue-router";
 import router from "@/router";
-import { roles, clases, requiredRules, numberRules } from "@/utils";
+import {
+  requiredRules,
+  numberRules,
+  APICallonJWT,
+  APICallonGET,
+} from "@/utils";
 
 const mainForm = ref(null);
 const state = ref({
+  id: "",
   uuid: "",
   email: "",
   name: "",
   number: "",
   class: "",
   role: "",
+  status: "",
 });
+var status = ["有効", "無効"];
+
+// クラス一覧を格納する変数
+var clases = ref([]);
+var claseids = [];
+
+// 役職一覧を格納する変数
+var roles = ref([]);
+var roleids = [];
 
 async function onUpdate() {
   const validResult = await mainForm.value.validate();
@@ -192,12 +220,36 @@ async function onDelete() {
 }
 
 onMounted(() => {
-  console.log("mounted");
-  // TODO: routerのpropsからユーザー情報を取得する(uuidとemailの組)
+  init();
+});
 
-  state.value.uuid = router.currentRoute.value.params.id;
-  state.value.email = "11@example.com";
+onBeforeRouteUpdate((to, from, next) => {
+  init();
+  next();
+});
+
+function init() {
+  // routerのpropsからidを取得する
+  state.value.id = router.currentRoute.value.params.id;
+
+  // クラス一覧を取得する
+  APICallonGET("utils/read/class").then((res) => {
+    // console.log(res);
+    res.document.forEach((class_) => {
+      clases.value.push(class_.class_name);
+      claseids.push(class_.class_id);
+    });
+  });
+
+  // ロール一覧を取得する
+  APICallonGET("utils/read/post").then((res) => {
+    // console.log(res);
+    res.document.forEach((post) => {
+      roles.value.push(post.post_name);
+      roleids.push(post.post_id);
+    });
+  });
 
   // TODO: ユーザーの詳細な情報を取得し設定する
-});
+}
 </script>
