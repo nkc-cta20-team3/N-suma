@@ -37,7 +37,7 @@ import (
 // 	DivisionID int `json:"division_id"` //区分ID
 // }
 
-func ResubmitDocument(c *gin.Context) {
+func ReSubmitDocument(c *gin.Context) {
 	request := model.ResubmitDocumentRequest{}
 	responseMessage := "RESUBMIT SUCCESS"
 

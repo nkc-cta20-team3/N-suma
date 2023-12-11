@@ -18,10 +18,17 @@ import (
 	// "main/api"
 	apiHello "main/api/hello"
 	apiUtils "main/api/utils"
+
 	apiAdminAdd "main/api/admin/add"
 	apiAdminEdit "main/api/admin/edit"
 	apiAdminList "main/api/admin/list"
 	
+	apiStudentAlarm "main/api/student/alarm"
+	apiStudentForm "main/api/student/form"
+	apiStudentReForm "main/api/student/reform"
+	apiStudentList "main/api/student/list"
+	apiStudentView "main/api/student/view"
+
 	//"main/api/student"
 	//"main/api/teacher"
 	"main/controller"
@@ -38,7 +45,6 @@ import (
 // @host localhost:8080
 func main() {
 
-	
 	g := gin.Default()
 	g.Use(controller.LogMiddleware())
 	g.Use(cors.New(cors.Config{
@@ -139,25 +145,43 @@ func main() {
 		adminEdit.POST("/delete", apiAdminEdit.DeleteUser)	// ユーザー削除
 	}
 	
+	// 学生用のAPIのルーティング
+	student := authRouter.Group("/student")
+	// student.Use(controller.RoleMiddleware("student"))
 	
+	// 通知関連のAPIのルーティング
+	studentAlarm := student.Group("/alarm")
+	{
+		student.POST("/check", apiStudentAlarm.CheckAlarm)		// 通知が存在するかの確認
+		student.POST("/read", apiStudentAlarm.ReadAlarm)		// 通知の内容を取得
+	}
+
+	// 書類提出画面用APIのルーティング
+	studentForm := student.Group("/form")
+	{		
+		studentForm.POST("/create", apiStudentForm.CreateDocument)	// 書類提出
+	}
+
+	// 書類再提出画面用APIのルーティング
+	studentReForm := student.Group("/reform")
+	{
+		studentReForm.POST("/create", apiStudentReForm.ReSubmitDocument)	// 書類再提出
+	}
+
+	// 提出書類一覧画面用APIのルーティング
+	studentList := student.Group("/list")
+	{
+		studentList.POST("/read", apiStudentList.ReadDocumentList)	// 書類提出履歴一覧取得
+	}
+
+	// 書類提出履歴画面用APIのルーティング
+	studentView := student.Group("/view")
+	{
+		studentView.POST("/read", apiStudentView.ReadDocument)		// 書類詳細取得
+		studentView.POST("/next", apiStudentView.NextDocument)		// 書類切り替え
+	}
+
 	/*
-	//学生がアクセスできるAPI
-	routes3 := g.Group("/api/student")
-	{
-		admin.POST("/post", apiHello.PostHello)				// 導通確認用
-	}
-	{
-
-		//学生用
-		routes3.POST("/nd", student.NextDocument)      //公欠届切り替え
-		routes3.POST("/ral", student.ReadAuthList)     //未認可リスト取得
-		routes3.POST("/rd", student.ReadDocument)      //公欠届詳細取得
-		routes3.POST("/cd", student.CreateDocument)    //公欠届作成
-		routes3.POST("/rsd", student.ResubmitDocument) //公欠届再提出
-		routes3.POST("/ca", student.CheckAlarm)        //通知取得
-		routes3.POST("/al", student.ReadAlarm)         //通知詳細取得
-	}
-
 	routes4 := g.Group("/api/teacher")
 	{
 		routes4.POST("/nd", teacher.NextDocument)  //公欠届切り替え
@@ -168,12 +192,8 @@ func main() {
 		routes4.POST("/ca", teacher.CheckAlarm)    //通知取得
 		routes4.POST("/al", teacher.ReadAlarm)     //通知詳細取得
 	}
-	*/
 
-	/*
 	routes.POST("/cl", api.CheckLogin) //ログイン確認
-	routes.POST("/rc", api.ReadClass)
-	routes.POST("/rp", api.ReadPost)
 	routes.POST("/rup", api.ReadUserPost)
 
 	//調査用
