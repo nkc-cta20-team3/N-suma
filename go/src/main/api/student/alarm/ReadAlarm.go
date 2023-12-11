@@ -6,6 +6,8 @@ import (
 	"main/infra"
 	"main/model"
 	"net/http"
+	
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -81,4 +83,9 @@ func ReadAlarm(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"document": "POST ERROR"})
 		return
 	}
+}
+
+func timeToString(t time.Time) string {
+	str := t.Format("2006-01-02 15:04:05")
+	return str
 }
