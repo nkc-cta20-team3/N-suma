@@ -34,11 +34,20 @@ func DeleteUser(c *gin.Context) {
 		return
 	}
 
+	/*
+	userflag := false
+	update := UpdateUser{UserFlag: &userflag}
+	err := db.Table("user").
+		Where("user_id = ?", request.TargetUserID).
+		Updates(update).Error	
+	*/
+
 	// ユーザー情報を削除(ユーザーを凍結処理)
+	userflag := false
 	err := db.Table("user").
 		Where("user_id = ?", request.TargetUserID).
 		Updates(model.DeleteUserStruct{
-			UserFlag: false}).
+			UserFlag: &userflag }).
 		Error
 	if err != nil {
 		//その他のエラーハンドリング
