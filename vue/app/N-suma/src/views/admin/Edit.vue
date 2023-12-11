@@ -204,8 +204,21 @@ async function onUpdate() {
     return;
   }
 
-  // TODO:ユーザーを更新する処理を記述する
-  console.log("ユーザーを更新しました");
+  // ユーザーを更新する処理を記述する
+  APICallonJWT("admin/add/update", {
+    user_id: state.value.id,
+    user_name: state.value.name,
+    user_number: state.role.value != "学生" ? null : state.value.number,
+    post_id: roleids[roles.indexOf(state.value.role)],
+    class_id: claseids[clases.indexOf(state.value.class)],
+    user_flag: state.value.status == "有効" ? true : false,
+  }).then((res) => {
+    res.message == "success"
+      ? alert("ユーザー情報を更新しました")
+      : alert("ユーザー情報の更新に失敗しました");
+    // 画面遷移
+    router.push("/app/admin/edit");
+  });
 }
 
 async function onDelete() {
@@ -215,8 +228,16 @@ async function onDelete() {
     return;
   }
 
-  // TODO:ユーザーを削除する処理を記述する
-  console.log("ユーザーを削除しました");
+  // ユーザーを削除する処理
+  APICallonJWT("admin/edit/delete", {
+    user_id: state.value.id,
+  }).then((res) => {
+    res.message == "success"
+      ? alert("ユーザーの凍結に成功しました")
+      : alert("ユーザーの凍結に失敗しました");
+    // 画面遷移
+    router.push("/app/admin/edit");
+  });
 }
 
 onMounted(() => {
@@ -250,6 +271,22 @@ function init() {
     });
   });
 
-  // TODO: ユーザーの詳細な情報を取得し設定する
+  // ユーザーの詳細な情報を取得し設定する
+  APICallonJWT("admin/edit/read", {
+    user_id: state.value.id,
+  }).then((res) => {
+    // console.log(res);
+    if (res.message == "success") {
+      state.value.uuid = res.document.user_uuid;
+      state.value.email = res.document.mail_address;
+      state.value.name = res.document.user_name;
+      state.value.number = res.document.user_number;
+      state.value.class = clases.value[claseids.indexOf(res.document.class_id)];
+      state.value.role = roles.value[roleids.indexOf(res.document.post_id)];
+      state.value.status = res.document.user_flag ? "有効" : "無効";
+    } else {
+      console.log("データの取得に失敗しました");
+    }
+  });
 }
 </script>
