@@ -14,6 +14,9 @@ import (
 func UpdateUser(c *gin.Context) {
 
 	request := model.UpdateUserRequest{}
+	responseWrap := model.ResponseWrap{}
+	responseWrap.Message = "success"
+	errResponse := model.MessageError{}
 
 	//POSTで受け取った値を格納する
 	if err := c.ShouldBindJSON(&request); err != nil {
@@ -21,27 +24,35 @@ func UpdateUser(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	//DBに接続
+	fmt.Println(request)
+
+	//DB接続とエラーハンドリング
 	db := infra.DBInitGorm()
-
-	//更新処理
-	db.Table("user").
-		Where("user_id = ?", request.UpdateUserID).
-		Updates(model.UpdateUserRequest{
-			UserName:    request.UserName,
-			UserNumber:  request.UserNumber,
-			PostID:      request.PostID,
-			ClassID:     request.ClassID,
-			MailAddress: request.MailAddress})
-
-	//エラーハンドリング
 	if db.Error != nil {
-		errMsg := "UPDATE ERROR"
-		c.JSON(http.StatusInternalServerError, gin.H{"error": errMsg})
+		errResponse.Message = "データベース接続エラー"
+		c.JSON(http.StatusInternalServerError, errResponse)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"flag": true})
-	return
+	// ユーザー情報を更新
+	db.Table("user").
+		Where("user_id = ?", request.UpdateUserID).
+		Updates(model.UpdateUserStruct{
+			UserName:   request.UserName,
+			UserNumber: request.UserNumber,
+			PostID:     request.PostID,
+			ClassID:    request.ClassID,
+			UserFlag:	request.user_flag})
+		.Error
+	if err != nil {
+		//その他のエラーハンドリング
+		errResponse.Message = "OTHER ERROR"
+		fmt.Println(err.Error())
+		c.JSON(http.StatusInternalServerError, errResponse)
+		return
+	}
 
+	// レスポンスを返す
+	c.JSON(http.StatusOK, responseWrap)
+	return
 }

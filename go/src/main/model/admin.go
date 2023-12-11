@@ -52,13 +52,23 @@ type ReadUserResponse struct {
 	UserFlag  	bool   	`json:"user_flag"`
 }
 
-// UpdateUserで使用する構造体
+// UpdateUser は、ユーザー情報を更新する際に、クライアントからのデータを受け取るのに使用する構造体
 type UpdateUserRequest struct {
 	UserID       int    `json:"user_id"`
 	UserName     string `json:"user_name"`
 	UserNumber   int    `json:"user_number"`
 	ClassID      int    `json:"class_id"`
 	PostID       int    `json:"post_id"`
+	UserFlag  	bool   	`json:"user_flag"`
+}
+
+
+// UpdateUserStruct は、ユーザー情報を更新する際に、DBのデータを更新するときに使用する構造体
+type UpdateUserStruct struct {
+	UserName     string `json:"user_name"`
+	UserNumber   int    `json:"user_number"`
+	PostID       int    `json:"post_id"`
+	ClassID      int    `json:"class_id"`
 	UserFlag  	bool   	`json:"user_flag"`
 }
 
