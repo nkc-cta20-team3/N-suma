@@ -25,7 +25,7 @@ func ReadPost(c *gin.Context) {
 
 	responseWrap := model.ResponseWrap{}
 	responseWrap.Message = "success"
-	response := []model.ReadPostPresponse{}
+	response := []model.ReadPostResponse{}
 	errResponse := model.MessageError{}
 
 	//DB接続とエラーハンドリング
