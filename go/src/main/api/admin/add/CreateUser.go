@@ -57,8 +57,8 @@ func CreateUser(c *gin.Context) {
 		Updates(model.CreateUserStruct{
 			UserName:    request.UserName,
 			UserNumber:  userNumber,
-			PostID:      request.PostID,
-			ClassID:     request.ClassID,
+			PostID:      &request.PostID,
+			ClassID:     &request.ClassID,
 		}).
 		Error
 	if err != nil {
