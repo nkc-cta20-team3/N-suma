@@ -55,6 +55,12 @@ func NextDocument(c *gin.Context) {
 	//1つ前と後の書類IDを探索
 	for i, v := range documentArray {
 		if v.DocumentID == request.DocumentID {
+			// 最初で最後の書類の場合
+			if len(documentArray) == 1 {
+				response.PrevDocumentID = -1
+				response.NextDocumentID = -1
+				break
+			}
 			//最初の書類の場合
 			if i == 0 {
 				response.PrevDocumentID = -1
