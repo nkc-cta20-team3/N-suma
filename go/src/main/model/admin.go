@@ -72,7 +72,12 @@ type UpdateUserStruct struct {
 	UserFlag  	bool   	`json:"user_flag"`
 }
 
-// DeleteUserで使用する構造体
+// DeleteUserRequest は、ユーザー情報を削除する際に、クライアントからのデータを受け取るのに使用する構造体
 type DeleteUserRequest struct {
 	TargetUserID int `json:"user_id"`
+}
+
+// DeleteUserStruct は、ユーザー情報を削除する際に、DBのデータを更新するときに使用する構造体
+type DeleteUserStruct struct {
+	UserFlag bool `json:"user_flag"`
 }

@@ -20,8 +20,9 @@ func UpdateUser(c *gin.Context) {
 
 	//POSTで受け取った値を格納する
 	if err := c.ShouldBindJSON(&request); err != nil {
-		// エラーな場合、ステータス400と、エラー情報を返す
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		// エラー処理
+		errResponse.Message = err.Error()
+		c.JSON(http.StatusBadRequest, errResponse)
 		return
 	}
 	fmt.Println(request)
@@ -42,8 +43,8 @@ func UpdateUser(c *gin.Context) {
 			UserNumber: request.UserNumber,
 			PostID:     request.PostID,
 			ClassID:    request.ClassID,
-			UserFlag:	request.user_flag})
-		.Error
+			UserFlag:	request.user_flag}).
+		Error
 	if err != nil {
 		//その他のエラーハンドリング
 		errResponse.Message = "OTHER ERROR"
