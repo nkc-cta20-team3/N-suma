@@ -2,7 +2,7 @@
   <v-container>
     <v-row justify="center">
       <!-- ひとつ前の書類を閲覧するボタン -->
-      <v-col cols="1">
+      <v-col cols="1" >
         <v-btn @click="onClick" height="100%" elevation="0" size="small">
           <!-- icon url : https://pictogrammers.com/library/mdi/icon/menu-left/ -->
           <v-icon :icon="mdiMenuLeft" size="x-large"></v-icon>
@@ -16,12 +16,12 @@
         <RowCard title="申請日" :text="state.date" />
         <RowCard title="公欠区分" :text="state.division" />
         <RowCard title="申請時間" :text="dateTime" />
-        <RowCard title="場所" :text="state.location" />
         <RowCard title="必要欠席時間" :text="absenceTime" />
+        <RowCard title="場所" :text="state.location" />
         <RowCard title="学生コメント" :text="state.studentComment" />
         <RowCard title="教員コメント" :text="state.teacherComment" />
       </v-col>
-      
+
       <!-- ひとつ後の書類を閲覧するボタン -->
       <v-col cols="1">
         <v-btn @click="onClick" height="100%" elevation="0" size="small">
@@ -39,7 +39,11 @@
 import { onMounted, ref } from "vue";
 import { mdiMenuLeft, mdiMenuRight } from "@mdi/js";
 import router from "@/router";
+import { useStore } from "@/stores/user";
 import RowCard from "@/components/StudentViewRowCard.vue";
+import { APICallonJWT } from "@/utils";
+
+const store = useStore();
 
 const state = ref({
   id: "",
@@ -56,6 +60,9 @@ const state = ref({
   nextId: "",
 });
 
+// v-if="state.value.prevId != ''"
+//  v-if="state.value.nextId != ''"
+
 var dateTime = "";
 var absenceTime = "";
 
@@ -66,28 +73,31 @@ function onClick() {
 }
 
 onMounted(() => {
-  console.log("mounted");
   state.value.id = router.currentRoute.value.params.id;
-  console.log(state.value.id);
-  // TODO: 受け取ったidをもとに、ドキュメントを取得するAPIを叩き、stateに格納する
-  state.value = {
-    date: "2021-04-01",
-    division: "国家試験 / FE",
-    startDate: "11-15 22:20",
-    endDate: "11-15 22:20",
-    location: "愛知県名古屋市",
-    startAbsence: "1限目",
-    endAbsence: "6限目",
-    studentComment:
-      "180文字 : ああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ",
-    teacherComment: "把握しました",
-  };
+  // 書類の詳細情報を取得する
+  APICallonJWT("student/view/read", {
+    user_id: Number(store.id),
+    document_id: Number(state.value.id),
+  }).then((res) => {
+    console.log(res);
+    state.value = {
+      date: res.document.request_at,
+      division:
+      res.document.division_name + "/" + res.document.division_detail,
+      startDate: res.document.start_time,
+      endDate: res.document.end_time,
+      startAbsence: res.document.start_flame,
+      endAbsence: res.document.end_flame,
+      location: res.document.location,
+      studentComment: res.document.student_comment,
+      teacherComment: res.document.teacher_comment,
+    };
+  });
+
   // TODO: 現在の書類の前後の書類を取得し、stateに格納する
-  state.value.prevId = state.value.id - 1;
-  state.value.nextId = state.value.id + 1;
 
   // TODO: 表示用に日付と時間を結合する処理を記述する
   dateTime = state.value.startDate + " ～ " + state.value.endDate;
-  absenceTime = state.value.startAbsence + " ～ " + state.value.endAbsence;
+  absenceTime = state.value.startAbsence + "限目 ～ " + state.value.endAbsence + "限目";
 });
 </script>
