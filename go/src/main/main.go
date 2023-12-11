@@ -29,8 +29,12 @@ import (
 	apiStudentList "main/api/student/list"
 	apiStudentView "main/api/student/view"
 
-	//"main/api/student"
-	//"main/api/teacher"
+	apiTeacherAlarm "main/api/teacher/alarm"
+	apiTeacherUnAuthList "main/api/teacher/unauthlist"
+	apiTeacherAuth "main/api/teacher/auth"
+	apiTeacherViewList "main/api/teacher/viewlist"
+	apiTeacherView "main/api/teacher/view"
+	
 	"main/controller"
 )
 
@@ -181,18 +185,46 @@ func main() {
 		studentView.POST("/next", apiStudentView.NextDocument)		// 書類切り替え
 	}
 
-	/*
-	routes4 := g.Group("/api/teacher")
+
+	// 教員用のAPIのルーティング
+	teacher := authRouter.Group("/teacher")
+	// teacher.Use(controller.RoleMiddleware("teacher"))
+	
+	// 通知関連のAPIのルーティング
+	teacherAlarm := teacher.Group("/alarm")
 	{
-		routes4.POST("/nd", teacher.NextDocument)  //公欠届切り替え
-		routes4.POST("/ral", teacher.ReadAuthList) //未認可リスト取得
-		routes4.POST("/rd", teacher.ReadDocument)  //公欠届詳細取得
-		routes4.POST("/ua", teacher.UpdateAuth)    //公欠届認可
-		routes4.POST("/ra", teacher.RejectAuth)    //公欠届却下
-		routes4.POST("/ca", teacher.CheckAlarm)    //通知取得
-		routes4.POST("/al", teacher.ReadAlarm)     //通知詳細取得
+		teacher.POST("/check", apiTeacherAlarm.CheckAlarm)		// 通知が存在するかの確認
+		teacher.POST("/read", apiTeacherAlarm.ReadAlarm)		// 通知の内容を取得
 	}
 
+	// 書類認可画面用APIのルーティング
+	teacherAuth := teacher.Group("/auth")
+	{
+		teacherAuth.POST("/read", apiTeacherAuth.ReadDocument)	// 書類詳細取得
+		teacherAuth.POST("/reject", apiTeacherAuth.RejectAuth)	// 書類却下
+		teacherAuth.POST("/update", apiTeacherAuth.UpdateAuth)	// 書類認可
+	}
+
+	// 未認可書類一覧画面用APIのルーティング
+	teacherUnAuthLlist := teacher.Group("/unauthllist")
+	{
+		teacherUnAuthLlist.POST("/read", apiTeacherUnAuthList.ReadUnAuthList)	// 未認可書類一覧取得
+	}	
+
+	// 書類詳細画面用APIのルーティング
+	teacherView := teacher.Group("/view")
+	{
+		teacherView.POST("/read", apiTeacherView.ReadDocument)	// 書類詳細取得
+		teacherView.POST("/next", apiTeacherView.NextDocument)	// 書類切り替え
+	}
+	
+	// 認可済書類一覧画面用APIのルーティング
+	teacherViewList := teacher.Group("/viewlist")
+	{
+		teacherViewList.POST("/read", apiTeacherViewList.ReadDocumentList)	// 認可済書類一覧取得
+	}
+	
+	/*
 	routes.POST("/cl", api.CheckLogin) //ログイン確認
 	routes.POST("/rup", api.ReadUserPost)
 

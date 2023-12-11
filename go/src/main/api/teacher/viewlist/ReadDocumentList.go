@@ -27,7 +27,7 @@ import (
 // 	ClassID string `json:"class_id"`
 // }
 
-func ReadAuthList(c *gin.Context) {
+func ReadDocumentList(c *gin.Context) {
 
 	response := []model.ReadAuthListResponse{}
 	take_class_id := model.TakeClassID{}
