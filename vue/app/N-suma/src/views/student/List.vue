@@ -25,7 +25,10 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import router from "@/router";
+import { useStore } from "@/stores/user";
+import { APICallonJWT } from "@/utils";
 
+const store = useStore();
 const items = ref([]);
 
 function onItemClick(item) {
@@ -37,12 +40,18 @@ function onItemClick(item) {
 }
 
 onMounted(() => {
-  console.log("mounted");
-  // TODO: ユーザーごとの書類の一覧を取得し、itemsに格納する
-  items.value = [
-    { id: 1, division: "国家試験 / FE", date: "2021/04/01" },
-    { id: 2, division: "国家試験 / SG", date: "2021/04/01" },
-    { id: 3, division: "国家試験 / AP", date: "2021/04/01" },
-  ];
+  // 書類一覧を取得する処理
+  APICallonJWT("student/list/read", {
+    user_id: store.id,
+  }).then((res) => {
+    // console.log(res);
+    res.document.forEach((docs) => {
+      items.value.push({
+        id: docs.document_id,
+        division: docs.division_name + "/" + docs.division_detail,
+        date: docs.request_at,
+      });
+    });
+  });
 });
 </script>
