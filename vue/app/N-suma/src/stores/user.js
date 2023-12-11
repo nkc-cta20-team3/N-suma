@@ -12,11 +12,13 @@ import router from "@/router";
 
 export const useStore = defineStore("user", {
   state: () => {
+    const id = null; // ユーザーID
     const user = null; // ユーザー情報
     const role = null; // 役職
     const isLogin = false; // ログイン状態
     const token = null; // JWT token
     return {
+      id,
       user,
       role,
       isLogin,
@@ -48,15 +50,19 @@ export const useStore = defineStore("user", {
         const unsuscribe = onAuthStateChanged(
           auth,
           (u) => {
-            if (u) {
+            if (u) {  
+              this.isLogin = true;
               this.user = u;
-              // TODO: getRole()を実装する
-              //this.role = getRole(u.uid);
+
+              // TODO: getIdAndRole()を実装する
+              // getIdAndRole(u.uid)
+
               //this.role = "admin";
               this.role = "student";
               //this.role = "teacher";
-              this.isLogin = true;
-              //console.log("user is login");
+
+              // TODO: getIDを実装する
+              this.id = 4;
 
               // tokenを取得する
               u.getIdToken().then((token) => {
