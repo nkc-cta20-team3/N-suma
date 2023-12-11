@@ -21,9 +21,9 @@
       <v-col cols="10">
         <RowCard title="申請日" :text="state.date" />
         <RowCard title="公欠区分" :text="state.division" />
-        <RowCard title="申請時間" :text="dateTime" />
+        <RowCard title="申請時間" :text="state.dateTime" />
+        <RowCard title="必要欠席時間" :text="state.absenceTime" />
         <RowCard title="場所" :text="state.location" />
-        <RowCard title="必要欠席時間" :text="absenceTime" />
         <RowCard title="学生コメント" :text="state.studentComment" />
         <RowCard title="教員コメント" :text="state.teacherComment" />
       </v-col>
@@ -98,19 +98,7 @@ onBeforeRouteUpdate((to, from, next) => {
 });
 
 function init() {
-  // 書類の詳細情報を取得する
-  state.value = {
-    date: "2021-04-01",
-    division: "国家試験 / FE",
-    startDate: "11-15 22:20",
-    endDate: "11-15 22:20",
-    location: "愛知県名古屋市",
-    startAbsence: "1限目",
-    endAbsence: "6限目",
-    studentComment:
-      "180文字 : ああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ",
-    teacherComment: "把握しました",
-  };
+  // console.log(state.value.id);
 
   // 書類の詳細情報を取得する
   APICallonJWT("teacher/view/read", {
