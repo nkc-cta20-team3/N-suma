@@ -70,7 +70,7 @@ func ReadDocument(c *gin.Context) {
 				"oa.teacher_comment",
 				"dv.division_name").
 			Joins("JOIN division dv ON oa.division_id = dv.division_id").
-			Where("document_id = ?", request.DocumentID).
+			//Where("document_id = ?", request.DocumentID).
 			First(&result).Error
 		if db.Error != nil {
 			errMsg := "データベースからデータを取得できませんでした"
@@ -88,7 +88,7 @@ func ReadDocument(c *gin.Context) {
 		startTime := timeToString(result.StartTime)
 		endTime := timeToString(result.EndTime)
 		response = model.ReadDocumentResponse{
-			DocumentID:     result.DocumentID,
+			//DocumentID:     result.DocumentID,
 			RequestAt:      requestAt,
 			StartTime:      startTime,
 			StartFlame:     result.StartFlame,

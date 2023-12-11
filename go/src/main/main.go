@@ -214,8 +214,8 @@ func main() {
 	// 書類詳細画面用APIのルーティング
 	teacherView := teacher.Group("/view")
 	{
-		teacherView.POST("/read", apiTeacherView.ReadDocument)	// 書類詳細取得
-		teacherView.POST("/next", apiTeacherView.NextDocument)	// 書類切り替え
+		teacherView.POST("/read", apiTeacherView.ReadAllDocument)	// 書類詳細取得
+		teacherView.POST("/next", apiTeacherView.NextAllDocument)	// 書類切り替え
 	}
 	
 	// 認可済書類一覧画面用APIのルーティング

@@ -3,7 +3,13 @@
     <v-row justify="center">
       <!-- ひとつ前の書類を閲覧するボタン -->
       <v-col cols="1">
-        <v-btn @click="onClick" height="100%" elevation="0" size="small">
+        <v-btn
+          v-if="prevId != Number(-1)"
+          @click="onPrevClick"
+          height="100%"
+          elevation="0"
+          size="small"
+        >
           <!-- icon url : https://pictogrammers.com/library/mdi/icon/menu-left/ -->
           <v-icon :icon="mdiMenuLeft" size="x-large"></v-icon>
           <v-icon :icon="mdiMenuLeft" size="x-large"></v-icon>
@@ -21,10 +27,16 @@
         <RowCard title="学生コメント" :text="state.studentComment" />
         <RowCard title="教員コメント" :text="state.teacherComment" />
       </v-col>
-      
+
       <!-- ひとつ後の書類を閲覧するボタン -->
       <v-col cols="1">
-        <v-btn @click="onClick" height="100%" elevation="0" size="small">
+        <v-btn
+          v-if="nextId != Number(-1)"
+          @click="onNextClick"
+          height="100%"
+          elevation="0"
+          size="small"
+        >
           <!-- icon url : https://pictogrammers.com/library/mdi/icon/menu-right/ -->
           <v-icon :icon="mdiMenuRight" size="x-large"></v-icon>
           <v-icon :icon="mdiMenuRight" size="x-large"></v-icon>
@@ -38,8 +50,10 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import { mdiMenuLeft, mdiMenuRight } from "@mdi/js";
+import { onBeforeRouteUpdate } from "vue-router";
 import router from "@/router";
 import RowCard from "@/components/StudentViewRowCard.vue";
+import { APICallonJWT } from "@/utils";
 
 const state = ref({
   id: "",
@@ -52,24 +66,39 @@ const state = ref({
   endAbsence: "",
   studentComment: "",
   teacherComment: "",
-  prevId: "",
-  nextId: "",
+  dateTime: "",
+  absenceTime: "",
 });
+const prevId = ref(-1);
+const nextId = ref(-1);
 
-var dateTime = "";
-var absenceTime = "";
+function onPrevClick() {
+  router.push({
+    name: "teacherView",
+    params: { id: prevId.value },
+  });
+}
 
-function onClick() {
-  // TODO: ひとつ前の書類を閲覧するボタンを押したときの処理を記述する
-  // TODO: ひとつ後の書類を閲覧するボタンを押したときの処理を記述する
-  console.log("onClick");
+function onNextClick() {
+  router.push({
+    name: "teacherView",
+    params: { id: nextId.value },
+  });
 }
 
 onMounted(() => {
-  console.log("mounted");
   state.value.id = router.currentRoute.value.params.id;
-  console.log(state.value.id);
-  // TODO: 受け取ったidをもとに、ドキュメントを取得するAPIを叩き、stateに格納する
+  init();
+});
+
+onBeforeRouteUpdate((to, from, next) => {
+  state.value.id = to.params.id;
+  init();
+  next();
+});
+
+function init() {
+  // 書類の詳細情報を取得する
   state.value = {
     date: "2021-04-01",
     division: "国家試験 / FE",
@@ -82,12 +111,37 @@ onMounted(() => {
       "180文字 : ああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ",
     teacherComment: "把握しました",
   };
-  // TODO: 現在の書類の前後の書類を取得し、stateに格納する
-  state.value.prevId = state.value.id - 1;
-  state.value.nextId = state.value.id + 1;
 
-  // TODO: 表示用に日付と時間を結合する処理を記述する
-  dateTime = state.value.startDate + " ～ " + state.value.endDate;
-  absenceTime = state.value.startAbsence + " ～ " + state.value.endAbsence;
-});
+  // 書類の詳細情報を取得する
+  APICallonJWT("teacher/view/read", {
+    document_id: Number(state.value.id),
+  }).then((res) => {
+    // console.log(res);
+    state.value = {
+      date: res.document.request_at,
+      division: res.document.division_name + "/" + res.document.division_detail,
+      startDate: res.document.start_time,
+      endDate: res.document.end_time,
+      startAbsence: res.document.start_flame,
+      endAbsence: res.document.end_flame,
+      location: res.document.location,
+      studentComment: res.document.student_comment,
+      teacherComment: res.document.teacher_comment,
+    };
+
+    // 表示用に日付と時間を結合する処理
+    state.value.dateTime = state.value.startDate + " ～ " + state.value.endDate;
+    state.value.absenceTime =
+      state.value.startAbsence + "限目 ～ " + state.value.endAbsence + "限目";
+  });
+
+  // 現在の書類の前後の書類IDを取得し、stateに格納する
+  APICallonJWT("teacher/view/next", {
+    document_id: Number(state.value.id),
+  }).then((res) => {
+    // console.log(res);
+    nextId.value = res.document.document_id_next;
+    prevId.value = res.document.document_id_prev;
+  });
+}
 </script>
