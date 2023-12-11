@@ -17,7 +17,7 @@ func UpdateUser(c *gin.Context) {
 	responseWrap.Message = "success"
 	errResponse := model.MessageError{}
 
-	//POSTで受け取った値を格納する
+		//POSTで受け取った値を格納する
 	if err := c.ShouldBindJSON(&request); err != nil {
 		// エラー処理
 		errResponse.Message = err.Error()
@@ -39,10 +39,10 @@ func UpdateUser(c *gin.Context) {
 		Where("user_id = ?", request.UserID).
 		Updates(model.UpdateUserStruct{
 			UserName:   request.UserName,
-			UserNumber: request.UserNumber,
-			PostID:     request.PostID,
-			ClassID:    request.ClassID,
-			UserFlag:	request.UserFlag}).
+			UserNumber: &request.UserNumber,
+			PostID:     &request.PostID,
+			ClassID:    &request.ClassID,
+			UserFlag:	&request.UserFlag}).
 		Error
 	if err != nil {
 		//その他のエラーハンドリング
