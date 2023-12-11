@@ -37,7 +37,7 @@ func ReadDivision(c *gin.Context) {
 	}
 
 	// 区分一覧を取得
-	err := db.Table("division").Select("division_id,division_name").Find(&response).Error
+	err := db.Table("division").Select("division_id,division_name,division_detail").Find(&response).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			// 行が見つからなかった場合の処理

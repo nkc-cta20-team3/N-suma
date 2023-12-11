@@ -17,4 +17,5 @@ type ReadPostResponse struct {
 type ReadDivisionResponse struct {
 	DivisionID   int    `json:"division_id"`
 	DivisionName string `json:"division_name"`
+	DivisionDetail string `json:"division_detail"`
 }

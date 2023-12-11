@@ -106,6 +106,7 @@ func main() {
 	{
 		router.GET("/read/class", apiUtils.ReadClass)		// クラス一覧取得
 		router.GET("/read/post", apiUtils.ReadPost)			// 役職一覧取得
+		router.GET("/read/division", apiUtils.ReadDivision)	// ユーザー役職一覧取得
 	}
 
 	// 認証が必要なAPIのルーティング
@@ -154,7 +155,6 @@ func main() {
 		routes3.POST("/cd", student.CreateDocument)    //公欠届作成
 		routes3.POST("/rsd", student.ResubmitDocument) //公欠届再提出
 		routes3.POST("/ca", student.CheckAlarm)        //通知取得
-		routes3.POST("/rdv", student.ReadDivision)     //区分取得
 		routes3.POST("/al", student.ReadAlarm)         //通知詳細取得
 	}
 
