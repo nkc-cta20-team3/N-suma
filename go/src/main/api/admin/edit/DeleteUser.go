@@ -3,63 +3,54 @@ package admin
 import (
 	"errors"
 	"fmt"
+	"net/http"
+
 	"main/infra"
 	"main/model"
-	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
 
 func DeleteUser(c *gin.Context) {
+
 	request := model.DeleteUserRequest{}
-	// response := model.DeleteUserResponse{}
-	post := model.Post{}
+	responseWrap := model.ResponseWrap{}
+	responseWrap.Message = "success"
+	errResponse := model.MessageError{}
 
 	//POSTで受け取った値を格納する
 	if err := c.ShouldBindJSON(&request); err != nil {
-		// エラーな場合、ステータス400と、エラー情報を返す
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		// エラー処理
+		errResponse.Message = err.Error()
+		c.JSON(http.StatusBadRequest, errResponse)
 		return
 	}
+	fmt.Println(request)
 
-	//DB接続
+	//DB接続とエラーハンドリング
 	db := infra.DBInitGorm()
-
-	db.Table("user").Select("post_id").Where("user_id = ?", request.AccessUserID).Scan(&post)
-
-	if post.PostID == 0 {
-		//管理者のみ実行できる
-
-		//削除(無効化)用準備
-		type UpdateUser struct {
-			UserFlag *bool `json:"user_flag"`
-		}
-		userflag := false
-		update := UpdateUser{UserFlag: &userflag}
-
-		//
-		err := db.Table("user").
-			Where("user_id = ?", request.TargetUserID).
-			Updates(update).Error
-
-		if err != nil {
-			if errors.Is(err, gorm.ErrRecordNotFound) {
-				// 行が見つからなかった場合の処理
-				fmt.Println("行が見つかりませんでした")
-				c.JSON(http.StatusBadRequest, gin.H{"message": "TABLE NOT FOUND"})
-				return
-			} else {
-				//その他のエラーハンドリング
-				c.JSON(http.StatusBadRequest, gin.H{"message": "OTHER ERROR"})
-				return
-			}
-		}
-		c.JSON(http.StatusOK, gin.H{"document": true})
-		return
-	} else {
-		//管理者でない場合
-		c.JSON(http.StatusBadRequest, gin.H{"document": "POST ERROR"})
+	if db.Error != nil {
+		errResponse.Message = "データベース接続エラー"
+		c.JSON(http.StatusInternalServerError, errResponse)
 		return
 	}
+
+	// ユーザー情報を削除(ユーザーを凍結処理)
+	err := db.Table("user").
+		Where("user_id = ?", request.TargetUserID).
+		Updates(model.DeleteUserStruct{
+			UserFlag: false}).
+		Error
+	if err != nil {
+		//その他のエラーハンドリング
+		errResponse.Message = "OTHER ERROR"
+		fmt.Println(err.Error())
+		c.JSON(http.StatusInternalServerError, errResponse)
+		return
+	}
+
+	// レスポンスを返す
+	c.JSON(http.StatusOK, responseWrap)
+	return
 }
