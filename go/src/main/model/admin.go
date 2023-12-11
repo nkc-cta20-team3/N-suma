@@ -11,7 +11,7 @@ type ReadPrepareInformationResponse struct {
 type CreateUserRequest struct {
 	UserID      int    `json:"user_id"`
 	UserName    string `json:"user_name"`
-	UserNumber  int    `json:"user_number"`
+	UserNumber  *string `json:"user_number"`
 	PostID      int    `json:"post_id"`
 	ClassID     int    `json:"class_id"`
 }
@@ -26,7 +26,7 @@ type ReadUserListResponse struct {
 // SearchUserListRequest は、ユーザーを検索する際に使用する構造体
 type SearchUserListRequest struct {
 	PostID      int    `json:"post_id"`
-	UserNumber  string    `json:"user_number"`
+	UserNumber  string `json:"user_number"`
 }
 
 // SearchUserListResponse は、ユーザーを検索した結果を受け取る際に使用する構造体
@@ -47,8 +47,9 @@ type ReadUserResponse struct {
 	MailAddress string 	`json:"mail_address"`
 	UserName   	string 	`json:"user_name"`
 	UserNumber 	int    	`json:"user_number"`
-	ClassName  	string 	`json:"class_name"`
-	PostName    int    	`json:"post_name"`
+	ClassID  	string 	`json:"class_id"`
+	PostID    	int    	`json:"post_id"`
+	UserFlag  	bool   	`json:"user_flag"`
 }
 
 // UpdateUserで使用する構造体
@@ -58,6 +59,7 @@ type UpdateUserRequest struct {
 	UserNumber   int    `json:"user_number"`
 	ClassID      int    `json:"class_id"`
 	PostID       int    `json:"post_id"`
+	UserFlag  	bool   	`json:"user_flag"`
 }
 
 // DeleteUserで使用する構造体
