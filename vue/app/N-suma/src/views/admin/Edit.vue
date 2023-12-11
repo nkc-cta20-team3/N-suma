@@ -82,7 +82,6 @@
                   height="40"
                   width="150"
                   v-bind="props"
-                  type="submit"
                   color="warning"
                   class="mr-2"
                   >削除</v-btn
@@ -120,12 +119,7 @@
             <!-- 更新ボタン -->
             <v-dialog transition="dialog-top-transition" width="auto">
               <template v-slot:activator="{ props }">
-                <v-btn
-                  height="40"
-                  width="150"
-                  v-bind="props"
-                  type="submit"
-                  color="success"
+                <v-btn height="40" width="150" v-bind="props" color="success"
                   >更新</v-btn
                 >
               </template>
@@ -205,19 +199,20 @@ async function onUpdate() {
   }
 
   // ユーザーを更新する処理を記述する
-  APICallonJWT("admin/add/update", {
-    user_id: state.value.id,
+  APICallonJWT("admin/edit/update", {
+    user_id: Number(state.value.id),
     user_name: state.value.name,
-    user_number: state.role.value != "学生" ? null : state.value.number,
-    post_id: roleids[roles.indexOf(state.value.role)],
-    class_id: claseids[clases.indexOf(state.value.class)],
+    user_number: state.value.role != "学生" ? null : state.value.number,
+    post_id: roleids[roles.value.indexOf(state.value.role)],
+    class_id: claseids[clases.value.indexOf(state.value.class)],
     user_flag: state.value.status == "有効" ? true : false,
   }).then((res) => {
+    // console.log(res);
     res.message == "success"
       ? alert("ユーザー情報を更新しました")
       : alert("ユーザー情報の更新に失敗しました");
     // 画面遷移
-    router.push("/app/admin/edit");
+    router.push("/app/admin/edit/" + state.value.id);
   });
 }
 
@@ -230,13 +225,13 @@ async function onDelete() {
 
   // ユーザーを削除する処理
   APICallonJWT("admin/edit/delete", {
-    user_id: state.value.id,
+    user_id: Number(state.value.id),
   }).then((res) => {
     res.message == "success"
       ? alert("ユーザーの凍結に成功しました")
       : alert("ユーザーの凍結に失敗しました");
     // 画面遷移
-    router.push("/app/admin/edit");
+    router.push("/app/admin/edit/" + state.value.id);
   });
 }
 
@@ -273,17 +268,18 @@ function init() {
 
   // ユーザーの詳細な情報を取得し設定する
   APICallonJWT("admin/edit/read", {
-    user_id: state.value.id,
+    user_id: Number(state.value.id),
   }).then((res) => {
     // console.log(res);
     if (res.message == "success") {
-      state.value.uuid = res.document.user_uuid;
-      state.value.email = res.document.mail_address;
-      state.value.name = res.document.user_name;
-      state.value.number = res.document.user_number;
-      state.value.class = clases.value[claseids.indexOf(res.document.class_id)];
-      state.value.role = roles.value[roleids.indexOf(res.document.post_id)];
-      state.value.status = res.document.user_flag ? "有効" : "無効";
+      state.value.uuid = res.document[0].user_uuid;
+      state.value.email = res.document[0].mail_address;
+      state.value.name = res.document[0].user_name;
+      state.value.number = res.document[0].user_number;
+      state.value.class =
+        clases.value[claseids.indexOf(res.document[0].class_id)];
+      state.value.role = roles.value[roleids.indexOf(res.document[0].post_id)];
+      state.value.status = res.document[0].user_flag ? "有効" : "無効";
     } else {
       console.log("データの取得に失敗しました");
     }
