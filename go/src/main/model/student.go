@@ -61,3 +61,20 @@ type ReadDocumentResponse struct {
 	StudentComment string `json:"student_comment"` //学生コメント
 	TeacherComment string `json:"teacher_comment"` //教員コメント
 }
+
+// NextDocumentRequest は、現在閲覧している書類の前後の書類を取得する際に必要なデータを保持するための構造体
+type NextDocumentRequest struct {
+	UserID     int `json:"user_id"`	//ユーザID
+	DocumentID int `json:"document_id"`	//書類ID
+}
+
+// DocumentArrayStruct は、現在閲覧している書類の前後の書類を取得する際に使用する構造体
+type DocumentArrayStruct struct {
+	DocumentID int `json:"document_id"` //書類ID
+}
+
+// NextDocumentResponse は、現在閲覧している書類の前後の書類を取得する際に使用する構造体
+type NextDocumentResponse struct {
+	NextDocumentID	int  `json:"document_id_next"`		//書類ID
+	PrevDocumentID  int	`json:"document_id_prev"`		//書類ID
+}
