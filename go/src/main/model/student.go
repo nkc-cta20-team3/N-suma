@@ -29,4 +29,15 @@ type CreateDocumentStruct struct {
 	DivisionID     int    // 区分ID
 }
 
+// ReadDocsListRequest は、学生が自身の提出した書類を取得する際に必要なデータを保持するための構造体
+type ReadDocsListRequest struct {
+	UserID int `json:"user_id"` //ユーザID
+}
 
+// ReadDocsListResponse は、学生が自身の提出した書類を取得する際に使用する構造体
+type ReadDocsListResponse struct {
+	DocumentID   	int    	`json:"document_id"`		//書類ID
+	RequestAt   	string	`json:"request_at"` 	   	//申請日
+	DivisionName 	string	`json:"division_name"`		//区分名
+	DivisionDetail 	string	`json:"division_detail"`	//区分詳細
+}
