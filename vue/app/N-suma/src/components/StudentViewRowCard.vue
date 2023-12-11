@@ -15,7 +15,7 @@
 </template>
 
 <script setup>
-import { defineProps, ref } from "vue";
+import { defineProps, ref, toRef } from "vue";
 const props = defineProps({
   title: {
     type: String,
@@ -26,5 +26,7 @@ const props = defineProps({
     required: true,
   },
 });
+toRef(props, "text");
+
 const dialog = ref(false);
 </script>
