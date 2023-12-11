@@ -1,6 +1,7 @@
 package admin
 
 import (
+	"strconv"
 	"net/http"
 
 	"main/infra"
@@ -28,12 +29,17 @@ func CreateUser(c *gin.Context) {
 		return
 	}
 
+	userNumber := nil
+	if(request.UserNumber != ""){
+		userNumber = strconv.Atoi(request.UserNumber)	
+	}
+
 	//ユーザ情報をDBに格納
 	err := db.Table("user").
 		Where("user_id = ?", request.UserID).
 		Updates(model.CreateUserRequest{
 			UserName:    request.UserName,
-			UserNumber:  request.UserNumber,
+			UserNumber:  userNumber,
 			PostID:      request.PostID,
 			ClassID:     request.ClassID,
 		})
