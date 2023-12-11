@@ -20,6 +20,7 @@ func ReadUser(c *gin.Context) {
 	response := []model.ReadUserResponse{}
 	errResponse := model.MessageError{}
 
+	fmt.Println(request)
 	//POSTで受け取った値を格納する
 	if err := c.ShouldBindJSON(&request); err != nil {
 		// エラー処理
@@ -36,10 +37,10 @@ func ReadUser(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, errResponse)
 		return
 	}
-	
+
 	// ユーザー情報を取得
 	err := db.Table("user").
-		Select("user.uuid,user.mail_address,user.user_name,user.user_number,user.class_id,user.post_id,user.user_flag").
+		Select("user.user_uuid,user.mail_address,user.user_name,user.user_number,user.class_id,user.post_id,user.user_flag").
 		Where("user_id = ?", request.TargetUserID).
 		Scan(&response).Error
 	if err != nil {
