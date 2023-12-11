@@ -221,7 +221,7 @@ func main() {
 	// 認可済書類一覧画面用APIのルーティング
 	teacherViewList := teacher.Group("/viewlist")
 	{
-		teacherViewList.POST("/read", apiTeacherViewList.ReadDocumentList)	// 認可済書類一覧取得
+		teacherViewList.POST("/read", apiTeacherViewList.ReadAllDocumentList)	// 認可済書類一覧取得
 	}
 	
 	/*

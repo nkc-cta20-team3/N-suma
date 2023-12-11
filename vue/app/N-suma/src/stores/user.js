@@ -50,7 +50,7 @@ export const useStore = defineStore("user", {
         const unsuscribe = onAuthStateChanged(
           auth,
           (u) => {
-            if (u) {  
+            if (u) {
               this.isLogin = true;
               this.user = u;
 
@@ -58,8 +58,8 @@ export const useStore = defineStore("user", {
               // getIdAndRole(u.uid)
 
               //this.role = "admin";
-              this.role = "student";
-              //this.role = "teacher";
+              //this.role = "student";
+              this.role = "teacher";
 
               // TODO: getIDを実装する
               this.id = 4;

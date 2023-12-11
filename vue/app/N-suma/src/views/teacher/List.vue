@@ -41,19 +41,22 @@
 </template>
 
 <script setup>
-import { mdiMagnify } from "@mdi/js";
 import { onMounted, ref } from "vue";
+import { mdiMagnify } from "@mdi/js";
 import router from "@/router";
+import { APICallonJWT } from "@/utils";
 
-const items = ref([]);
 const number = ref("");
+const items = ref([]);
 
 function onSearch() {
+  // TODO: 学籍番号を元に検索し、itemsに格納する
   console.log("検索");
+  alert("未実装です");
 }
 
 function onItemClick(item) {
-  console.log(item);
+  // console.log(item);
   router.push({
     name: "teacherView",
     params: { id: item.id },
@@ -61,12 +64,16 @@ function onItemClick(item) {
 }
 
 onMounted(() => {
-  console.log("mounted");
-  // TODO: 書類の一覧を取得し、itemsに格納する
-  items.value = [
-    { id: 1, class: "CTA20", name: "山田太郎" },
-    { id: 2, class: "CTB20", name: "鈴木花子" },
-    { id: 3, class: "CTA21", name: "佐藤次郎" },
-  ];
+  // 書類一覧を取得する処理
+  APICallonJWT("teacher/viewlist/read", {}).then((res) => {
+    // console.log(res);
+    res.document.forEach((docs) => {
+      items.value.push({
+        id: docs.document_id,
+        class: docs.division_name + "/" + docs.division_detail,
+        name: docs.user_name,
+      });
+    });
+  });
 });
 </script>
