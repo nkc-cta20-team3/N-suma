@@ -1,4 +1,4 @@
-package contoroller
+package controller
 
 import (
 	"log"
@@ -19,7 +19,7 @@ func RoleMiddleware(role string, UUID string) gin.HandlerFunc {
 		post := Post{}
 
 		//取得するユーザのUUID
-		request_id = UUID
+		request_id := UUID
 
 		//DB接続
 		db := infra.DBInitGorm()
@@ -38,7 +38,7 @@ func RoleMiddleware(role string, UUID string) gin.HandlerFunc {
 		}
 
 		//引数と役職が一致するか判定
-		if role == Post.PostName {
+		if role == post.PostName {
 			//引数と役職が一致
 			log.Printf("ROLL NAME : %s\n", post.PostName)
 			c.Next()
