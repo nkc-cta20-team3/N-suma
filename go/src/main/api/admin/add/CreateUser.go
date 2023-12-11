@@ -2,6 +2,7 @@ package admin
 
 import (
 	"strconv"
+	"fmt"
 	"net/http"
 
 	"main/infra"
@@ -13,6 +14,9 @@ import (
 func CreateUser(c *gin.Context) {
 
 	request := model.CreateUserRequest{}
+	responseWrap := model.ResponseWrap{}
+	responseWrap.Message = "success"
+	errResponse := model.MessageError{}
 
 	//POSTで受け取った値を格納する
 	if err := c.ShouldBindJSON(&request); err != nil {
@@ -20,18 +24,30 @@ func CreateUser(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+	fmt.Println(request)
 	
 	//DB接続とエラーハンドリング
 	db := infra.DBInitGorm()
 	if db.Error != nil {
-		errMsg := "データベース接続エラー"
-		c.JSON(http.StatusInternalServerError, gin.H{"error": errMsg})
+		errResponse.Message = "データベース接続エラー"
+		c.JSON(http.StatusInternalServerError, errResponse)
 		return
 	}
 
-	userNumber := nil
-	if(request.UserNumber != ""){
-		userNumber = strconv.Atoi(request.UserNumber)	
+	// userNumberというnil許容の数値型を定義し、
+	// user_numberが空文字の場合、nilを格納する
+	var userNumber *int
+	if request.UserNumber == nil {
+		userNumber = nil
+	} else {
+		// user_numberが空文字でない場合、数値型に変換して格納する
+		userNumberInt, err := strconv.Atoi(request.UserNumber)
+		if err != nil {
+			errResponse.Message := "ユーザー番号の数値変換エラー"
+			c.JSON(http.StatusInternalServerError, errResponse)
+			return
+		}
+		userNumber = &userNumberInt
 	}
 
 	//ユーザ情報をDBに格納
@@ -42,13 +58,17 @@ func CreateUser(c *gin.Context) {
 			UserNumber:  userNumber,
 			PostID:      request.PostID,
 			ClassID:     request.ClassID,
-		})
-	if err.Error != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error })
+		}).
+		Error
+	if err != nil {
+		//その他のエラーハンドリング
+		errResponse.Message = "OTHER ERROR"
+		fmt.Println(err.Error())
+		c.JSON(http.StatusInternalServerError, errResponse)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "success"})
+	// レスポンスを返す
+	c.JSON(http.StatusOK, responseWrap)
 	return
-
 }
