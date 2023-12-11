@@ -175,7 +175,7 @@ func main() {
 	// 提出書類一覧画面用APIのルーティング
 	studentList := student.Group("/list")
 	{
-		studentList.POST("/read", apiStudentList.ReadAuthList)		// 認可済み書類一覧取得
+		studentList.POST("/read", apiStudentList.ReadDocsList)		// 認可済み書類一覧取得
 	}
 
 	// 書類提出履歴画面用APIのルーティング
