@@ -202,7 +202,7 @@ async function onUpdate() {
   APICallonJWT("admin/edit/update", {
     user_id: Number(state.value.id),
     user_name: state.value.name,
-    user_number: state.value.role != "学生" ? null : state.value.number,
+    user_number: state.value.role != "学生" ? null : Number(state.value.number),
     post_id: roleids[roles.value.indexOf(state.value.role)],
     class_id: claseids[clases.value.indexOf(state.value.class)],
     user_flag: state.value.status == "有効" ? true : false,
