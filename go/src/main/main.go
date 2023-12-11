@@ -35,6 +35,7 @@ import (
 	apiTeacherViewList "main/api/teacher/viewlist"
 	apiTeacherView "main/api/teacher/view"
 	
+	apiAuth "main/api/auth"
 	"main/controller"
 )
 
@@ -122,6 +123,13 @@ func main() {
 	// 認証が必要なAPIのルーティング
 	authRouter := g.Group("/")
 	authRouter.Use(controller.AuthMiddleware())
+
+
+	// 役職の決まっていないAPIのルーティング
+	noRole := authRouter.Group("/auth")
+	{
+		noRole.POST("/getid", apiAuth.GetID)
+	}
 
 	// 管理者用APIのルーティング
 	admin := authRouter.Group("/admin")

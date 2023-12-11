@@ -9,6 +9,7 @@ import { defineStore } from "pinia";
 import { auth, provider } from "@/plugins/firebase";
 import { onAuthStateChanged, signInWithRedirect, signOut } from "firebase/auth";
 import router from "@/router";
+import { APICallonJWT } from "@/utils";
 
 export const useStore = defineStore("user", {
   state: () => {
@@ -61,8 +62,17 @@ export const useStore = defineStore("user", {
               //this.role = "student";
               this.role = "teacher";
 
-              // TODO: getIDを実装する
-              this.id = 4;
+              // ユーザーのIDを取得する
+              APICallonJWT("auth/getid", {
+                user_uuid: u.uid,
+              }).then((res) => {
+                // console.log(res);
+                if (res.message == "success") {
+                  // ユーザーIDを取得する
+                  this.id = res.document.user_id;
+                  // console.log("user id is " + this.id);
+                }
+              });
 
               // tokenを取得する
               u.getIdToken().then((token) => {
