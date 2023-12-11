@@ -100,8 +100,10 @@
 import { onMounted, ref } from "vue";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
-import { requiredRules, divisions } from "@/utils";
+import { requiredRules, APICallonJWT, APICallonGET } from "@/utils";
+import { useStore } from "@/stores/user";
 
+const store = useStore();
 const format = "yyyy-MM-dd HH:mm";
 
 const mainForm = ref(null);
@@ -114,6 +116,10 @@ const state = ref({
   comment: "",
 });
 const date = ref(null);
+
+// 区分一覧を格納する変数
+var divisions = ref([]);
+var divisionids = [];
 
 async function onSubmit() {
   // 日付の入力チェック
@@ -131,11 +137,36 @@ async function onSubmit() {
   state.value.startDate = date.value[0];
   state.value.endDate = date.value[1];
 
-  // TODO: データを送信する処理を記述する
-  console.log("提出しました");
+  // データを送信する処理を記述する
+  console.log(state.value);
+  APICallonJWT("student/form/create", {
+    user_id: store.id,
+    start_time: state.value.startDate,
+    end_time: state.value.endDate,
+    location: state.value.location,
+    student_comment: state.value.comment,
+    division_id: divisionids[divisions.value.indexOf(state.value.division)],
+  }).then((res) => {
+    // console.log(res);
+    if (res.message == "success") {
+      alert("書類を提出しました");
+      router.push("/student/list");
+    } else {
+      alert("書類の提出に失敗しました");
+    }
+  });
 }
 
 onMounted(() => {
-  console.log("mounted");
+  // 区分一覧を取得する
+  APICallonGET("utils/read/division").then((res) => {
+    // console.log(res);
+    res.document.forEach((division_) => {
+      divisions.value.push(
+        division_.division_name + "/" + division_.division_detail
+      );
+      divisionids.push(division_.division_id);
+    });
+  });
 });
 </script>
