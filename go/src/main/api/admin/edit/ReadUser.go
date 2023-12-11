@@ -36,17 +36,7 @@ func ReadUser(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, errResponse)
 		return
 	}
-
-	type ReadUserResponse struct {
-		UserUUID  	string 	`json:"user_uuid"`
-		MailAddress string 	`json:"mail_address"`
-		UserName   	string 	`json:"user_name"`
-		UserNumber 	int    	`json:"user_number"`
-		ClassID  	string 	`json:"class_id"`
-		PostID    	int    	`json:"post_id"`
-		UserFlag  	bool   	`json:"user_flag"`
-	}
-
+	
 	// ユーザー情報を取得
 	err := db.Table("user").
 		Select("user.uuid,user.mail_address,user.user_name,user.user_number,user.class_id,user.post_id,user.user_flag").
