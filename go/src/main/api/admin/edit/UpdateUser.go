@@ -36,13 +36,13 @@ func UpdateUser(c *gin.Context) {
 
 	// ユーザー情報を更新
 	err := db.Table("user").
-		Where("user_id = ?", request.TargetUserID).
+		Where("user_id = ?", request.UserID).
 		Updates(model.UpdateUserStruct{
 			UserName:   request.UserName,
 			UserNumber: request.UserNumber,
 			PostID:     request.PostID,
 			ClassID:    request.ClassID,
-			UserFlag:	request.user_flag}).
+			UserFlag:	request.UserFlag}).
 		Error
 	if err != nil {
 		//その他のエラーハンドリング
