@@ -156,8 +156,8 @@ func main() {
 	// 通知関連のAPIのルーティング
 	studentAlarm := student.Group("/alarm")
 	{
-		student.POST("/check", apiStudentAlarm.CheckAlarm)		// 通知が存在するかの確認
-		student.POST("/read", apiStudentAlarm.ReadAlarm)		// 通知の内容を取得
+		studentAlarm.POST("/check", apiStudentAlarm.CheckAlarm)		// 通知が存在するかの確認
+		studentAlarm.POST("/read", apiStudentAlarm.ReadAlarm)		// 通知の内容を取得
 	}
 
 	// 書類提出画面用APIのルーティング
@@ -175,7 +175,7 @@ func main() {
 	// 提出書類一覧画面用APIのルーティング
 	studentList := student.Group("/list")
 	{
-		studentList.POST("/read", apiStudentList.ReadDocumentList)	// 書類提出履歴一覧取得
+		studentList.POST("/read", apiStudentList.ReadAuthList)		// 認可済み書類一覧取得
 	}
 
 	// 書類提出履歴画面用APIのルーティング
@@ -193,8 +193,8 @@ func main() {
 	// 通知関連のAPIのルーティング
 	teacherAlarm := teacher.Group("/alarm")
 	{
-		teacher.POST("/check", apiTeacherAlarm.CheckAlarm)		// 通知が存在するかの確認
-		teacher.POST("/read", apiTeacherAlarm.ReadAlarm)		// 通知の内容を取得
+		teacherAlarm.POST("/check", apiTeacherAlarm.CheckAlarm)		// 通知が存在するかの確認
+		teacherAlarm.POST("/read", apiTeacherAlarm.ReadAlarm)		// 通知の内容を取得
 	}
 
 	// 書類認可画面用APIのルーティング
