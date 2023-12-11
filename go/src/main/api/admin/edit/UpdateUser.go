@@ -1,14 +1,13 @@
 package admin
 
 import (
-	"errors"
 	"fmt"
-	"main/infra"
-	"main/model"
 	"net/http"
 
+	"main/infra"
+	"main/model"
+
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 )
 
 func UpdateUser(c *gin.Context) {
@@ -36,8 +35,8 @@ func UpdateUser(c *gin.Context) {
 	}
 
 	// ユーザー情報を更新
-	db.Table("user").
-		Where("user_id = ?", request.UpdateUserID).
+	err := db.Table("user").
+		Where("user_id = ?", request.TargetUserID).
 		Updates(model.UpdateUserStruct{
 			UserName:   request.UserName,
 			UserNumber: request.UserNumber,
