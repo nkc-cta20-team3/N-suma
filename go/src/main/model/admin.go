@@ -20,8 +20,8 @@ type CreateUserRequest struct {
 type CreateUserStruct struct {
 	UserName    string 	`json:"user_name"`
 	UserNumber  *int	`json:"user_number"`
-	PostID      int    	`json:"post_id"`
-	ClassID     int    	`json:"class_id"`
+	PostID      *int    `json:"post_id"`
+	ClassID     *int    `json:"class_id"`
 }
 
 // ReadUserListResponse は、ユーザー一覧を取得する際に使用する構造体
