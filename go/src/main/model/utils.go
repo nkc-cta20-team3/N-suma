@@ -8,7 +8,13 @@ type ReadClassResponse struct {
 }
 
 // ReadPostResponse は、役職一覧取得時に使用する構造体
-type ReadPostPresponse struct {
+type ReadPostResponse struct {
 	PostID   int    `json:"post_id"`
 	PostName string `json:"post_name"`
+}
+
+// ReadDivisionResponse は、区分一覧取得時に使用する構造体
+type ReadDivisionResponse struct {
+	DivisionID   int    `json:"division_id"`
+	DivisionName string `json:"division_name"`
 }

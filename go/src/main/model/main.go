@@ -178,18 +178,6 @@ type TakePostID struct {
 	PostID int `json:"post_id"` //役職ID
 }
 
-
-// ReadDivisionで使用する構造体
-type ReadDivisionRequest struct {
-	UserID int `json:"user_id"`
-}
-
-type ReadDivisionResponse struct {
-	DivisionID   int    `json:"division_id"`
-	DivisionName string `json:"division_name"`
-}
-
-
 // ReadAlarmで使用する構造体
 type ReadAlarmRequest struct {
 	UserID int `json:"user_id"`
