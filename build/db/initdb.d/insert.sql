@@ -2,6 +2,7 @@ USE cta20gr3;
 
 INSERT INTO `classification`(class_id,class_abbr,class_name)
 VALUES
+(0,'Admin','管理ユーザー'),
 (101,'CT1A','情報総合学科1年A組'),
 (102,'CT1B','情報総合学科1年B組'),
 (103,'CT2A','情報総合学科2年A組'),
