@@ -61,3 +61,13 @@ func StringToTime3(stringTime string) time.Time {
 	}
 	return time
 }
+
+// 「2023-12-11T15:54:00Z」を「12-11 15:54」に変換
+func StringToTime4(stringTime string) time.Time {
+	// 文字列を時刻型に変換
+	time, err := time.Parse("2006-01-02T15:04:00Z", stringTime)
+	if err != nil {
+		log.Println(err)
+	}
+	return time
+}
