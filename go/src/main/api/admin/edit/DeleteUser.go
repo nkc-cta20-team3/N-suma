@@ -1,7 +1,6 @@
 package admin
 
 import (
-	"errors"
 	"fmt"
 	"net/http"
 
@@ -9,7 +8,6 @@ import (
 	"main/model"
 
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 )
 
 func DeleteUser(c *gin.Context) {
