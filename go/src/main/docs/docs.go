@@ -102,6 +102,35 @@ const docTemplate = `{
                 }
             }
         },
+        "/utils/read/division": {
+            "get": {
+                "description": "GETメソッドで動作し、ステータス200と、DBの区分一覧を返します",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Utils"
+                ],
+                "summary": "区分一覧を返す",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.MessageSuccess"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/model.MessageError"
+                        }
+                    }
+                }
+            }
+        },
         "/utils/read/post": {
             "get": {
                 "description": "GETメソッドで動作し、ステータス200と、DBの役職一覧を返します",

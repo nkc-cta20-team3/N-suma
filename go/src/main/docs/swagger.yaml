@@ -79,6 +79,25 @@ paths:
       summary: クラス一覧を返す
       tags:
       - Utils
+  /utils/read/division:
+    get:
+      consumes:
+      - application/json
+      description: GETメソッドで動作し、ステータス200と、DBの区分一覧を返します
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.MessageSuccess'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.MessageError'
+      summary: 区分一覧を返す
+      tags:
+      - Utils
   /utils/read/post:
     get:
       consumes:
