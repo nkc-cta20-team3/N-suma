@@ -37,21 +37,32 @@ func ReadUser(c *gin.Context) {
 		return
 	}
 
+	type ReadUserResponse struct {
+		UserUUID  	string 	`json:"user_uuid"`
+		MailAddress string 	`json:"mail_address"`
+		UserName   	string 	`json:"user_name"`
+		UserNumber 	int    	`json:"user_number"`
+		ClassID  	string 	`json:"class_id"`
+		PostID    	int    	`json:"post_id"`
+		UserFlag  	bool   	`json:"user_flag"`
+	}
+
+	// ユーザー情報を取得
 	err := db.Table("user").
-		Select("user.user_name,user.user_number,cs.class_abbr,user.post_id").
-		Joins("LEFT OUTER JOIN classification cs ON user.class_id = cs.class_id").
-		Where("user_flag = true").
+		Select("user.uuid,user.mail_address,user.user_name,user.user_number,user.class_id,user.post_id,user.user_flag").
 		Where("user_id = ?", request.TargetUserID).
 		Scan(&response).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			// 行が見つからなかった場合の処理
-			fmt.Println("行が見つかりませんでした")
-			c.JSON(http.StatusBadRequest, gin.H{"message": "TABLE NOT FOUND"})
+			errResponse.Message = "RECORD NOT FOUND"
+			c.JSON(http.StatusInternalServerError, errResponse)
 			return
 		} else {
 			//その他のエラーハンドリング
-			c.JSON(http.StatusBadRequest, gin.H{"message": "OTHER ERROR"})
+			errResponse.Message = "OTHER ERROR"
+			fmt.Println(err.Error())
+			c.JSON(http.StatusInternalServerError, errResponse)
 			return
 		}
 	}
