@@ -58,21 +58,29 @@ export const useStore = defineStore("user", {
               // TODO: getIdAndRole()を実装する
               // getIdAndRole(u.uid)
 
-              //this.role = "admin";
-              //this.role = "student";
-              this.role = "teacher";
+              // 役職を取得する
+              if (this.role === null) {
+                console.log("role is set");
+                this.role = "admin";
+              }
 
               // ユーザーのIDを取得する
-              APICallonJWT("auth/getid", {
-                user_uuid: u.uid,
-              }).then((res) => {
-                // console.log(res);
-                if (res.message == "success") {
-                  // ユーザーIDを取得する
-                  this.id = res.document.user_id;
-                  // console.log("user id is " + this.id);
-                }
-              });
+              if (this.id === null) {
+                console.log("id is set");
+                APICallonJWT("auth/getid", {
+                  user_uuid: u.uid,
+                }).then((res) => {
+                  // console.log(res);
+                  if (res.message == "success") {
+                    // ユーザーIDを取得する
+                    this.id = res.document.user_id;
+                    // console.log("user id is " + this.id);
+                  } else {
+                    console.log("user id is none data");
+                    this.id = 9;
+                  }
+                });
+              }
 
               // tokenを取得する
               u.getIdToken().then((token) => {
@@ -96,6 +104,20 @@ export const useStore = defineStore("user", {
       this.user = null;
       this.role = null;
       this.isLogin = false;
+    },
+    changeRole() {
+      //console.log(this.role);
+      if (this.role === "admin") {
+        this.role = "student";
+        alert("学生に切り替えました");
+      } else if (this.role === "student") {
+        this.role = "teacher";
+        alert("教員に切り替えました");
+      } else if (this.role === "teacher") {
+        this.role = "admin";
+        alert("管理者に切り替えました");
+      }
+      //console.log(this.role);
     },
   },
 });

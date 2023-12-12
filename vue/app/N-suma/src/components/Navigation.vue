@@ -51,7 +51,7 @@
       <!-- <v-btn @click="consoleDebug">debug</v-btn> -->
 
       <!-- Debug Button changeRole -->
-      <v-btn v-if="store.isLogin" @click="changeRole">役職切替</v-btn>
+      <v-btn v-if="store.isLogin" @click="store.changeRole">役職切替</v-btn>
     </v-toolbar-items>
   </v-app-bar>
   <!-- 通知ポップアップ -->
@@ -93,19 +93,6 @@ function consoleDebug() {
   console.log("role: ", store.role);
   console.log("user: ", store.user ? store.user.uid : "null");
   console.log("====================\n");
-}
-
-function changeRole() {
-  if (store.role === "admin") {
-    store.role = "student";
-    alart("学生に切り替えました");
-  } else if (store.role === "student") {
-    store.role = "teacher";
-    alart("教員に切り替えました");
-  } else if (store.role === "teacher") {
-    store.role = "admin";
-    alart("管理者に切り替えました");
-  }
 }
 
 function onItemClick(id) {
