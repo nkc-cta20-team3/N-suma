@@ -8,6 +8,7 @@ RUN GOOS=linux go build -o ./build/main ./main.go
 
 # production environment
 FROM alpine:latest as production-stage
+COPY ./preview/go/n-suma-firebase-admin.secret /.select/n-suma-firebase-admin.secret
 COPY --from=build-stage /go/src/main/build/main /app/main
 EXPOSE 8080
 CMD ["/app/main"]

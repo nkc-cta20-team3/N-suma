@@ -58,7 +58,10 @@ func main() {
 		AllowOrigins: []string{
 
 			// ローカルのデプロイ先
+			"http://localhost",
+			"http://localhost:80",
 			"http://localhost:5173",
+			
 
 			// awsのデプロイ先
 			"http://n-suma.com",
