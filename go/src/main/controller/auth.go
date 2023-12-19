@@ -45,7 +45,6 @@ func AuthMiddleware() gin.HandlerFunc {
 		}
 		// ロギング
 		log.Printf("Vertifed ID token: %v\n", token)
-		
 
 		// ユーザー情報を取得
 		user, err := auth.GetUser(context.Background(), token.UID)
@@ -56,14 +55,16 @@ func AuthMiddleware() gin.HandlerFunc {
 			})
 			return
 		}
-		// ロギング
-		log.Printf("Successfully fetched user data: %v\n", user)
-
-		// ユーザー情報をコンテキストにセット
-		c.Set("user", user)
+		
+		// UUIDをコンテキストにセット
+		c.Set("UUID", user.UID)	
+		// emailをコンテキストにセット
+		c.Set("Email", user.Email)
 
 		// コンテキストにセットしたユーザー情報を取得してロギング
-		log.Printf("test get user data: %v\n", c.MustGet("user").(string))
+		// uuid := c.MustGet("UUID").(string)
+		log.Printf("UUID: %v\n", c.MustGet("UUID").(string))
+		log.Printf("Email: %v\n", c.MustGet("Email").(string))
 
 		// 次のミドルウェアへ
 		c.Next()

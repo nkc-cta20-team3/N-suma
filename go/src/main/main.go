@@ -126,12 +126,12 @@ func main() {
 	// 認証が必要なAPIのルーティング
 	authRouter := g.Group("/")
 	authRouter.Use(controller.AuthMiddleware())
-
+	authRouter.Use(controller.RoleSetMiddleware())
 
 	// 役職の決まっていないAPIのルーティング
 	noRole := authRouter.Group("/auth")
 	{
-		noRole.POST("/getid", apiAuth.GetID)
+		noRole.POST("/", apiAuth.GetPost) 	//ユーザー情報取得
 	}
 
 	// 管理者用APIのルーティング
