@@ -1,12 +1,14 @@
 version: "3"
 services:
   vue:
+    container_name: n-suna_front_preview
     build:
       context: .
       dockerfile: ./preview/vue/Dockerfile
     ports:
       - "80:80"
   go:
+    container_name: n-suna_back_preview
     build: 
       context: .
       dockerfile: ./preview/Go/Dockerfile
@@ -17,6 +19,7 @@ services:
     depends_on:
       - db
   db:
+    container_name: n-suna_db_preview
     build: ./preview/db
     volumes:
       - ./preview/db/initdb.d:/docker-entrypoint-initdb.d
