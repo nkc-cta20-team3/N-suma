@@ -1,0 +1,120 @@
+definitions:
+  model.MessageError:
+    properties:
+      error:
+        type: string
+    type: object
+  model.MessageSuccess:
+    properties:
+      message:
+        type: string
+    type: object
+  model.ResponseWrap:
+    properties:
+      document: {}
+      message:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: N-suma用にGo側で実装するAPI
+  title: N-suma-API
+  version: 1.0.0
+paths:
+  /hello/get:
+    get:
+      consumes:
+      - application/json
+      description: GETメソッドで動作し、ステータス200と、HelloWorldを返します
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.MessageSuccess'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.MessageError'
+      summary: HelloWorldを返す
+      tags:
+      - Hello
+  /hello/post:
+    post:
+      consumes:
+      - application/json
+      description: POSTメソッドで動作し、ステータス200と、HelloWorldを返します
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.MessageSuccess'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.MessageError'
+      summary: HelloWorldを返す
+      tags:
+      - Hello
+  /utils/read/class:
+    get:
+      consumes:
+      - application/json
+      description: GETメソッドで動作し、ステータス200と、DBのクラス一覧を返します
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.MessageSuccess'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.MessageError'
+      summary: クラス一覧を返す
+      tags:
+      - Utils
+  /utils/read/division:
+    get:
+      consumes:
+      - application/json
+      description: GETメソッドで動作し、ステータス200と、DBの区分一覧を返します
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.MessageSuccess'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.MessageError'
+      summary: 区分一覧を返す
+      tags:
+      - Utils
+  /utils/read/post:
+    get:
+      consumes:
+      - application/json
+      description: GETメソッドで動作し、ステータス200と、DBの役職一覧を返します
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.ResponseWrap'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.MessageError'
+      summary: 役職一覧を返す
+      tags:
+      - Utils
+swagger: "2.0"

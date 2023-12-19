@@ -1,0 +1,28 @@
+version: "3"
+services:
+  vue:
+    build:
+      context: .
+      dockerfile: ./preview/vue/Dockerfile
+    ports:
+      - "80:80"
+  go:
+    build: 
+      context: .
+      dockerfile: ./preview/Go/Dockerfile
+    env_file:
+      - ./preview/go/.go_env
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+  db:
+    build: ./preview/db
+    volumes:
+      - ./preview/db/initdb.d:/docker-entrypoint-initdb.d
+      - ./preview/db/mysql/:/var/lib/mysql/
+    env_file:
+      - ./preview/db/.env
+networks:
+  default:
+    name: n-suna-preview

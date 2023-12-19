@@ -1,43 +1,86 @@
 package main
 
 import (
-	"log"
 	"time"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 
+	// gin-swaggerをインポート
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
+
+	// docsのディレクトリを指定
+	_ "main/docs"
+
 	// ローカルモジュールのインポート
-	"main/api"
-	"main/handler"
-	"main/infra"
-	"main/service"
+
+	// "main/api"
+	apiHello "main/api/hello"
+	apiUtils "main/api/utils"
+
+	apiAdminAdd "main/api/admin/add"
+	apiAdminEdit "main/api/admin/edit"
+	apiAdminList "main/api/admin/list"
+	
+	apiStudentAlarm "main/api/student/alarm"
+	apiStudentForm "main/api/student/form"
+	apiStudentReForm "main/api/student/reform"
+	apiStudentList "main/api/student/list"
+	apiStudentView "main/api/student/view"
+
+	apiTeacherAlarm "main/api/teacher/alarm"
+	apiTeacherUnAuthList "main/api/teacher/unauthlist"
+	apiTeacherAuth "main/api/teacher/auth"
+	apiTeacherViewList "main/api/teacher/viewlist"
+	apiTeacherView "main/api/teacher/view"
+	
+	apiAuth "main/api/auth"
+	"main/controller"
 )
 
+// @title N-suma-API
+// @version 1.0.0
+// @description N-suma用にGo側で実装するAPI
+// @contact name:4年A組3班 Nスマ開発チーム
+// @contact url: 'https://github.com/nkc-cta20-team3/N-suma'
+// @contact email:dev@example
+// @license name:MIT
+// @license url: 'https://opensource.org/licenses/MIT'
+// @host localhost:8080
 func main() {
 
-	//
-	engine := infra.DBInit()
-	factory := service.NewService(engine)
-	defer func() {
-		log.Println("engine closed")
-		engine.Close()
-	}()
-
-	//
 	g := gin.Default()
-	g.Use(service.ServiceFactoryMiddleware(factory))
+	g.Use(controller.LogMiddleware())
 	g.Use(cors.New(cors.Config{
 
 		// アクセスを許可したいアクセス元
 		AllowOrigins: []string{
+
+			// ローカルのデプロイ先
+			"http://localhost",
+			"http://localhost:80",
 			"http://localhost:5173",
+			
+
+			// awsのデプロイ先
+			"http://n-suma.com",
+			"https://n-suma.com",
+
+			// firebaseのデプロイ先
+			"http://n-suma.firebaseapp.com",
+			"https://n-suma.firebaseapp.com",
+			"http://n-suma.web.app",
+			"https://n-suma.web.app",
+			
 		},
 
-		// アクセスを許可したいHTTPメソッド(以下の例だとPUTやDELETEはアクセスできません)
+		// アクセスを許可したいHTTPメソッド
 		AllowMethods: []string{
-			"POST",
 			"GET",
+			"POST",
+			"PUT",
+			"DELETE",
 		},
 
 		// 許可したいHTTPリクエストヘッダ
@@ -58,36 +101,147 @@ func main() {
 		MaxAge: 24 * time.Hour,
 	}))
 
-	//
-	routes := g.Group("/v1")
+	// swagger uiにアクセスするためのルーティング
+	// swagger/index.html
+	swaggerui := g.Group("/swagger")
 	{
-		// user
-		routes.POST("/users", handler.Create)
-		routes.GET("/users", handler.GetAll)
-		routes.GET("/users/:user-id", handler.GetOne)
-		routes.PUT("/users/:user-id", handler.Update)
-		routes.DELETE("/users/:user-id", handler.Delete)
-
+		swaggerui.GET("/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	}
 
-	routes2 := g.Group("/v2")
+	// 導通兼用SwaggerGo用のサンプルコード
+	hello := g.Group("/hello")
 	{
-		// hello world
-		routes2.GET("/hello", handler.Hello)
+		hello.GET("/get", apiHello.GetHello)
+		hello.POST("/post", apiHello.PostHello)	
 	}
 
-	routeapi := g.Group("/api")
+	// 認証不要なAPIのルーティング
+	router := g.Group("/utils")
 	{
-		//apiフォルダ内のapiをルーティング
-		routeapi.POST("/ral", api.ReadAuthList)
-		routeapi.POST("/rd", api.ReadDocument)
-		routeapi.POST("/ua", api.UpdateAuth)
-		routeapi.POST("/gu", api.Rejection)
-
-		//実装予定の管理者向けのAPI
-		//routeapi.POST("/cd", api.CreateDocument)
-		//routeapi.POST("/dd", api.DeleteDocument)
+		router.GET("/read/class", apiUtils.ReadClass)		// クラス一覧取得
+		router.GET("/read/post", apiUtils.ReadPost)			// 役職一覧取得
+		router.GET("/read/division", apiUtils.ReadDivision)	// ユーザー役職一覧取得
 	}
+
+	// 認証が必要なAPIのルーティング
+	authRouter := g.Group("/")
+	authRouter.Use(controller.AuthMiddleware())
+
+
+	// 役職の決まっていないAPIのルーティング
+	noRole := authRouter.Group("/auth")
+	{
+		noRole.POST("/getid", apiAuth.GetID)
+	}
+
+	// 管理者用APIのルーティング
+	admin := authRouter.Group("/admin")
+	// admin.Use(controller.RoleMiddleware("Admin"))
+	
+	// ユーザー登録画面用APIのルーティング
+	adminAdd := admin.Group("/add")
+	{
+		adminAdd.POST("/read", apiAdminAdd.ReadPrepareInformation)		// 役職が未登録ユーザーのid,uuid,emailをリストで一覧取得
+		adminAdd.POST("/create", apiAdminAdd.CreateUser)				// ユーザー作成
+	}
+
+	// ユーザー一覧画面用APIのルーティング
+	adminList := admin.Group("/list")
+	{
+		adminList.POST("/read", apiAdminList.ReadUserList)	// ユーザー一覧取得
+		adminList.POST("/search", apiAdminList.SearchUserList)		// ユーザー検索
+	}
+
+	// ユーザー編集画面用APIのルーティング
+	adminEdit := admin.Group("/edit")
+	{
+		adminEdit.POST("/read", apiAdminEdit.ReadUser)		// ユーザー詳細取得
+		adminEdit.POST("/update", apiAdminEdit.UpdateUser)	// ユーザー編集
+		adminEdit.POST("/delete", apiAdminEdit.DeleteUser)	// ユーザー削除
+	}
+	
+	// 学生用のAPIのルーティング
+	student := authRouter.Group("/student")
+	// student.Use(controller.RoleMiddleware("student"))
+	
+	// 通知関連のAPIのルーティング
+	studentAlarm := student.Group("/alarm")
+	{
+		studentAlarm.POST("/check", apiStudentAlarm.CheckAlarm)		// 通知が存在するかの確認
+		studentAlarm.POST("/read", apiStudentAlarm.ReadAlarm)		// 通知の内容を取得
+	}
+
+	// 書類提出画面用APIのルーティング
+	studentForm := student.Group("/form")
+	{		
+		studentForm.POST("/create", apiStudentForm.CreateDocument)	// 書類提出
+	}
+
+	// 書類再提出画面用APIのルーティング
+	studentReForm := student.Group("/reform")
+	{
+		studentReForm.POST("/create", apiStudentReForm.ReSubmitDocument)	// 書類再提出
+	}
+
+	// 提出書類一覧画面用APIのルーティング
+	studentList := student.Group("/list")
+	{
+		studentList.POST("/read", apiStudentList.ReadDocsList)		// 認可済み書類一覧取得
+	}
+
+	// 書類提出履歴画面用APIのルーティング
+	studentView := student.Group("/view")
+	{
+		studentView.POST("/read", apiStudentView.ReadDocument)		// 書類詳細取得
+		studentView.POST("/next", apiStudentView.NextDocument)		// 書類切り替え
+	}
+
+
+	// 教員用のAPIのルーティング
+	teacher := authRouter.Group("/teacher")
+	// teacher.Use(controller.RoleMiddleware("teacher"))
+	
+	// 通知関連のAPIのルーティング
+	teacherAlarm := teacher.Group("/alarm")
+	{
+		teacherAlarm.POST("/check", apiTeacherAlarm.CheckAlarm)		// 通知が存在するかの確認
+		teacherAlarm.POST("/read", apiTeacherAlarm.ReadAlarm)		// 通知の内容を取得
+	}
+
+	// 書類認可画面用APIのルーティング
+	teacherAuth := teacher.Group("/auth")
+	{
+		teacherAuth.POST("/read", apiTeacherAuth.ReadDocument)	// 書類詳細取得
+		teacherAuth.POST("/reject", apiTeacherAuth.RejectAuth)	// 書類却下
+		teacherAuth.POST("/update", apiTeacherAuth.UpdateAuth)	// 書類認可
+	}
+
+	// 未認可書類一覧画面用APIのルーティング
+	teacherUnAuthLlist := teacher.Group("/unauthllist")
+	{
+		teacherUnAuthLlist.POST("/read", apiTeacherUnAuthList.ReadUnAuthList)	// 未認可書類一覧取得
+	}	
+
+	// 書類詳細画面用APIのルーティング
+	teacherView := teacher.Group("/view")
+	{
+		teacherView.POST("/read", apiTeacherView.ReadAllDocument)	// 書類詳細取得
+		teacherView.POST("/next", apiTeacherView.NextAllDocument)	// 書類切り替え
+	}
+	
+	// 認可済書類一覧画面用APIのルーティング
+	teacherViewList := teacher.Group("/viewlist")
+	{
+		teacherViewList.POST("/read", apiTeacherViewList.ReadAllDocumentList)	// 認可済書類一覧取得
+	}
+	
+	/*
+	routes.POST("/cl", api.CheckLogin) //ログイン確認
+	routes.POST("/rup", api.ReadUserPost)
+
+	//調査用
+	routes.POST("/td", api.TestDate)
+	*/
 
 	g.Run(":8080")
 }

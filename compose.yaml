@@ -1,45 +1,53 @@
-version: '3'
+version: "3"
 services:
-    vue:
-        build: ./build/vue/
-        container_name: "sssr-vue-webserver"
-        links:
-            - go
-        ports:
-            - "5173:5173"
-        volumes:
-            - "./vue/app:/app"
-        tty: true
-        stdin_open: true
-        
-    go:
-        build: ./build/go/
-        container_name: "sssr-go-webserver"
-        volumes:
-            - "./go/src/:/go/src/"
-        env_file:
-            - ./build/go/.go_env
-        ports:
-            - "8080:8080"
-        depends_on:
-            - db
-        tty: true
-        init: true
-    db:
-        build: ./build/db/
-        container_name: "sssr-mysql-dbserver"
-        volumes:
-            - ./build/db/initdb.d:/docker-entrypoint-initdb.d
-            - ./db/mysql/:/var/lib/mysql/
-        env_file:
-          - ./build/db/.env
-    phpmyadmin:
-        image: phpmyadmin/phpmyadmin
-        container_name: "sssr-phpmyadmin"
-        env_file:
-          - ./build/phpmyadmin/.env
-        links:
-            - db
-        ports:
-            - 4000:80
-        
+  vue:
+    container_name: n-suna_front
+    build: ./build/vue/
+    ports:
+      - "5173:5173"
+    volumes:
+      - "./vue/app:/app"
+    tty: true
+    stdin_open: true
+    profiles:
+      - dev_front
+  go:
+    container_name: n-suna_back
+    build: ./build/go/
+    volumes:
+      - "./go/src/:/go/src/"
+    env_file:
+      - ./build/go/.go_env
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    tty: true
+    init: true
+    profiles:
+      - dev_back
+  db:
+    container_name: n-suna_db
+    build: ./build/db/
+    volumes:
+      - ./build/db/initdb.d:/docker-entrypoint-initdb.d
+      - ./db/mysql/:/var/lib/mysql/
+    env_file:
+      - ./build/db/.env
+    profiles:
+      - dev_back
+      - db_debug
+  phpmyadmin:
+    container_name: n-suna_phpmyadmin
+    image: phpmyadmin/phpmyadmin
+    env_file:
+      - ./build/phpmyadmin/.env
+    links:
+      - db
+    ports:
+      - 4000:80
+    profiles:
+      - db_debug
+networks:
+  default:
+    name: n-suna

@@ -1,3 +1,10 @@
+# Ignore all db files
 db/mysql/
+preview/db/mysql/
 
+# Ignore all temp files
+go/src/main/tmp/
+
+# Ignore all .secret files
 *.secret
+secret_*.sql

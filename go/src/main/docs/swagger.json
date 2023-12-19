@@ -1,0 +1,184 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "N-suma用にGo側で実装するAPI",
+        "title": "N-suma-API",
+        "contact": {},
+        "version": "1.0.0"
+    },
+    "host": "localhost:8080",
+    "paths": {
+        "/hello/get": {
+            "get": {
+                "description": "GETメソッドで動作し、ステータス200と、HelloWorldを返します",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Hello"
+                ],
+                "summary": "HelloWorldを返す",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.MessageSuccess"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/model.MessageError"
+                        }
+                    }
+                }
+            }
+        },
+        "/hello/post": {
+            "post": {
+                "description": "POSTメソッドで動作し、ステータス200と、HelloWorldを返します",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Hello"
+                ],
+                "summary": "HelloWorldを返す",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.MessageSuccess"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/model.MessageError"
+                        }
+                    }
+                }
+            }
+        },
+        "/utils/read/class": {
+            "get": {
+                "description": "GETメソッドで動作し、ステータス200と、DBのクラス一覧を返します",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Utils"
+                ],
+                "summary": "クラス一覧を返す",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.MessageSuccess"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/model.MessageError"
+                        }
+                    }
+                }
+            }
+        },
+        "/utils/read/division": {
+            "get": {
+                "description": "GETメソッドで動作し、ステータス200と、DBの区分一覧を返します",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Utils"
+                ],
+                "summary": "区分一覧を返す",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.MessageSuccess"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/model.MessageError"
+                        }
+                    }
+                }
+            }
+        },
+        "/utils/read/post": {
+            "get": {
+                "description": "GETメソッドで動作し、ステータス200と、DBの役職一覧を返します",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Utils"
+                ],
+                "summary": "役職一覧を返す",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.ResponseWrap"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/model.MessageError"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "model.MessageError": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.MessageSuccess": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.ResponseWrap": {
+            "type": "object",
+            "properties": {
+                "document": {},
+                "message": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
