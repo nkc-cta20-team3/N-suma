@@ -45,6 +45,27 @@ func AuthMiddleware() gin.HandlerFunc {
 		}
 		// ロギング
 		log.Printf("Vertifed ID token: %v\n", token)
+		
+
+		// ユーザー情報を取得
+		user, err := auth.GetUser(context.Background(), token.UID)
+		if err != nil {
+			// ユーザー情報取得エラー
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
+				"Error": err.Error(),
+			})
+			return
+		}
+		// ロギング
+		log.Printf("Successfully fetched user data: %v\n", user)
+
+		// ユーザー情報をコンテキストにセット
+		c.Set("user", user)
+
+		// コンテキストにセットしたユーザー情報を取得してロギング
+		log.Printf("test get user data: %v\n", c.MustGet("user").(string))
+
+		// 次のミドルウェアへ
 		c.Next()
 	}
 }
