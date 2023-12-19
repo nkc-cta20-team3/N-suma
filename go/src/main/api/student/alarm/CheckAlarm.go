@@ -37,7 +37,6 @@ func CheckAlarm(c *gin.Context) {
 		return
 	}
 	
-	
 	// 再提出の書類があるかどうかを確認
 	var count int64
 	err := db.Table("oa").
