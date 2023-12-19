@@ -1,13 +1,11 @@
 package teacher
 
 import (
-	"time"
 	"fmt"
 	"net/http"
 
 	"main/infra"
 	"main/model"
-	"main/utils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -39,10 +37,11 @@ func CheckAlarm(c *gin.Context) {
 		
 	// 未認可の書類があるかどうかを確認
 	var count int64
-	db.Table("oa").
+	err := db.Table("oa").
 		Select("document_id").
-		Where("oa.status = ?", take_post_id.PostID-1).
-		Count(&count)
+		Where("oa.status = ?", 1).
+		Count(&count).
+		Error
 	if err != nil {
 		//その他のエラーハンドリング
 		errResponse.Message = "OTHER ERROR"
