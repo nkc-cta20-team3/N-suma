@@ -87,21 +87,9 @@ type ResubmitDocument struct {
 	DivisionID     int    `json:"division_id"`     //区分ID
 }
 
-
 type TakePostID struct {
 	PostID int `json:"post_id"` //役職ID
 }
-
-// ReadAlarmで使用する構造体
-type StudentReadAlarmRequest struct {
-	UserID int `json:"user_id"`
-}
-type TeacherReadAlarmResponse struct {
-	DocumentID int    `json:"document_id"`
-	UserName   string `json:"user_name"`
-	ClassAbbr  string `json:"class_abbr"`
-}
-
 
 // 役職ID取得用
 type Post struct {

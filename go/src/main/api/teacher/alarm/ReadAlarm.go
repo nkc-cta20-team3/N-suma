@@ -1,79 +1,64 @@
 package teacher
 
 import (
-	"errors"
+	"time"
 	"fmt"
-	"main/infra"
-	"main/model"
 	"net/http"
 
+	"main/infra"
+	"main/model"
+	"main/utils"
+
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 )
 
-// ReadAlarmで使用する構造体
-// type ReadAlarmRequest struct {
-// 	UserID int `json:"user_id"`
-// }
-// type StudentReadAlarmResponse struct {
-// 	DocumentID int       `json:"document_id"`
-// 	RequestAt  time.Time `json:"request_at"`
-// 	Status     int       `json:"status"`
-// }
-// type TeacherReadAlarmResponse struct {
-// 	DocumentID int    `json:"document_id"`
-// 	UserName   string `json:"user_name"`
-// 	ClassAbbr  string `json:"class_abbr"`
-// }
-
 func ReadAlarm(c *gin.Context) {
-	request := model.ReadAlarmRequest{}
-	teacherResponse := []model.TeacherReadAlarmResponse{}
-	post := model.Post{}
+
+	request := model.TeacherReadAlarmRequest{}
+	responseWrap := model.ResponseWrap{}
+	responseWrap.Message = "success"
+	response := []model.TeacherReadAlarmResponse{}
+	errResponse := model.MessageError{}
 
 	//POSTで受け取った値を格納する
 	if err := c.ShouldBindJSON(&request); err != nil {
-		// エラーな場合、ステータス400と、エラー情報を返す
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		// エラー処理
+		errResponse.Message = err.Error()
+		c.JSON(http.StatusBadRequest, errResponse)
 		return
 	}
+	fmt.Println(request)
 
+	//DB接続とエラーハンドリング
 	db := infra.DBInitGorm()
-
-	db.Table("user").Select("post_id").Where("user_id = ?", request.UserID).Scan(&post)
-
-	if post.PostID == 2 {
-		//教員の処理
-		err := db.Debug().Table("oa").
-			Select(
-				"oa.document_id",
-				"user.user_name",
-				"cs.class_abbr").
-			Joins("JOIN user ON oa.user_id = user.user_id").
-			Joins("JOIN classification AS cs ON user.class_id = cs.class_id").
-			Where("status = ?", 1).
-			Scan(&teacherResponse).Error
-
-		// err := db.Table("oa").
-		// 	Select("document_id,request_at,status").
-		// 	Where("user_id = ? AND ((status = ? AND read_flag = ?) OR status = ?)", request.UserID, 2, 1, -1).
-		// 	Scan(&studentResponse).Error
-		if err != nil {
-			if errors.Is(err, gorm.ErrRecordNotFound) {
-				// 行が見つからなかった場合の処理
-				fmt.Println("行が見つかりませんでした")
-				c.JSON(http.StatusBadRequest, gin.H{"message": "TABLE NOT FOUND"})
-				return
-			} else {
-				//その他のエラーハンドリング
-				c.JSON(http.StatusBadRequest, gin.H{"message": "OTHER ERROR"})
-				return
-			}
-		}
-		c.JSON(http.StatusOK, gin.H{"document": teacherResponse})
-		return
-	} else {
-		c.JSON(http.StatusBadRequest, gin.H{"document": "POST ERROR"})
+	if db.Error != nil {
+		errResponse.Message = "データベース接続エラー"
+		c.JSON(http.StatusInternalServerError, errResponse)
 		return
 	}
+
+	err := db.Table("oa").
+		Select(
+			"oa.document_id",
+			"user.user_name",
+			"cs.class_abbr").
+		Joins("JOIN user ON oa.user_id = user.user_id").
+		Joins("JOIN classification AS cs ON user.class_id = cs.class_id").
+		Where("status = ?", 1).
+		Scan(&response).
+		Error
+	if err != nil {
+		//その他のエラーハンドリング
+		errResponse.Message = "OTHER ERROR"
+		fmt.Println(err.Error())
+		c.JSON(http.StatusInternalServerError, errResponse)
+		return
+	}
+
+	fmt.Println(response)
+	responseWrap.Document = response
+
+	// レスポンスを返す
+	c.JSON(http.StatusOK, responseWrap)
+	return
 }

@@ -47,3 +47,15 @@ type ReadAllDocumentResponse struct {
 type TeacherCheckAlarmRequest struct {
 	UserID int `json:"user_id"` //ユーザID
 }
+
+// TeacherReadAlarmRequest は、通知の内容を取得する際に使用する構造体
+type TeacherReadAlarmRequest struct {
+	UserID int `json:"user_id"`
+}
+
+// TeacherReadAlarmResponse は、通知の内容を取得する際に、データを保持するのに使用する構造体
+type TeacherReadAlarmResponse struct {
+	DocumentID int    `json:"document_id"`
+	UserName   string `json:"user_name"`
+	ClassAbbr  string `json:"class_abbr"`
+}
