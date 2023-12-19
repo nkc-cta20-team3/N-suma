@@ -1,13 +1,11 @@
 package student
 
 import (
-	"time"
 	"fmt"
 	"net/http"
 
 	"main/infra"
 	"main/model"
-	"main/utils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -42,7 +40,9 @@ func CheckAlarm(c *gin.Context) {
 	err := db.Table("oa").
 		Select("document_id").
 		Where("status = -1").
-		Where("user_id = ?", request.UserID)
+		Where("user_id = ?", request.UserID).
+		Count(&count).
+		Error
 	if err != nil {
 		//その他のエラーハンドリング
 		errResponse.Message = "OTHER ERROR"
@@ -58,11 +58,12 @@ func CheckAlarm(c *gin.Context) {
 
 	// 認可完了していて、自分が未読の書類があるかどうかを確認
 	count = 0	
-	err := db.Table("oa").
+	err = db.Table("oa").
 		Select("document_id").
 		Where("status = 2 AND read_flag = 1").
 		Where("user_id = ?", request.UserID).
-		Count(&count).Error
+		Count(&count).
+		Error
 	if err != nil {
 		//その他のエラーハンドリング
 		errResponse.Message = "OTHER ERROR"
