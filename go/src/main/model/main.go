@@ -87,9 +87,6 @@ type ResubmitDocument struct {
 	DivisionID     int    `json:"division_id"`     //区分ID
 }
 
-type CheckAlarmRequest struct {
-	UserID int `json:"user_id"` //ユーザID
-}
 
 type TakePostID struct {
 	PostID int `json:"post_id"` //役職ID
@@ -99,6 +96,7 @@ type TakePostID struct {
 type ReadAlarmRequest struct {
 	UserID int `json:"user_id"`
 }
+
 type StudentReadAlarm struct {
 	DocumentID int       `json:"document_id"`
 	RequestAt  time.Time `json:"request_at"`

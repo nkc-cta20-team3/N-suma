@@ -78,3 +78,8 @@ type NextDocumentResponse struct {
 	NextDocumentID	int  `json:"document_id_next"`		//書類ID
 	PrevDocumentID  int	`json:"document_id_prev"`		//書類ID
 }
+
+// StudentCheckAlarmRequest は、通知が存在するかの確認をする際に必要なデータを保持するための構造体
+type StudentCheckAlarmRequest struct {
+	UserID int `json:"user_id"` //ユーザID
+}

@@ -1,72 +1,83 @@
 package student
 
 import (
+	"time"
 	"fmt"
+	"net/http"
+
 	"main/infra"
 	"main/model"
-	"net/http"
+	"main/utils"
 
 	"github.com/gin-gonic/gin"
 )
 
-// type ReadAlarmRequest struct {
-// 	UserID int `json:"user_id"` //ユーザID
-// }
-// type TakePostID struct {
-// 	PostID int `json:"post_id"` //役職ID
-// }
-
 func CheckAlarm(c *gin.Context) {
 
-	//必要な変数定義
-	request := model.CheckAlarmRequest{}
-	take_post_id := model.TakePostID{}
-	var AlarmFlag = false
-	var count int64
+	request := model.StudentCheckAlarmRequest{}
+	responseWrap := model.ResponseWrap{}
+	responseWrap.Message = "success"
+	errResponse := model.MessageError{}
+	responseWrap.Document = false
 
 	//POSTで受け取った値を格納する
 	if err := c.ShouldBindJSON(&request); err != nil {
-		// エラーな場合、ステータス400と、エラー情報を返す
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		// エラー処理
+		errResponse.Message = err.Error()
+		c.JSON(http.StatusBadRequest, errResponse)
 		return
 	}
+	fmt.Println(request)
 
-	//DB接続
+	//DB接続とエラーハンドリング
 	db := infra.DBInitGorm()
-
-	//役職を識別
-	// db.Table("user").Select("post_id").Where("user_id = ?", request.UserID).Order("post_id DESC").First(&take_post_id)
-	db.Table("user").Select("post_id").Where("user_id = ?", request.UserID).Order("post_id DESC").First(&take_post_id)
-
-	//ロールごとの処理分け
-	if take_post_id.PostID == 1 {
-		//学生→再提出or(認可完了and未読)
-		unreadQuery := db.Table("oa").Select("document_id").Where("status = 2 AND read_flag = 1").Where("user_id = ?", request.UserID)
-		resubmitQuery := db.Table("oa").Select("document_id").Where("status = -1").Where("user_id = ?", request.UserID)
-
-
-		if err := unreadQuery.Count(&count).Error; err != nil {
-			//エラーハンドリング
-		} else if count > 0 {
-			//認可済みかつ未読の書類がある
-			AlarmFlag = true
-			fmt.Println("UNREAD DOCUMENT EXIST")
-		}
-		count = 0
-		if err := resubmitQuery.Count(&count).Error; err != nil {
-			//エラーハンドリング
-		} else if count > 0 {
-			//再提出の書類がある
-			AlarmFlag = true
-			fmt.Println("RESUBMIT DOCUMENT EXIST")
-		}
-
-	} else {
-		//エラー
-		c.JSON(http.StatusBadRequest, gin.H{"document": "POST ERROR"})
+	if db.Error != nil {
+		errResponse.Message = "データベース接続エラー"
+		c.JSON(http.StatusInternalServerError, errResponse)
 		return
 	}
+	
+	
+	// 再提出の書類があるかどうかを確認
+	var count int64
+	err := db.Table("oa").
+		Select("document_id").
+		Where("status = -1").
+		Where("user_id = ?", request.UserID)
+	if err != nil {
+		//その他のエラーハンドリング
+		errResponse.Message = "OTHER ERROR"
+		fmt.Println(err.Error())
+		c.JSON(http.StatusInternalServerError, errResponse)
+		return
+	}
+	if count > 0 {
+		//再提出の書類がある
+		responseWrap.Document = false
+		fmt.Println("RESUBMIT DOCUMENT EXIST")
+	}
 
-	//結果を返却
-	c.JSON(http.StatusOK, gin.H{"document": AlarmFlag})
+	// 認可完了していて、自分が未読の書類があるかどうかを確認
+	count = 0	
+	err := db.Table("oa").
+		Select("document_id").
+		Where("status = 2 AND read_flag = 1").
+		Where("user_id = ?", request.UserID).
+		Count(&count).Error
+	if err != nil {
+		//その他のエラーハンドリング
+		errResponse.Message = "OTHER ERROR"
+		fmt.Println(err.Error())
+		c.JSON(http.StatusInternalServerError, errResponse)
+		return
+	}
+	if count > 0 {
+		//認可済みかつ未読の書類がある
+		responseWrap.Document = true
+		fmt.Println("UNREAD DOCUMENT EXIST")
+	}
+
+	// レスポンスを返す
+	c.JSON(http.StatusOK, responseWrap)
+	return
 }
