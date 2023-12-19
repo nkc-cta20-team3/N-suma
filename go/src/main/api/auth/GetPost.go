@@ -4,35 +4,32 @@ import (
 	"fmt"
 	"net/http"
 
-	"main/infra"
+	// "main/infra"
 	"main/model"
 
 	"github.com/gin-gonic/gin"
 )
 
-type GetIDRequest struct {
-	UserUUID string `json:"user_uuid"` //ユーザUUID
-}
 type GetIDResponse struct {
 	UserID int `json:"user_id"` //ユーザID
 }
 
-func GetID(c *gin.Context) {
-
-	request := GetIDRequest{}
+func GetPost(c *gin.Context) {
+	
 	responseWrap := model.ResponseWrap{}
 	responseWrap.Message = "success"
 	response := GetIDResponse{}
-	errResponse := model.MessageError{}
+	// errResponse := model.MessageError{}
 
-	//POSTで受け取った値を格納する
-	if err := c.ShouldBindJSON(&request); err != nil {
-		// エラー処理
-		errResponse.Message = err.Error()
-		c.JSON(http.StatusBadRequest, errResponse)
-		return
-	}
-	fmt.Println(request)
+	// ユーザーIDを取得
+	post_id := c.MustGet("PostID").(int)
+	fmt.Println(post_id)
+
+	// post_idが0の場合は、役職が未定義のだと判断する
+
+	// これ以下TODO
+
+	/*
 
 	//DB接続とエラーハンドリング
 	db := infra.DBInitGorm()
@@ -44,8 +41,8 @@ func GetID(c *gin.Context) {
 
 	// ユーザーIDを取得
 	err := db.Table("user").
-		Select("user.user_id").
-		Where("user_uuid = ?", request.UserUUID).
+		Select("user_id").
+		Where("user_uuid = ?", uuid).
 		First(&response).
 		Error
 	if err != nil {
@@ -55,6 +52,7 @@ func GetID(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, errResponse)
 		return
 	}
+	*/
 	
 	fmt.Println(response)
 	responseWrap.Document = response
