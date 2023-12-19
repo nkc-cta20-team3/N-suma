@@ -125,8 +125,8 @@ func main() {
 
 	// 認証が必要なAPIのルーティング
 	authRouter := g.Group("/")
-	authRouter.Use(controller.AuthMiddleware())
-	authRouter.Use(controller.RoleSetMiddleware())
+	authRouter.Use(controller.AuthMiddleware())	// VerifyTokenの実行
+	authRouter.Use(controller.RoleSetMiddleware()) // DBとの照合、ユーザー情報の取得
 
 	// 役職の決まっていないAPIのルーティング
 	noRole := authRouter.Group("/auth")
