@@ -1,7 +1,6 @@
 package student
 
 import (
-	"time"
 	"fmt"
 	"net/http"
 
@@ -51,8 +50,11 @@ func ReadAlarm(c *gin.Context) {
 		return
 	}
 
-	// 時刻の形式を変換
-	response.RequestAt = utils.StringToTime3(response.RequestAt).Format("2006-01-02")
+	for i := 0; i < len(response); i++ {
+		// 時刻の形式を変換
+		response[i].RequestAt = utils.StringToTime3(response[i].RequestAt).Format("2006-01-02")
+	}
+	
 	
 	fmt.Println(response)
 	responseWrap.Document = response
