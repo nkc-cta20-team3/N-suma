@@ -1,14 +1,12 @@
 package teacher
 
 import (
-	"time"
 	"fmt"
 	"net/http"
 
 	"main/infra"
 	"main/model"
-	"main/utils"
-
+	
 	"github.com/gin-gonic/gin"
 )
 
