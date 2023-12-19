@@ -42,3 +42,8 @@ type ReadAllDocumentResponse struct {
 	StudentComment string `json:"student_comment"` //学生コメント
 	TeacherComment string `json:"teacher_comment"` //教員コメント
 }
+
+// TeacherCheckAlarmRequest は、通知が存在するかの確認をする際に必要なデータを保持するための構造体
+type TeacherCheckAlarmRequest struct {
+	UserID int `json:"user_id"` //ユーザID
+}
