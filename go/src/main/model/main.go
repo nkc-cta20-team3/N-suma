@@ -93,21 +93,9 @@ type TakePostID struct {
 }
 
 // ReadAlarmで使用する構造体
-type ReadAlarmRequest struct {
+type StudentReadAlarmRequest struct {
 	UserID int `json:"user_id"`
 }
-
-type StudentReadAlarm struct {
-	DocumentID int       `json:"document_id"`
-	RequestAt  time.Time `json:"request_at"`
-	Status     int       `json:"status"`
-}
-type StudentReadAlarmResponse struct {
-	DocumentID int    `json:"document_id"`
-	RequestAt  string `json:"request_at"`
-	Status     int    `json:"status"`
-}
-
 type TeacherReadAlarmResponse struct {
 	DocumentID int    `json:"document_id"`
 	UserName   string `json:"user_name"`

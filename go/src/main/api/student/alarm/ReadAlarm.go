@@ -1,91 +1,63 @@
 package student
 
 import (
-	"errors"
+	"time"
 	"fmt"
+	"net/http"
+
 	"main/infra"
 	"main/model"
-	"net/http"
-	
-	"time"
+	"main/utils"
 
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 )
 
-// ReadAlarmで使用する構造体
-// type ReadAlarmRequest struct {
-// 	UserID int `json:"user_id"`
-// }
-// type StudentReadAlarmResponse struct {
-// 	DocumentID int       `json:"document_id"`
-// 	RequestAt  time.Time `json:"request_at"`
-// 	Status     int       `json:"status"`
-// }
-
 func ReadAlarm(c *gin.Context) {
-	request := model.ReadAlarmRequest{}
-	studentResponse := []model.StudentReadAlarmResponse{}
-	post := model.Post{}
 
-	result := []model.StudentReadAlarm{}
-
+	request := model.StudentReadAlarmRequest{}
+	responseWrap := model.ResponseWrap{}
+	responseWrap.Message = "success"
+	response := []model.StudentReadAlarmResponse{}
+	errResponse := model.MessageError{}
+	
 	//POSTで受け取った値を格納する
 	if err := c.ShouldBindJSON(&request); err != nil {
-		// エラーな場合、ステータス400と、エラー情報を返す
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		// エラー処理
+		errResponse.Message = err.Error()
+		c.JSON(http.StatusBadRequest, errResponse)
 		return
 	}
+	fmt.Println(request)
 
+	//DB接続とエラーハンドリング
 	db := infra.DBInitGorm()
-
-	db.Table("user").Select("post_id").Where("user_id = ?", request.UserID).Scan(&post)
-
-	if post.PostID == 1 {
-		//学生の処理
-
-		err := db.Table("oa").
-			Select("document_id,request_at,status").
-			Where("user_id = ? AND ((status = ? AND read_flag = ?) OR status = ?)", request.UserID, 2, 1, -1).
-			Scan(&result).Error
-
-		if err != nil {
-			if errors.Is(err, gorm.ErrRecordNotFound) {
-				// 行が見つからなかった場合の処理
-				fmt.Println("行が見つかりませんでした")
-				c.JSON(http.StatusBadRequest, gin.H{"message": "TABLE NOT FOUND"})
-				return
-			} else {
-				//その他のエラーハンドリング
-				c.JSON(http.StatusBadRequest, gin.H{"message": "OTHER ERROR"})
-				return
-			}
-		}
-
-		//日付変換処理
-		for _, t := range result {
-
-			//日付変換処理
-			requestAt := timeToString(t.RequestAt)
-			document := model.StudentReadAlarmResponse{
-				DocumentID: t.DocumentID,
-				RequestAt:  requestAt,
-				Status:     t.Status,
-			}
-			studentResponse = append(studentResponse, document)
-		}
-
-		//戻り値
-		c.JSON(http.StatusOK, gin.H{"document": studentResponse})
-		return
-
-	} else {
-		c.JSON(http.StatusBadRequest, gin.H{"document": "POST ERROR"})
+	if db.Error != nil {
+		errResponse.Message = "データベース接続エラー"
+		c.JSON(http.StatusInternalServerError, errResponse)
 		return
 	}
-}
 
-func timeToString(t time.Time) string {
-	str := t.Format("2006-01-02 15:04:05")
-	return str
+	err := db.Table("oa").
+		Select("document_id,request_at,status").
+		Where("user_id = ?", request.UserID).
+		Where("(status = ? AND read_flag = ?) OR status = ?" , 2, 1, -1).
+		Scan(&response).
+		Error
+	if err != nil {
+		//その他のエラーハンドリング
+		errResponse.Message = "OTHER ERROR"
+		fmt.Println(err.Error())
+		c.JSON(http.StatusInternalServerError, errResponse)
+		return
+	}
+
+	// 時刻の形式を変換
+	response.RequestAt = utils.StringToTime3(response.RequestAt).Format("2006-01-02")
+	
+	fmt.Println(response)
+	responseWrap.Document = response
+
+	// レスポンスを返す
+	c.JSON(http.StatusOK, responseWrap)
+	return
 }

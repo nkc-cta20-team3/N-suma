@@ -83,3 +83,15 @@ type NextDocumentResponse struct {
 type StudentCheckAlarmRequest struct {
 	UserID int `json:"user_id"` //ユーザID
 }
+
+// StudentCheckAlarmResponse は、通知の内容を取得する際に使用する構造体
+type StudentReadAlarmRequest struct {
+	UserID int `json:"user_id"`
+}
+
+// StudentReadAlarmResponse は、通知の内容を取得する際に、データを保持するのに使用する構造体
+type StudentReadAlarmResponse struct {
+	DocumentID int    `json:"document_id"`
+	RequestAt  string `json:"request_at"`
+	Status     int    `json:"status"`
+}
