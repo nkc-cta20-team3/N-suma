@@ -12,20 +12,10 @@ import (
 
 func CheckAlarm(c *gin.Context) {
 
-	request := model.TeacherCheckAlarmRequest{}
 	responseWrap := model.ResponseWrap{}
 	responseWrap.Message = "success"
 	errResponse := model.MessageError{}
 	responseWrap.Document = false
-
-	//POSTで受け取った値を格納する
-	if err := c.ShouldBindJSON(&request); err != nil {
-		// エラー処理
-		errResponse.Message = err.Error()
-		c.JSON(http.StatusBadRequest, errResponse)
-		return
-	}
-	log.Println(request)
 
 	//DB接続とエラーハンドリング
 	db := infra.DBInitGorm()
@@ -51,7 +41,7 @@ func CheckAlarm(c *gin.Context) {
 	}
 	if count > 0 {
 		//再提出の書類がある
-		responseWrap.Document = false
+		responseWrap.Document = true
 		log.Println("RESUBMIT DOCUMENT EXIST")
 	}
 
