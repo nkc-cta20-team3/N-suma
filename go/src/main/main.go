@@ -231,6 +231,7 @@ func main() {
 	teacherViewList := teacher.Group("/viewlist")
 	{
 		teacherViewList.POST("/read", apiTeacherViewList.ReadAllDocumentList)	// 認可済書類一覧取得
+		teacherViewList.POST("/search", apiTeacherViewList.SearchAllDocumentList)	// 書類一覧検索
 	}
 	
 	/*

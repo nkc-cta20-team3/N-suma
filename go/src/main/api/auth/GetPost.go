@@ -14,7 +14,7 @@ func GetPost(c *gin.Context) {
 	
 	responseWrap := model.ResponseWrap{}
 	responseWrap.Message = "success"
-	response := GetPostResponse{}
+	response := model.GetPostResponse{}
 	errResponse := model.MessageError{}
 
 	// APIにアクセスしたユーザーの役職IDを取得

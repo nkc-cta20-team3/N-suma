@@ -8,12 +8,12 @@ type ReadAllDocumentListResponse struct {
  	UserName     string `json:"user_name"`
 }
 
-// ReadAllDocumentListRequest は、書類一覧を取得する際に必要なデータを保持するための構造体
-type ReadAllDocumentListRequest struct {
+// SearchAllDocumentListRequest は、書類一覧を取得する際に必要なデータを保持するための構造体
+type SearchAllDocumentListRequest struct {
 	UserNumber  string `json:"user_number"`
 }
 
-// SearchAllDocumentListRequest は、書類一覧を取得する際に使用する構造体
+// SearchAllDocumentListResponse は、書類一覧を取得する際に使用する構造体
 type SearchAllDocumentListResponse struct {
 	DocumentID   int    `json:"document_id"`
 	DivisionName string `json:"division_name"`

@@ -18,15 +18,6 @@ func ReadAlarm(c *gin.Context) {
 	responseWrap.Message = "success"
 	response := []model.StudentReadAlarmResponse{}
 	errResponse := model.MessageError{}
-	
-	//POSTで受け取った値を格納する
-	if err := c.ShouldBindJSON(&request); err != nil {
-		// エラー処理
-		errResponse.Message = err.Error()
-		c.JSON(http.StatusBadRequest, errResponse)
-		return
-	}
-	log.Println(request)
 
 	//DB接続とエラーハンドリング
 	db := infra.DBInitGorm()

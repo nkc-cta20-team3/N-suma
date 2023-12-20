@@ -19,15 +19,6 @@ func ReadDocsList(c *gin.Context) {
 	response := []model.ReadDocsListResponse{}
 	errResponse := model.MessageError{}
 
-	log.Println(request)
-	//POSTで受け取った値を格納する
-	if err := c.ShouldBindJSON(&request); err != nil {
-		// エラー処理
-		errResponse.Message = err.Error()
-		c.JSON(http.StatusBadRequest, errResponse)
-		return
-	}
-
 	//DB接続とエラーハンドリング
 	db := infra.DBInitGorm()
 	if db.Error != nil {
@@ -35,7 +26,6 @@ func ReadDocsList(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, errResponse)
 		return
 	}
-
 	
 	// 書類一覧を取得
 	err := db.Table("oa").

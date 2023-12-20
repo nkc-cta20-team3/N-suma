@@ -1,10 +1,8 @@
 package controller
 
 import (
-	"log"
 	"net/http"
-
-	"main/infra"
+	
 	"main/model"
 
 	"github.com/gin-gonic/gin"

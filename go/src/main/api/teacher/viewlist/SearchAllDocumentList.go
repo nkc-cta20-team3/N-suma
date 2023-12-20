@@ -12,7 +12,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func AllDocumentList(c *gin.Context) {
+func SearchAllDocumentList(c *gin.Context) {
 
 	request := model.SearchAllDocumentListRequest{}
 	responseWrap := model.ResponseWrap{}

@@ -34,7 +34,7 @@ func RejectAuth(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	loglog.Print("&")
+	log.Print(request)
 
 	//DB接続
 	db := infra.DBInitGorm()

@@ -18,6 +18,7 @@ type DocumentStatus struct {
 
 func ReadDocument(c *gin.Context) {
 
+	UserID := c.MustGet("UserID").(int)
 	request := model.ReadDocumentRequest{}
 	response := model.ReadDocumentResponse{}
 
@@ -42,7 +43,7 @@ func ReadDocument(c *gin.Context) {
 	//引数定義
 	post := model.Post{}
 	//post_idを取得(reqest.UserIDの部分に取得したいユーザのユーザIDを入れる)
-	db.Table("user").Select("post_id").Where("user_id = ?", request.UserID).First(&post)
+	db.Table("user").Select("post_id").Where("user_id = ?", UserID).First(&post)
 
 	PostID := post.PostID
 
