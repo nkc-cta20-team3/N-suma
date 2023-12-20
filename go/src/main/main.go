@@ -133,7 +133,7 @@ func main() {
 
 	// 管理者用APIのルーティング
 	admin := authRouter.Group("/admin")
-	// admin.Use(controller.RoleMiddleware("Admin"))
+	admin.Use(controller.RoleCheckMiddleware(0))
 	
 	// ユーザー登録画面用APIのルーティング
 	adminAdd := admin.Group("/add")
@@ -157,9 +157,10 @@ func main() {
 		adminEdit.POST("/delete", apiAdminEdit.DeleteUser)	// ユーザー削除
 	}
 	
+	
 	// 学生用のAPIのルーティング
 	student := authRouter.Group("/student")
-	// student.Use(controller.RoleMiddleware("student"))
+	student.Use(controller.RoleCheckMiddleware(1))
 	
 	// 通知関連のAPIのルーティング
 	studentAlarm := student.Group("/alarm")
@@ -196,7 +197,7 @@ func main() {
 
 	// 教員用のAPIのルーティング
 	teacher := authRouter.Group("/teacher")
-	// teacher.Use(controller.RoleMiddleware("teacher"))
+	student.Use(controller.RoleCheckMiddleware(2))
 	
 	// 通知関連のAPIのルーティング
 	teacherAlarm := teacher.Group("/alarm")
