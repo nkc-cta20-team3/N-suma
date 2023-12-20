@@ -54,13 +54,17 @@ export const useStore = defineStore("user", {
               u.getIdToken().then((token) => {
                 this.token = token;
                 // console.log("token is " + token);
-                
+
                 // 役職名を取得する
                 APICallonJWT("auth", {}).then((res) => {
-                  console.log(res);
-                  this.role = "admin";
+                  // console.log(res);
+                  if (res.document.post_name === "管理者") this.role = "admin";
+                  else if (res.document.post_name === "教員")
+                    this.role = "teacher";
+                  else if (res.document.post_name === "学生")
+                    this.role = "student";
+                  // console.log(this.role);
                 });
-                
               });
 
               resolve(true);
@@ -78,6 +82,8 @@ export const useStore = defineStore("user", {
       this.token = null;
     },
     changeRole() {
+      // 役職名を取得するコードをコメントアウトしないと動作しない
+
       //console.log(this.role);
       if (this.role === "admin") {
         this.role = "student";
