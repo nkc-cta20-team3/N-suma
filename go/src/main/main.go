@@ -2,6 +2,7 @@ package main
 
 import (
 	"time"
+	"os"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -11,7 +12,7 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 
 	// docsのディレクトリを指定
-	_ "main/docs"
+	docs "main/docs"
 
 	// ローカルモジュールのインポート
 
@@ -47,8 +48,10 @@ import (
 // @contact email:dev@example
 // @license name:MIT
 // @license url: 'https://opensource.org/licenses/MIT'
-// @host localhost:8080
 func main() {
+
+	// swaggerの設定
+	docs.SwaggerInfo.Host = os.Getenv("MY_HOST")
 
 	g := gin.Default()
 	g.Use(controller.LogMiddleware())
@@ -61,11 +64,13 @@ func main() {
 			"http://localhost",
 			"http://localhost:80",
 			"http://localhost:5173",
-			
+			"http://localhost:8080",
 
 			// awsのデプロイ先
 			"http://n-suma.com",
 			"https://n-suma.com",
+			"http://n-suma.com:8080",
+			"https://n-suma.com:8080",
 
 			// firebaseのデプロイ先
 			"http://n-suma.firebaseapp.com",
