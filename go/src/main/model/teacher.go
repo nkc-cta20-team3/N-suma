@@ -62,3 +62,20 @@ type TeacherReadAlarmResponse struct {
 	UserName   string `json:"user_name"`
 	ClassAbbr  string `json:"class_abbr"`
 }
+
+// UpdateAuthRequest は、書類を更新する際に必要なデータを保持するための構造体
+type UpdateAuthRequest struct {
+	DocumentID 		int 	`json:"document_id"`		//書類ID
+	StartFlame     	int    	`json:"start_flame"`     	//公欠開始時限
+	EndFlame       	int    	`json:"end_flame"`       	//公欠終了時限
+	TeacherComment 	string 	`json:"teacher_comment"` 	//教員コメント
+	Status			int    	`json:"status"`				//ステータス
+}
+
+// UpdateAuthStruct は、書類を更新する際に使用する構造体
+type UpdateAuthStruct struct {
+	StartFlame     	int    `json:"start_flame"`     //公欠開始時限
+	EndFlame       	int    `json:"end_flame"`       //公欠終了時限
+	TeacherComment 	string `json:"teacher_comment"` //教員コメント
+	Status			int    `json:"status"`			//ステータス
+}

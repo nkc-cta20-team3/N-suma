@@ -10,64 +10,75 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// type UpdateDocument struct {
-// 	Status         int    `json:"status"`          // ステータス
-// 	TeacherComment string `json:"teacher_comment"` // 教員コメント
-// }
-
-// // RejectAuthで使用する構造体
-//
-//	type RejectAuthRequest struct {
-//		DocumentID     int    `json:"document_id"`
-//		UserID         int    `json:"user_id"`
-//		TeacherComment string `json:"teacher_comment"` // 教員コメント
-//	}
-
 func RejectAuth(c *gin.Context) {
 
-	request := model.RejectAuthRequest{}
-	post := model.Post{}
+	request := model.UpdateAuthRequest{}
+	responseWrap := model.ResponseWrap{}
+	responseWrap.Message = "success"
+	errResponse := model.MessageError{}
 
 	//POSTで受け取った値を格納する
 	if err := c.ShouldBindJSON(&request); err != nil {
-		// エラーな場合、ステータス400と、エラー情報を返す
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		// エラー処理
+		errResponse.Message = err.Error()
+		c.JSON(http.StatusBadRequest, errResponse)
 		return
 	}
-	log.Print(request)
+	log.Println(request)
 
-	//DB接続
+	//DB接続とエラーハンドリング
 	db := infra.DBInitGorm()
-
-	//post_idを取得(reqest.UserIDの部分に取得したいユーザのユーザIDを入れる)
-	db.Table("user").Select("post_id").Where("user_id = ?", request.UserID).First(&post)
-
-	if request.TeacherComment != "" && post.PostID == 2 {
-		//却下処理
-		db.Table("oa").
-			Where("document_id = ?", request.DocumentID).
-			Updates(model.UpdateDocument{Status: -1, TeacherComment: request.TeacherComment})
-
-		//エラーハンドリング
-		if db.Error != nil {
-			errMsg := "データベース接続エラー"
-			c.JSON(http.StatusInternalServerError, gin.H{"error": errMsg})
-			return
-		}
-
-		c.JSON(http.StatusOK, gin.H{
-			"message": http.StatusOK,
-		})
-	} else if request.TeacherComment == "" {
-		//教員コメントがない場合
-		c.JSON(http.StatusBadRequest, gin.H{
-			"message": "TEACHER COMMENT NOT EXISTS",
-		})
-	} else {
-		//却下者が不適切な場合
-		c.JSON(http.StatusBadRequest, gin.H{
-			"message": "POST ERROR",
-		})
+	if db.Error != nil {
+		errResponse.Message = "データベース接続エラー"
+		c.JSON(http.StatusInternalServerError, errResponse)
+		return
 	}
 
+	// 却下可能な書類かどうかの確認
+	err := db.Table("oa").
+		Select("document_id").
+		Where("document_id = ?", request.DocumentID).
+		Where("status = 1")
+	if err.Error != nil {
+		// その他のエラーハンドリング
+		errResponse.Message = "OTHER ERROR"
+		log.Println(err.Error.Error())
+		c.JSON(http.StatusInternalServerError, errResponse)
+		return
+	}
+	if err.RowsAffected == 0 {
+		// 却下できない書類の場合
+		errResponse.Message = "DOCUMENT ERROR"
+		log.Println(errResponse.Message)
+		c.JSON(http.StatusBadRequest, errResponse)
+		return
+	} else if request.TeacherComment == "" {
+		// 教員コメントが空の場合
+		errResponse.Message = "COMMENT ERROR"
+		log.Println(errResponse.Message)
+		c.JSON(http.StatusBadRequest, errResponse)
+		return
+	}
+
+	// 公欠届を却下する
+	Status := -1
+	err = db.Table("oa").
+		Where("document_id = ?", request.DocumentID).
+		Updates(model.UpdateAuthStruct{
+			StartFlame:     request.StartFlame,
+			EndFlame:      	request.EndFlame,
+			TeacherComment: request.TeacherComment,
+			Status:         Status,
+		})
+	if err.Error != nil {
+		//その他のエラーハンドリング
+		errResponse.Message = "OTHER ERROR"
+		log.Println(err.Error.Error())
+		c.JSON(http.StatusInternalServerError, errResponse)
+		return
+	}
+
+	// レスポンスを返す
+	c.JSON(http.StatusOK, responseWrap)
+	return
 }

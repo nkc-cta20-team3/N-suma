@@ -34,13 +34,6 @@ type Document struct {
 	DivisionName   string    `json:"division_name"`   //区分名
 }
 
-// UpdateAuthで使用する構造体
-type UpdateAuthRequest struct {
-	DocumentID     int    `json:"document_id"` //ドキュメントID
-	UserID         int    `json:"user_id"`
-	TeacherComment string `json:"teacher_comment"` //教員コメント
-}
-
 type UpdateDocument struct {
 	Status         int    `json:"status"`          // ステータス
 	TeacherComment string `json:"teacher_comment"` // 教員コメント
