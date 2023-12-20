@@ -27,10 +27,13 @@ func RoleSetMiddleware() gin.HandlerFunc {
 		uuid := c.MustGet("UUID").(string)
 		email := c.MustGet("Email").(string)
 
-		// あらかじめコンテキストにnilをセットしておく
-		c.Set("UserID", nil)
-		c.Set("PostID", nil)
+		// あらかじめコンテキストに-1をセットしておく
+		c.Set("UserID", -1)
+		c.Set("PostID", -1)
 
+		// log.Printf("UserID: %v\n", c.MustGet("UserID").(int))
+		// log.Printf("PostID: %v\n", c.MustGet("PostID").(int))
+		
 		errResponse := model.MessageError{}
 		user := GetUser{}
 
