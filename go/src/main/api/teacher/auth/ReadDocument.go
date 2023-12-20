@@ -46,10 +46,10 @@ func ReadDocument(c *gin.Context) {
 
 	PostID := post.PostID
 
-	// fmt.Println(PostID)
+	// log.Println(PostID)
 	//管理者処理
 	if PostID == 0 {
-		// fmt.Println("権限がありません")
+		// log.Println("権限がありません")
 		c.JSON(http.StatusBadRequest, gin.H{"document": "権限がありません"})
 		return
 
@@ -104,7 +104,7 @@ func ReadDocument(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"document": response})
 		return
 	} else {
-		// fmt.Println("権限がありません")
+		// log.Println("権限がありません")
 
 		c.JSON(http.StatusBadRequest, gin.H{"document": "権限がありません"})
 		return

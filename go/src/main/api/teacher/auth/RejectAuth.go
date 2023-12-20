@@ -1,7 +1,7 @@
 package teacher
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 
 	"main/infra"
@@ -34,7 +34,7 @@ func RejectAuth(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	fmt.Print("&")
+	loglog.Print("&")
 
 	//DB接続
 	db := infra.DBInitGorm()

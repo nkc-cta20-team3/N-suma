@@ -1,7 +1,7 @@
 package teacher
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 
 	"main/infra"
@@ -25,7 +25,7 @@ func NextAllDocument(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, errResponse)
 		return
 	}
-	fmt.Println(request)
+	log.Println(request)
 
 	//DB接続とエラーハンドリング
 	db := infra.DBInitGorm()
@@ -45,7 +45,7 @@ func NextAllDocument(c *gin.Context) {
 	if err != nil {
 		//その他のエラーハンドリング
 		errResponse.Message = "OTHER ERROR"
-		fmt.Println(err.Error())
+		log.Println(err.Error())
 		c.JSON(http.StatusInternalServerError, errResponse)
 		return
 	}	
@@ -79,7 +79,7 @@ func NextAllDocument(c *gin.Context) {
 		
 	}
 
-	fmt.Println(response)
+	log.Println(response)
 	responseWrap.Document = response
 
 	// レスポンスを返す

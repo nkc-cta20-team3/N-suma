@@ -1,7 +1,7 @@
 package teacher
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 
 	"main/infra"
@@ -25,7 +25,7 @@ func CheckAlarm(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, errResponse)
 		return
 	}
-	fmt.Println(request)
+	log.Println(request)
 
 	//DB接続とエラーハンドリング
 	db := infra.DBInitGorm()
@@ -45,14 +45,14 @@ func CheckAlarm(c *gin.Context) {
 	if err != nil {
 		//その他のエラーハンドリング
 		errResponse.Message = "OTHER ERROR"
-		fmt.Println(err.Error())
+		log.Println(err.Error())
 		c.JSON(http.StatusInternalServerError, errResponse)
 		return
 	}
 	if count > 0 {
 		//再提出の書類がある
 		responseWrap.Document = false
-		fmt.Println("RESUBMIT DOCUMENT EXIST")
+		log.Println("RESUBMIT DOCUMENT EXIST")
 	}
 
 	// レスポンスを返す
