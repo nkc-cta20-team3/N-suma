@@ -25,8 +25,8 @@ func GetPost(c *gin.Context) {
 	post_id := c.MustGet("PostID").(int)
 	log.Println(post_id)
 
-	// post_idがnilの場合は、役職が未定義だと判断する
-	if post_id == nil {
+	// post_idが-1の場合は、役職が未定義だと判断する
+	if post_id == -1 {
 		responseWrap.Document = nil
 		// レスポンスを返す
 		c.JSON(http.StatusOK, responseWrap)
