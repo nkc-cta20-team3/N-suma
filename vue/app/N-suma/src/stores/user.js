@@ -50,14 +50,17 @@ export const useStore = defineStore("user", {
             if (u) {
               this.isLogin = true;
 
-              // 役職を取得する
-              //TODO: getRole()を呼び出す
-              this.role = "admin";
-
               // tokenを取得する
               u.getIdToken().then((token) => {
                 this.token = token;
                 // console.log("token is " + token);
+                
+                // 役職名を取得する
+                APICallonJWT("auth", {}).then((res) => {
+                  console.log(res);
+                  this.role = "admin";
+                });
+                
               });
 
               resolve(true);
