@@ -215,8 +215,7 @@ func main() {
 	teacherAuth := teacher.Group("/auth")
 	{
 		teacherAuth.POST("/read", apiTeacherView.ReadDocument)	// 書類詳細取得
-		teacherAuth.POST("/reject", apiTeacherAuth.RejectAuth)	// 書類却下
-		teacherAuth.POST("/update", apiTeacherAuth.UpdateAuth)	// 書類認可
+		teacherAuth.POST("/update", apiTeacherAuth.UpdateAuth)	// 書類更新(認可、却下)
 	}
 
 	// 未認可書類一覧画面用APIのルーティング
