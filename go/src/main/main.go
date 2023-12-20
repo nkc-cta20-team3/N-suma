@@ -183,7 +183,7 @@ func main() {
 	// 書類再提出画面用APIのルーティング
 	studentReForm := student.Group("/reform")
 	{
-		studentReForm.POST("/create", apiStudentReForm.ReSubmitDocument)	// 書類再提出
+		studentReForm.POST("/update", apiStudentReForm.ReSubmitDocument)	// 書類再提出
 	}
 
 	// 提出書類一覧画面用APIのルーティング
@@ -239,13 +239,5 @@ func main() {
 		teacherViewList.POST("/search", apiTeacherViewList.SearchAllDocumentList)	// 書類一覧検索
 	}
 	
-	/*
-	routes.POST("/cl", api.CheckLogin) //ログイン確認
-	routes.POST("/rup", api.ReadUserPost)
-
-	//調査用
-	routes.POST("/td", api.TestDate)
-	*/
-
 	g.Run(":8080")
 }
