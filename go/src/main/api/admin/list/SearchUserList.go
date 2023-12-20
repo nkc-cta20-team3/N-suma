@@ -2,7 +2,7 @@ package admin
 
 import (
 	"errors"
-	"fmt"
+	"log"
 	"net/http"
 
 	"main/infra"
@@ -27,7 +27,7 @@ func SearchUserList(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, errResponse)
 		return
 	}
-	fmt.Println(request)
+	log.Println(request)
 
 	//DB接続とエラーハンドリング
 	db := infra.DBInitGorm()
@@ -53,7 +53,7 @@ func SearchUserList(c *gin.Context) {
 			} else {
 				//その他のエラーハンドリング
 				errResponse.Message = "OTHER ERROR"
-				fmt.Println(err.Error())
+				log.Println(err.Error())
 				c.JSON(http.StatusInternalServerError, errResponse)
 				return
 			}
@@ -74,14 +74,14 @@ func SearchUserList(c *gin.Context) {
 			} else {
 				//その他のエラーハンドリング
 				errResponse.Message = "OTHER ERROR"
-				fmt.Println(err.Error())
+				log.Println(err.Error())
 				c.JSON(http.StatusInternalServerError, errResponse)
 				return
 			}
 		}
 	}
 	
-	fmt.Println(response)
+	log.Println(response)
 	responseWrap.Document = response
 
 	// レスポンスを返す

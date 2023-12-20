@@ -1,7 +1,7 @@
 package admin
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 
 	"main/infra"
@@ -24,7 +24,7 @@ func DeleteUser(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, errResponse)
 		return
 	}
-	fmt.Println(request)
+	log.Println(request)
 
 	//DB接続とエラーハンドリング
 	db := infra.DBInitGorm()
@@ -52,7 +52,7 @@ func DeleteUser(c *gin.Context) {
 	if err != nil {
 		//その他のエラーハンドリング
 		errResponse.Message = "OTHER ERROR"
-		fmt.Println(err.Error())
+		log.Println(err.Error())
 		c.JSON(http.StatusInternalServerError, errResponse)
 		return
 	}

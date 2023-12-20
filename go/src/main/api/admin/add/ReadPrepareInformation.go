@@ -2,7 +2,7 @@ package admin
 
 import (
 	"errors"
-	"fmt"
+	"log"
 	"net/http"
 
 	"main/infra"
@@ -31,7 +31,8 @@ func ReadPrepareInformation(c *gin.Context) {
 	err := db.Table("user").
 		Select("user_id, user_uuid, mail_address").
 		Where("post_id IS NULL").
-		Scan(&response).Error
+		Scan(&response).
+		Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			// 行が見つからなかった場合の処理
@@ -41,13 +42,13 @@ func ReadPrepareInformation(c *gin.Context) {
 		} else {
 			//その他のエラーハンドリング
 			errResponse.Message = "OTHER ERROR"
-			fmt.Println(err.Error())
+			log.Println(err.Error())
 			c.JSON(http.StatusInternalServerError, errResponse)
 			return
 		}
 	}
 
-	fmt.Println(response)
+	log.Println(response)
 	responseWrap.Document = response
 
 	// レスポンスを返す
