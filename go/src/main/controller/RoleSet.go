@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 
 	"main/infra"
@@ -10,7 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type GetUserResponse struct {
+type GetUser struct {
 	UserID int `json:"user_id"` //ユーザID
 	PostID int `json:"post_id"` //役職ID
 }
@@ -32,7 +32,7 @@ func RoleSetMiddleware() gin.HandlerFunc {
 		c.Set("PostID", nil)
 
 		errResponse := model.MessageError{}
-		response := GetUserResponse{}
+		user := GetUser{}
 
 		//DB接続とエラーハンドリング
 		db := infra.DBInitGorm()
@@ -47,40 +47,40 @@ func RoleSetMiddleware() gin.HandlerFunc {
 			Select("user_id, post_id").
 			Where("user_uuid = ?", uuid).
 			Limit(1).
-			Find(&response)
+			Find(&user)
 		if err.Error != nil {
 			// その他のエラーハンドリング
 			errResponse.Message = "OTHER ERROR"
-			fmt.Println(err.Error.Error())
+			log.Println(err.Error.Error())
 			c.JSON(http.StatusInternalServerError, errResponse)
 			return
 		}
 		// ユーザー情報が存在しない場合は、ユーザーを作成する
 		if err.RowsAffected == 0 {
 			// 値のセット
-			user := CreateUser{
+			createUser := CreateUser{
 				UserUUID: uuid,
 				MailAddress: email,
 			}
 			
 			// クエリの発行
 			err := db.Table("user").
-				Create(&user).
+				Create(&createUser).
 				Error
 			if err != nil {
 				// その他のエラーハンドリング
 				errResponse.Message = "OTHER ERROR"
-				fmt.Println(err.Error())
+				log.Println(err.Error())
 				c.JSON(http.StatusInternalServerError, errResponse)
 				return
 			}
 		} else {
 			// ロギング
-			fmt.Println(response)
+			log.Println(user)
 			// コンテキストに、ユーザーのIDをセットする
-			c.Set("UserID", response.UserID)
+			c.Set("UserID", user.UserID)
 			// コンテキストに、ユーザーのロールをセットする
-			c.Set("PostID", response.PostID)
+			c.Set("PostID", user.PostID)
 		}
 
 		// 次のミドルウェアへ
