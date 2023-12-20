@@ -10,10 +10,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type GetPostResponse struct {
-	PostName string `json:"post_name"` //役職名
-}
-
 func GetPost(c *gin.Context) {
 	
 	responseWrap := model.ResponseWrap{}
