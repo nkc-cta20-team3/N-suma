@@ -1,7 +1,7 @@
 package student
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 
 	"main/infra"
@@ -13,13 +13,14 @@ import (
 
 func ReadDocument(c *gin.Context) {
 
+	UserID := c.MustGet("UserID").(int)
 	request := model.ReadDocumentRequest{}
 	responseWrap := model.ResponseWrap{}
 	responseWrap.Message = "success"
 	response := model.ReadDocumentResponse{}
 	errResponse := model.MessageError{}
 
-	fmt.Println(request)
+	log.Println(request)
 	//POSTで受け取った値を格納する
 	if err := c.ShouldBindJSON(&request); err != nil {
 		// エラー処理
@@ -51,13 +52,13 @@ func ReadDocument(c *gin.Context) {
 			"oa.teacher_comment").
 		Joins("JOIN division dv ON oa.division_id = dv.division_id").
 		Where("document_id = ?", request.DocumentID).
-		Where("oa.user_id = ?", request.UserID).
+		Where("oa.user_id = ?", UserID).
 		First(&response).
 		Error
 	if err != nil {
 		//その他のエラーハンドリング
 		errResponse.Message = "OTHER ERROR"
-		fmt.Println(err.Error())
+		log.Println(err.Error())
 		c.JSON(http.StatusInternalServerError, errResponse)
 		return
 	}
@@ -67,7 +68,7 @@ func ReadDocument(c *gin.Context) {
 	response.StartTime = utils.StringToTime4(response.StartTime).Format("01-02 15:04")
 	response.EndTime = utils.StringToTime4(response.EndTime).Format("01-02 15:04")
 
-	fmt.Println(response)
+	log.Println(response)
 	responseWrap.Document = response
 
 	// レスポンスを返す

@@ -6,7 +6,6 @@ import (
 
 // CreateDocumentRequest は、書類を作成時に必要なデータを取得するための構造体
 type CreateDocumentRequest struct {
-	UserID         int    `json:"user_id"`         //ユーザID
 	StartTime      string `json:"start_time"`      // 欠席開始日
 	EndTime        string `json:"end_time"`        // 欠席終了日
 	Location       string `json:"location"`        // 場所
@@ -29,11 +28,6 @@ type CreateDocumentStruct struct {
 	DivisionID     int    // 区分ID
 }
 
-// ReadDocsListRequest は、学生が自身の提出した書類を取得する際に必要なデータを保持するための構造体
-type ReadDocsListRequest struct {
-	UserID int `json:"user_id"` //ユーザID
-}
-
 // ReadDocsListResponse は、学生が自身の提出した書類を取得する際に使用する構造体
 type ReadDocsListResponse struct {
 	DocumentID   	int    	`json:"document_id"`		//書類ID
@@ -44,7 +38,6 @@ type ReadDocsListResponse struct {
 
 // ReadDocumentRequest は、学生が自身の提出した書類を取得する際に必要なデータを保持するための構造体
 type ReadDocumentRequest struct {
-	UserID     int `json:"user_id"`	//ユーザID
 	DocumentID int `json:"document_id"`	//書類ID
 }
 
@@ -64,7 +57,6 @@ type ReadDocumentResponse struct {
 
 // NextDocumentRequest は、現在閲覧している書類の前後の書類を取得する際に必要なデータを保持するための構造体
 type NextDocumentRequest struct {
-	UserID     int `json:"user_id"`	//ユーザID
 	DocumentID int `json:"document_id"`	//書類ID
 }
 
@@ -77,16 +69,6 @@ type DocumentArrayStruct struct {
 type NextDocumentResponse struct {
 	NextDocumentID	int  `json:"document_id_next"`		//書類ID
 	PrevDocumentID  int	`json:"document_id_prev"`		//書類ID
-}
-
-// StudentCheckAlarmRequest は、通知が存在するかの確認をする際に必要なデータを保持するための構造体
-type StudentCheckAlarmRequest struct {
-	UserID int `json:"user_id"` //ユーザID
-}
-
-// StudentCheckAlarmResponse は、通知の内容を取得する際に使用する構造体
-type StudentReadAlarmRequest struct {
-	UserID int `json:"user_id"`
 }
 
 // StudentReadAlarmResponse は、通知の内容を取得する際に、データを保持するのに使用する構造体

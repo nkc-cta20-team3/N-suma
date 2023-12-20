@@ -1,7 +1,7 @@
 package student
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 
 	"main/infra"
@@ -13,6 +13,7 @@ import (
 
 func NextDocument(c *gin.Context) {
 
+	UserID := c.MustGet("UserID").(int)
 	request := model.NextDocumentRequest{}
 	responseWrap := model.ResponseWrap{}
 	responseWrap.Message = "success"
@@ -26,7 +27,7 @@ func NextDocument(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, errResponse)
 		return
 	}
-	fmt.Println(request)
+	log.Println(request)
 
 	//DB接続とエラーハンドリング
 	db := infra.DBInitGorm()
@@ -41,13 +42,13 @@ func NextDocument(c *gin.Context) {
 	//書類ID一覧を取得
 	err := db.Table("oa").
 		Select("document_id").
-		Where("user_id = ?", request.UserID).
+		Where("user_id = ?", UserID).
 		Scan(&documentArray).
 		Error
 	if err != nil {
 		//その他のエラーハンドリング
 		errResponse.Message = "OTHER ERROR"
-		fmt.Println(err.Error())
+		log.Println(err.Error())
 		c.JSON(http.StatusInternalServerError, errResponse)
 		return
 	}		
@@ -81,7 +82,7 @@ func NextDocument(c *gin.Context) {
 		
 	}
 
-	fmt.Println(response)
+	log.Println(response)
 	responseWrap.Document = response
 
 	// レスポンスを返す

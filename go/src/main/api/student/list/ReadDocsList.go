@@ -1,7 +1,7 @@
 package student
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 
 	"main/infra"
@@ -13,13 +13,13 @@ import (
 
 func ReadDocsList(c *gin.Context) {
 
-	request := model.ReadDocsListRequest{}
+	UserID := c.MustGet("UserID").(int)
 	responseWrap := model.ResponseWrap{}
 	responseWrap.Message = "success"
 	response := []model.ReadDocsListResponse{}
 	errResponse := model.MessageError{}
 
-	fmt.Println(request)
+	log.Println(request)
 	//POSTで受け取った値を格納する
 	if err := c.ShouldBindJSON(&request); err != nil {
 		// エラー処理
@@ -45,13 +45,13 @@ func ReadDocsList(c *gin.Context) {
 			"dv.division_name",
 			"dv.division_detail").
 		Joins("JOIN division AS dv ON oa.division_id = dv.division_id").
-		Where("oa.user_id = ?", request.UserID).
+		Where("oa.user_id = ?", UserID).
 		Scan(&response).
 		Error
 	if err != nil {
 		//その他のエラーハンドリング
 		errResponse.Message = "OTHER ERROR"
-		fmt.Println(err.Error())
+		log.Println(err.Error())
 		c.JSON(http.StatusInternalServerError, errResponse)
 		return
 	}
@@ -61,7 +61,7 @@ func ReadDocsList(c *gin.Context) {
 		response[i].RequestAt = (utils.StringToTime3(response[i].RequestAt)).Format("2006-01-02")
 	}
 
-	fmt.Println(response)
+	log.Println(response)
 	responseWrap.Document = response
 
 	// レスポンスを返す
