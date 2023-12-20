@@ -52,6 +52,7 @@ func CreateUser(c *gin.Context) {
 	}
 
 	//ユーザ情報をDBに格納
+	UserFlag := true
 	err := db.Table("user").
 		Where("user_id = ?", request.UserID).
 		Updates(model.CreateUserStruct{
@@ -59,6 +60,7 @@ func CreateUser(c *gin.Context) {
 			UserNumber:  userNumber,
 			PostID:      &request.PostID,
 			ClassID:     &request.ClassID,
+			UserFlag:	 &UserFlag,
 		}).
 		Error
 	if err != nil {
