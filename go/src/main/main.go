@@ -128,11 +128,8 @@ func main() {
 	authRouter.Use(controller.AuthMiddleware())	// VerifyTokenの実行
 	authRouter.Use(controller.RoleSetMiddleware()) // DBとの照合、ユーザー情報の取得
 
-	// 役職の決まっていないAPIのルーティング
-	noRole := authRouter.Group("/auth")
-	{
-		noRole.POST("/", apiAuth.GetPost) 	//ユーザー情報取得
-	}
+	authRouter.POST("/auth", apiAuth.GetPost) 	//ユーザーログイン時に役職を取得するためのAPI
+	
 
 	// 管理者用APIのルーティング
 	admin := authRouter.Group("/admin")
