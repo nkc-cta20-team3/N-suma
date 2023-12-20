@@ -11,7 +11,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func ReadAllDocument(c *gin.Context) {
+func ReadDocument(c *gin.Context) {
 
 	request := model.ReadAllDocumentRequest{}
 	responseWrap := model.ResponseWrap{}

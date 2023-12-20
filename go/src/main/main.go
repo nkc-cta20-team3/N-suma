@@ -214,7 +214,7 @@ func main() {
 	// 書類認可画面用APIのルーティング
 	teacherAuth := teacher.Group("/auth")
 	{
-		teacherAuth.POST("/read", apiTeacherAuth.ReadDocument)	// 書類詳細取得
+		teacherAuth.POST("/read", apiTeacherView.ReadDocument)	// 書類詳細取得
 		teacherAuth.POST("/reject", apiTeacherAuth.RejectAuth)	// 書類却下
 		teacherAuth.POST("/update", apiTeacherAuth.UpdateAuth)	// 書類認可
 	}
@@ -228,7 +228,7 @@ func main() {
 	// 書類詳細画面用APIのルーティング
 	teacherView := teacher.Group("/view")
 	{
-		teacherView.POST("/read", apiTeacherView.ReadAllDocument)	// 書類詳細取得
+		teacherView.POST("/read", apiTeacherView.ReadDocument)	// 書類詳細取得
 		teacherView.POST("/next", apiTeacherView.NextAllDocument)	// 書類切り替え
 	}
 	
