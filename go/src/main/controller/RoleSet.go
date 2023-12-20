@@ -11,8 +11,9 @@ import (
 )
 
 type GetUser struct {
-	UserID int `json:"user_id"` //ユーザID
-	PostID int `json:"post_id"` //役職ID
+	UserID 		int 	`json:"user_id"` //ユーザID
+	PostID 		int 	`json:"post_id"` //役職ID
+	UserFlag  	bool  	`json:"user_flag"`
 }
 
 type CreateUser struct {
@@ -48,9 +49,8 @@ func RoleSetMiddleware() gin.HandlerFunc {
 		
 		// UUIDをもとに、DBからユーザー情報を取得する
 		err := db.Table("user").
-			Select("user_id, post_id").
+			Select("user_id, post_id, user_flag").
 			Where("user_uuid = ?", uuid).
-			Where("user_flag = ?", true).
 			Limit(1).
 			Find(&user)
 		if err.Error != nil {
@@ -80,7 +80,9 @@ func RoleSetMiddleware() gin.HandlerFunc {
 				c.JSON(http.StatusInternalServerError, errResponse)
 				return
 			}
-		} else {
+		} else if user.UserFlag == true {
+			// ユーザーが存在し、かつ、ユーザーが有効な場合
+
 			// ロギング
 			log.Println(user)
 			// コンテキストに、ユーザーのIDをセットする
