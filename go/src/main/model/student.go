@@ -77,3 +77,24 @@ type StudentReadAlarmResponse struct {
 	RequestAt  string `json:"request_at"`
 	Status     int    `json:"status"`
 }
+
+// ReSubmitDocumentRequest は、書類を更新時に必要なデータを取得するための構造体
+type ReSubmitDocumentRequest struct {
+	DocumentID		int   	`json:"document_id"` 	//書類ID
+	StartTime      	string	`json:"start_time"`     // 欠席開始日
+	EndTime        	string 	`json:"end_time"`       // 欠席終了日
+	Location       	string 	`json:"location"`       // 場所
+	StudentComment 	string 	`json:"student_comment"`// 学生コメント
+	DivisionID     	int    	`json:"division_id"`    //区分ID
+}
+
+// ReSubmitDocumentStruct は、書類を更新する際に、DBにデータを追加するときに使用する構造体
+type ReSubmitDocumentStruct struct {
+	RequestAt      *time.Time // 申請日
+	StartTime      *time.Time // 欠席開始日
+	EndTime        *time.Time // 欠席終了日
+	Location       string // 場所
+	Status         int    // 認可状態
+	StudentComment string // 学生コメント
+	DivisionID     int    // 区分ID
+}

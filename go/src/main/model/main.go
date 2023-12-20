@@ -63,30 +63,6 @@ type UserPosition struct {
 	PostID int `json:"post_id"`
 }
 
-// ResubmitDocumentで使用する構造体
-type ResubmitDocumentRequest struct {
-	DocumentID     int    `json:"document_id"`
-	UserID         int    `json:"user_id"`
-	RequestAt      string `json:"request_at"`
-	StartTime      string `json:"start_time"`
-	EndTime        string `json:"end_time"`
-	Location       string `json:"location"`
-	StudentComment string `json:"student_comment"`
-	DivisionID     int    `json:"division_id"`
-}
-
-type ResubmitDocument struct {
-	DocumentID     int    `json:"document_id"`     //書類ID
-	RequestAt      string `json:"request_at"`      // 申請日
-	StartTime      string `json:"start_time"`      // 欠席開始日
-	EndTime        string `json:"end_time"`        // 欠席終了日
-	Location       string `json:"location"`        // 場所
-	Status         int    `json:"status"`          //ステータス
-	ReadFlag       bool   `json:"read_flag"`       //既読フラグ
-	StudentComment string `json:"student_comment"` // 学生コメント
-	DivisionID     int    `json:"division_id"`     //区分ID
-}
-
 type TakePostID struct {
 	PostID int `json:"post_id"` //役職ID
 }
