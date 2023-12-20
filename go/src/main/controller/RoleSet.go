@@ -18,6 +18,7 @@ type GetUser struct {
 type CreateUser struct {
 	UserUUID  	string 	`json:"user_uuid"`
 	MailAddress string 	`json:"mail_address"`
+	UserFlag  	bool   `json:"user_flag"`
 }
 
 func RoleSetMiddleware() gin.HandlerFunc {
@@ -49,6 +50,7 @@ func RoleSetMiddleware() gin.HandlerFunc {
 		err := db.Table("user").
 			Select("user_id, post_id").
 			Where("user_uuid = ?", uuid).
+			Where("user_flag = ?", true).
 			Limit(1).
 			Find(&user)
 		if err.Error != nil {
@@ -64,6 +66,7 @@ func RoleSetMiddleware() gin.HandlerFunc {
 			createUser := CreateUser{
 				UserUUID: uuid,
 				MailAddress: email,
+				UserFlag: false,
 			}
 			
 			// クエリの発行
