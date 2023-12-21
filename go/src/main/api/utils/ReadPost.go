@@ -28,16 +28,8 @@ func ReadPost(c *gin.Context) {
 	response := []model.ReadPostResponse{}
 	errResponse := model.MessageError{}
 
-	//DB接続とエラーハンドリング
-	db := infra.DBInitGorm()
-	if db.Error != nil {
-		errResponse.Message = "データベース接続エラー"
-		c.JSON(http.StatusInternalServerError, errResponse)
-		return
-	}
-
 	// 役職一覧を取得
-	err := db.Table("post").Select("post_id,post_name").Scan(&response).Error
+	err := infra.DB.Table("post").Select("post_id,post_name").Scan(&response).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			// 行が見つからなかった場合の処理

@@ -28,16 +28,8 @@ func ReadClass(c *gin.Context) {
 	response := []model.ReadClassResponse{}
 	errResponse := model.MessageError{}
 
-	//DB接続とエラーハンドリング
-	db := infra.DBInitGorm()
-	if db.Error != nil {
-		errResponse.Message = "データベース接続エラー"
-		c.JSON(http.StatusInternalServerError, errResponse)
-		return
-	}
-
 	// クラス一覧を取得
-	err := db.Table("classification").Select("class_id,class_abbr,class_name").Scan(&response).Error
+	err := infra.DB.Table("classification").Select("class_id,class_abbr,class_name").Scan(&response).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			// 行が見つからなかった場合の処理
