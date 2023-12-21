@@ -51,7 +51,7 @@
       <!-- <v-btn @click="consoleDebug">debug</v-btn> -->
 
       <!-- Debug Button changeRole -->
-      <v-btn v-if="store.isLogin" @click="store.changeRole">役職切替</v-btn>
+      <!-- <v-btn v-if="store.isLogin" @click="store.changeRole">役職切替</v-btn> -->
     </v-toolbar-items>
   </v-app-bar>
   <!-- 通知ポップアップ -->
@@ -79,6 +79,7 @@ import { mdiBellOutline } from "@mdi/js";
 import RowCard from "@/components/NavigationRowCard.vue";
 import router from "@/router";
 import { useStore } from "@/stores/user";
+import { APICallonJWT } from "@/utils";
 
 const store = useStore();
 
@@ -114,8 +115,20 @@ function onItemClick(id) {
 }
 
 onMounted(() => {
-  // TODO: 通知がないかを確認するAPIを叩く処理を記述する
-  isNotification.value = true;
+  // MEMO: 叩くAPIは、学生か教員かで挙動が変わる
+  if (store.role === "student") {
+    // 学生向けの通知がないかを確認するAPIを叩く
+    APICallonJWT("student/alarm/check", {}).then((res) => {
+      console.log(res);
+      isNotification.value = res.message;
+    });
+  } else if (store.role === "teacher") {
+    // 教員向けの通知がないかを確認するAPIを叩く
+    APICallonJWT("teacher/alarm/check", {}).then((res) => {
+      console.log(res);
+      isNotification.value = res.message;
+    });
+  }
 
   // MEMO: 叩くAPIは、学生か教員かで挙動が変わる
   // TODO: 通知がある場合は、notificationに通知の内容を格納する
