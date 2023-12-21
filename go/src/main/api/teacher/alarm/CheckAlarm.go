@@ -4,13 +4,13 @@ import (
 	"log"
 	"net/http"
 
+	"main/infra"
 	"main/model"
 
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 )
 
-func CheckAlarm(c *gin.Context, db *gorm.DB) {
+func CheckAlarm(c *gin.Context) {
 
 	responseWrap := model.ResponseWrap{}
 	responseWrap.Message = "success"
@@ -19,7 +19,7 @@ func CheckAlarm(c *gin.Context, db *gorm.DB) {
 	
 	// 未認可の書類があるかどうかを確認
 	var count int64
-	err := db.Table("oa").
+	err := infra.DB.Table("oa").
 		Select("document_id").
 		Where("oa.status = ?", 1).
 		Count(&count).

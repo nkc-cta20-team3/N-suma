@@ -17,15 +17,7 @@ func ReadAlarm(c *gin.Context) {
 	response := []model.TeacherReadAlarmResponse{}
 	errResponse := model.MessageError{}
 
-	//DB接続とエラーハンドリング
-	db := infra.DBInitGorm()
-	if db.Error != nil {
-		errResponse.Message = "データベース接続エラー"
-		c.JSON(http.StatusInternalServerError, errResponse)
-		return
-	}
-
-	err := db.Table("oa").
+	err := infra.DB.Table("oa").
 		Select(
 			"oa.document_id",
 			"user.user_name",

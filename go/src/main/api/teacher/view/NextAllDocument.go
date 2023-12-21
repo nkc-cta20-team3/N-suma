@@ -27,18 +27,10 @@ func NextAllDocument(c *gin.Context) {
 	}
 	log.Println(request)
 
-	//DB接続とエラーハンドリング
-	db := infra.DBInitGorm()
-	if db.Error != nil {
-		errResponse.Message = "データベース接続エラー"
-		c.JSON(http.StatusInternalServerError, errResponse)
-		return
-	}
-
 	documentArray := []model.AllDocumentArrayStruct{}
 
 	//書類ID一覧を取得
-	err := db.Table("oa").
+	err := infra.DB.Table("oa").
 		Select("document_id").
 		Scan(&documentArray).
 		Error

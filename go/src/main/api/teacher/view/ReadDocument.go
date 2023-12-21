@@ -28,16 +28,8 @@ func ReadDocument(c *gin.Context) {
 		return
 	}
 
-	//DB接続とエラーハンドリング
-	db := infra.DBInitGorm()
-	if db.Error != nil {
-		errResponse.Message = "データベース接続エラー"
-		c.JSON(http.StatusInternalServerError, errResponse)
-		return
-	}
-	
 	// データベースからデータを取得する
-	err := db.Table("oa").
+	err := infra.DB.Table("oa").
 		Select(
 			"oa.request_at",
 			"dv.division_name",
