@@ -32,7 +32,7 @@ const store = useStore();
 const items = ref([]);
 
 function onItemClick(item) {
-  console.log(item);
+  // console.log(item);
   router.push({
     name: "studentView",
     params: { id: item.id },
