@@ -19,16 +19,8 @@ func ReadDocsList(c *gin.Context) {
 	response := []model.ReadDocsListResponse{}
 	errResponse := model.MessageError{}
 
-	//DB接続とエラーハンドリング
-	db := infra.DBInitGorm()
-	if db.Error != nil {
-		errResponse.Message = "データベース接続エラー"
-		c.JSON(http.StatusInternalServerError, errResponse)
-		return
-	}
-	
 	// 書類一覧を取得
-	err := db.Table("oa").
+	err := infra.DB.Table("oa").
 		Select(
 			"oa.document_id",
 			"oa.request_at",

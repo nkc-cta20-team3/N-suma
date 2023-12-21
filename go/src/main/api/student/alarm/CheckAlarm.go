@@ -17,18 +17,10 @@ func CheckAlarm(c *gin.Context) {
 	responseWrap.Message = "success"
 	errResponse := model.MessageError{}
 	responseWrap.Document = false
-
-	//DB接続とエラーハンドリング
-	db := infra.DBInitGorm()
-	if db.Error != nil {
-		errResponse.Message = "データベース接続エラー"
-		c.JSON(http.StatusInternalServerError, errResponse)
-		return
-	}
 	
 	// 再提出の書類があるかどうかを確認
 	var count int64
-	err := db.Table("oa").
+	err := infra.DB.Table("oa").
 		Select("document_id").
 		Where("status = -1").
 		Where("user_id = ?", UserID).
@@ -49,7 +41,7 @@ func CheckAlarm(c *gin.Context) {
 
 	// 認可完了していて、自分が未読の書類があるかどうかを確認
 	count = 0	
-	err = db.Table("oa").
+	err = infra.DB.Table("oa").
 		Select("document_id").
 		Where("status = 2 AND read_flag = 1").
 		Where("user_id = ?", UserID).

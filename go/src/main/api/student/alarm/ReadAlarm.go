@@ -19,15 +19,7 @@ func ReadAlarm(c *gin.Context) {
 	response := []model.StudentReadAlarmResponse{}
 	errResponse := model.MessageError{}
 
-	//DB接続とエラーハンドリング
-	db := infra.DBInitGorm()
-	if db.Error != nil {
-		errResponse.Message = "データベース接続エラー"
-		c.JSON(http.StatusInternalServerError, errResponse)
-		return
-	}
-
-	err := db.Table("oa").
+	err := infra.DB.Table("oa").
 		Select("document_id,request_at,status").
 		Where("user_id = ?", UserID).
 		Where("(status = ? AND read_flag = ?) OR status = ?" , 2, 1, -1).
@@ -45,7 +37,6 @@ func ReadAlarm(c *gin.Context) {
 		// 時刻の形式を変換
 		response[i].RequestAt = utils.StringToTime3(response[i].RequestAt).Format("2006-01-02")
 	}
-	
 	
 	log.Println(response)
 	responseWrap.Document = response

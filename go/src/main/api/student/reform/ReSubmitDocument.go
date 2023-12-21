@@ -29,16 +29,8 @@ func ReSubmitDocument(c *gin.Context) {
 	}
 	log.Println(request)
 
-	//DB接続とエラーハンドリング
-	db := infra.DBInitGorm()
-	if db.Error != nil {
-		errResponse.Message = "データベース接続エラー"
-		c.JSON(http.StatusInternalServerError, errResponse)
-		return
-	}
-
 	//再提出の書類と提出者の整合性確認SQLを発行
-	err := db.Table("oa").
+	err := infra.DB.Table("oa").
 		Select("document_id").
 		Where("user_id = ?", UserID).
 		Where("document_id = ?", request.DocumentID).
@@ -73,7 +65,7 @@ func ReSubmitDocument(c *gin.Context) {
 	endTime := utils.StringToTime2(request.EndTime)
 
 	// 公欠届のデータを更新
-	err = db.Table("oa").
+	err = infra.DB.Table("oa").
 		Where("user_id = ?", UserID).
 		Where("document_id = ?", request.DocumentID).
 		Updates(model.ReSubmitDocumentStruct{

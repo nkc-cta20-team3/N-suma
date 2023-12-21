@@ -29,14 +29,6 @@ func CreateDocument(c *gin.Context) {
 	}
 	log.Println(request)
 
-	//DB接続とエラーハンドリング
-	db := infra.DBInitGorm()
-	if db.Error != nil {
-		errResponse.Message = "データベース接続エラー"
-		c.JSON(http.StatusInternalServerError, errResponse)
-		return
-	}
-
 	// 現在時刻yyyy-MM-dd HH:mm形式で取得
 	requestAt := time.Now()
 
@@ -45,7 +37,7 @@ func CreateDocument(c *gin.Context) {
 	endTime := utils.StringToTime2(request.EndTime)
 	
 	// ユーザ情報をDBに格納
-	err := db.Table("oa").
+	err := infra.DB.Table("oa").
 		Create(model.CreateDocumentStruct{
 			UserID:         UserID,
 			RequestAt:      &requestAt,
