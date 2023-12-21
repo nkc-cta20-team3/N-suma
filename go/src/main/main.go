@@ -3,6 +3,7 @@ package main
 import (
 	"time"
 	"os"
+	"log"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -15,6 +16,7 @@ import (
 	docs "main/docs"
 
 	// ローカルモジュールのインポート
+	infra "main/infra"
 
 	// "main/api"
 	apiHello "main/api/hello"
@@ -49,6 +51,13 @@ import (
 // @license name:MIT
 // @license url: 'https://opensource.org/licenses/MIT'
 func main() {
+
+	//DB接続とエラーハンドリング
+	db := infra.DBInitGorm()
+	if db.Error != nil {
+		log.Println("データベース接続エラー")
+		return
+	}
 
 	// swaggerの設定
 	docs.SwaggerInfo.Host = os.Getenv("MY_HOST")
@@ -133,8 +142,9 @@ func main() {
 	authRouter.Use(controller.AuthMiddleware())	// VerifyTokenの実行
 	authRouter.Use(controller.RoleSetMiddleware()) // DBとの照合、ユーザー情報の取得
 
-	authRouter.POST("/auth", apiAuth.GetPost) 	//ユーザーログイン時に役職を取得するためのAPI
-	
+	authRouter.POST("/auth", func(c *gin.Context){
+		apiAuth.GetPost(c,db) // 通知が存在するかの確認
+	})
 
 	// 管理者用APIのルーティング
 	admin := authRouter.Group("/admin")
@@ -207,7 +217,9 @@ func main() {
 	// 通知関連のAPIのルーティング
 	teacherAlarm := teacher.Group("/alarm")
 	{
-		teacherAlarm.POST("/check", apiTeacherAlarm.CheckAlarm)		// 通知が存在するかの確認
+		teacherAlarm.POST("/check", func(c *gin.Context){
+			apiTeacherAlarm.CheckAlarm(c,db) // 通知が存在するかの確認
+		})
 		teacherAlarm.POST("/read", apiTeacherAlarm.ReadAlarm)		// 通知の内容を取得
 	}
 

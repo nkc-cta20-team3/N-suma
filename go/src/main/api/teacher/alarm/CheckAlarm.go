@@ -4,28 +4,19 @@ import (
 	"log"
 	"net/http"
 
-	"main/infra"
 	"main/model"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
-func CheckAlarm(c *gin.Context) {
+func CheckAlarm(c *gin.Context, db *gorm.DB) {
 
 	responseWrap := model.ResponseWrap{}
 	responseWrap.Message = "success"
 	errResponse := model.MessageError{}
 	responseWrap.Document = false
-
-	//DB接続とエラーハンドリング
-	db := infra.DBInitGorm()
-	if db.Error != nil {
-		errResponse.Message = "データベース接続エラー"
-		c.JSON(http.StatusInternalServerError, errResponse)
-		return
-	}
-	defer db.Close()
-		
+	
 	// 未認可の書類があるかどうかを確認
 	var count int64
 	err := db.Table("oa").

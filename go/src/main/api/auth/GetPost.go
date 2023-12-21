@@ -4,13 +4,13 @@ import (
 	"log"
 	"net/http"
 
-	"main/infra"
 	"main/model"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
-func GetPost(c *gin.Context) {
+func GetPost(c *gin.Context, db *gorm.DB) {
 	
 	responseWrap := model.ResponseWrap{}
 	responseWrap.Message = "success"
@@ -28,15 +28,6 @@ func GetPost(c *gin.Context) {
 		c.JSON(http.StatusOK, responseWrap)
 		return
 	}
-
-	//DB接続とエラーハンドリング
-	db := infra.DBInitGorm()
-	if db.Error != nil {
-		errResponse.Message = "データベース接続エラー"
-		c.JSON(http.StatusInternalServerError, errResponse)
-		return
-	}
-	defer db.Close()
 
 	// 役職IDをもとに、DBから役職名を取得する
 	err := db.Table("post").

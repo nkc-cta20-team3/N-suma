@@ -33,7 +33,6 @@ func DeleteUser(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, errResponse)
 		return
 	}
-	defer db.Close()
 
 	// ユーザー情報を削除(ユーザーを凍結処理)
 	userflag := false

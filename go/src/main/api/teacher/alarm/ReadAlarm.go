@@ -24,7 +24,6 @@ func ReadAlarm(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, errResponse)
 		return
 	}
-	defer db.Close()
 
 	err := db.Table("oa").
 		Select(

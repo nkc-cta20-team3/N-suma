@@ -36,7 +36,6 @@ func SearchUserList(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, errResponse)
 		return
 	}
-	defer db.Close()
 
 	// ユーザーを検索
 	if(request.UserNumber == ""){

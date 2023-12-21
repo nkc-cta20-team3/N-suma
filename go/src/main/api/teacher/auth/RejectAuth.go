@@ -33,7 +33,6 @@ func RejectAuth(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, errResponse)
 		return
 	}
-	defer db.Close()
 
 	// 却下可能な書類かどうかの確認
 	err := db.Table("oa").

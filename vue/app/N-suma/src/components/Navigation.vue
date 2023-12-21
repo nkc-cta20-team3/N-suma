@@ -93,7 +93,7 @@ function consoleDebug() {
   console.log("====================");
   console.log("isLogin: ", store.isLogin);
   console.log("role: ", store.role);
-  console.log("user: ", store.user ? store.user.uid : "null");
+  console.log("token: ", store.token);
   console.log("====================\n");
 }
 
@@ -140,7 +140,7 @@ function init() {
     });
   }
 
-  console.log(isNotification.value);
+  // console.log(isNotification.value);
 
   // TODO: 通知がある場合は、notificationに通知の内容を格納する
   if (isNotification) {

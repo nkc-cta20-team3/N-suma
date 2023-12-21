@@ -33,7 +33,6 @@ func UpdateUser(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, errResponse)
 		return
 	}
-	defer db.Close()
 
 	// ユーザー情報を更新
 	err := db.Table("user").

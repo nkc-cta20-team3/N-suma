@@ -35,7 +35,6 @@ func ReadClass(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, errResponse)
 		return
 	}
-	defer db.Close()
 
 	// クラス一覧を取得
 	err := db.Table("classification").Select("class_id,class_abbr,class_name").Scan(&response).Error

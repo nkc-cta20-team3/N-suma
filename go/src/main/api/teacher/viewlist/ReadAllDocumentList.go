@@ -24,7 +24,6 @@ func ReadAllDocumentList(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, errResponse)
 		return
 	}
-	defer db.Close()
 
 	// 書類一覧を取得
 	err := db.Table("oa").

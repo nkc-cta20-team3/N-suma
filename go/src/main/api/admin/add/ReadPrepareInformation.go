@@ -26,7 +26,6 @@ func ReadPrepareInformation(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, errResponse)
 		return
 	}
-	defer db.Close()
 	
 	// 役職が未登録ユーザーのid,uuid,emailをリストで一覧取得
 	err := db.Table("user").

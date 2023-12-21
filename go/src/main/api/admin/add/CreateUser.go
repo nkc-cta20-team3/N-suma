@@ -34,7 +34,6 @@ func CreateUser(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, errResponse)
 		return
 	}
-	defer db.Close()
 
 	// userNumberというnil許容の数値型を定義し、
 	// user_numberが空文字の場合、nilを格納する
