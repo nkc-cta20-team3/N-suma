@@ -33,14 +33,7 @@ func DeleteUser(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, errResponse)
 		return
 	}
-
-	/*
-	userflag := false
-	update := UpdateUser{UserFlag: &userflag}
-	err := db.Table("user").
-		Where("user_id = ?", request.TargetUserID).
-		Updates(update).Error	
-	*/
+	defer db.Close()
 
 	// ユーザー情報を削除(ユーザーを凍結処理)
 	userflag := false
@@ -56,7 +49,7 @@ func DeleteUser(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, errResponse)
 		return
 	}
-
+	
 	// レスポンスを返す
 	c.JSON(http.StatusOK, responseWrap)
 	return

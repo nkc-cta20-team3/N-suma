@@ -34,6 +34,7 @@ func NextAllDocument(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, errResponse)
 		return
 	}
+	defer db.Close()
 
 	documentArray := []model.AllDocumentArrayStruct{}
 

@@ -36,6 +36,7 @@ func CreateDocument(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, errResponse)
 		return
 	}
+	defer db.Close()
 
 	// 現在時刻yyyy-MM-dd HH:mm形式で取得
 	requestAt := time.Now()

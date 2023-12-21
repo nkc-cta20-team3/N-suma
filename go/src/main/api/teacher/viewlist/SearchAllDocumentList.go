@@ -36,6 +36,7 @@ func SearchAllDocumentList(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, errResponse)
 		return
 	}
+	defer db.Close()
 
 	// 書類を検索
 	err := db.Table("oa").

@@ -36,6 +36,7 @@ func GetPost(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, errResponse)
 		return
 	}
+	defer db.Close()
 
 	// 役職IDをもとに、DBから役職名を取得する
 	err := db.Table("post").

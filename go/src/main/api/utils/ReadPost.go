@@ -35,6 +35,7 @@ func ReadPost(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, errResponse)
 		return
 	}
+	defer db.Close()
 
 	// 役職一覧を取得
 	err := db.Table("post").Select("post_id,post_name").Scan(&response).Error

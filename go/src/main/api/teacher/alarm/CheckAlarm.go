@@ -24,6 +24,7 @@ func CheckAlarm(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, errResponse)
 		return
 	}
+	defer db.Close()
 		
 	// 未認可の書類があるかどうかを確認
 	var count int64
