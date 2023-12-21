@@ -5,12 +5,12 @@ import (
 	"net/http"
 
 	"main/model"
+	"main/infra"
 
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 )
 
-func GetPost(c *gin.Context, db *gorm.DB) {
+func GetPost(c *gin.Context) {
 	
 	responseWrap := model.ResponseWrap{}
 	responseWrap.Message = "success"
@@ -30,7 +30,7 @@ func GetPost(c *gin.Context, db *gorm.DB) {
 	}
 
 	// 役職IDをもとに、DBから役職名を取得する
-	err := db.Table("post").
+	err := infra.DB.Table("post").
 		Select("post_name").
 		Where("post_id = ?", post_id).
 		First(&response).
