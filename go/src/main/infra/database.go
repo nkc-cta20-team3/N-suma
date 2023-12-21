@@ -5,9 +5,10 @@ import (
 	"os"
 	"time"
 
-	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
+	"gorm.io/driver/mysql"
+	"gorm.io/plugin/dbresolver"
 )
 
 var DB *gorm.DB
@@ -28,6 +29,14 @@ func init() {
 		log.Println(err)
 		connect(dialector, 100)
 	}
+	DB.Use(
+		dbresolver.Register(dbresolver.Config{ /* xxx */ }).
+		SetConnMaxIdleTime(time.Minute * 30).
+		SetConnMaxLifetime(time.Hour * 12).
+		SetMaxIdleConns(40).
+		SetMaxOpenConns(80),
+	)
+	// データベース接続成功
 	log.Println("データベース接続成功")
 }
 
