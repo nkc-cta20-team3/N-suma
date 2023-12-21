@@ -57,8 +57,7 @@
   <!-- 通知ポップアップ -->
   <v-dialog width="70%" v-model="dialog" scrollable>
     <v-card>
-      <v-card-title v-if="!isNotification">通知はありません</v-card-title>
-      <v-container v-else>
+      <v-container v-if="isNotification">
         <v-row justify="center">
           <v-col cols="12" v-for="item in notification" :key="item.title">
             <RowCard
@@ -69,6 +68,7 @@
           </v-col>
         </v-row>
       </v-container>
+      <v-container v-else>通知はありません</v-container>
     </v-card>
   </v-dialog>
 </template>
@@ -77,6 +77,7 @@
 import { onMounted, ref } from "vue";
 import { mdiBellOutline } from "@mdi/js";
 import RowCard from "@/components/NavigationRowCard.vue";
+import { onBeforeRouteUpdate } from "vue-router";
 import router from "@/router";
 import { useStore } from "@/stores/user";
 import { APICallonJWT } from "@/utils";
@@ -115,24 +116,34 @@ function onItemClick(id) {
 }
 
 onMounted(() => {
+  init();
+});
+
+onBeforeRouteUpdate((to, from, next) => {
+  init();
+  next();
+});
+
+function init() {
   // MEMO: 叩くAPIは、学生か教員かで挙動が変わる
   if (store.role === "student") {
     // 学生向けの通知がないかを確認するAPIを叩く
     APICallonJWT("student/alarm/check", {}).then((res) => {
-      console.log(res);
-      isNotification.value = res.message;
+      // console.log(res);
+      isNotification.value = res.document;
     });
   } else if (store.role === "teacher") {
     // 教員向けの通知がないかを確認するAPIを叩く
     APICallonJWT("teacher/alarm/check", {}).then((res) => {
-      console.log(res);
-      isNotification.value = res.message;
+      // console.log(res);
+      isNotification.value = res.document;
     });
   }
 
-  // MEMO: 叩くAPIは、学生か教員かで挙動が変わる
+  console.log(isNotification.value);
+
   // TODO: 通知がある場合は、notificationに通知の内容を格納する
-  if (isNotification.value) {
+  if (isNotification) {
     notification.value = [
       {
         id: 1,
@@ -151,5 +162,5 @@ onMounted(() => {
       },
     ];
   }
-});
+}
 </script>
