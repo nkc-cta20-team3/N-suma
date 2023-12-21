@@ -39,16 +39,8 @@ func RoleSetMiddleware() gin.HandlerFunc {
 		errResponse := model.MessageError{}
 		user := GetUser{}
 
-		//DB接続とエラーハンドリング
-		db := infra.DBInitGorm()
-		if db.Error != nil {
-			errResponse.Message = "データベース接続エラー"
-			c.JSON(http.StatusInternalServerError, errResponse)
-			return
-		}
-		
 		// UUIDをもとに、DBからユーザー情報を取得する
-		err := db.Table("user").
+		err := infra.DB.Table("user").
 			Select("user_id, post_id, user_flag").
 			Where("user_uuid = ?", uuid).
 			Limit(1).
@@ -70,7 +62,7 @@ func RoleSetMiddleware() gin.HandlerFunc {
 			}
 			
 			// クエリの発行
-			err := db.Table("user").
+			err := infra.DB.Table("user").
 				Create(&createUser).
 				Error
 			if err != nil {
