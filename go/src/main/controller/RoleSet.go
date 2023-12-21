@@ -46,6 +46,7 @@ func RoleSetMiddleware() gin.HandlerFunc {
 			c.JSON(http.StatusInternalServerError, errResponse)
 			return
 		}
+		defer db.Close()
 		
 		// UUIDをもとに、DBからユーザー情報を取得する
 		err := db.Table("user").

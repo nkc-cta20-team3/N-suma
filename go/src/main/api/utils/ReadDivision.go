@@ -35,6 +35,7 @@ func ReadDivision(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, errResponse)
 		return
 	}
+	defer db.Close()
 
 	// 区分一覧を取得
 	err := db.Table("division").Select("division_id,division_name,division_detail").Find(&response).Error

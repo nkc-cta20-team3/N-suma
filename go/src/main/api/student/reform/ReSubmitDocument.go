@@ -36,6 +36,7 @@ func ReSubmitDocument(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, errResponse)
 		return
 	}
+	defer db.Close()
 
 	//再提出の書類と提出者の整合性確認SQLを発行
 	err := db.Table("oa").

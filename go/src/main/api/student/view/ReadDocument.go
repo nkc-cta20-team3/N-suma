@@ -36,6 +36,7 @@ func ReadDocument(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, errResponse)
 		return
 	}
+	defer db.Close()
 
 	// データベースからデータを取得する
 	err := db.Table("oa").

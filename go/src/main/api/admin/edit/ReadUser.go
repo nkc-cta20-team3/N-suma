@@ -37,6 +37,7 @@ func ReadUser(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, errResponse)
 		return
 	}
+	defer db.Close()
 
 	// ユーザー情報を取得
 	err := db.Table("user").
