@@ -58,11 +58,21 @@ export const useStore = defineStore("user", {
                 // 役職名を取得する
                 APICallonJWT("auth", {}).then((res) => {
                   // console.log(res);
-                  if (res.document.post_name === "管理者") this.role = "admin";
-                  else if (res.document.post_name === "教員")
-                    this.role = "teacher";
-                  else if (res.document.post_name === "学生")
-                    this.role = "student";
+
+                  // documentはnullになることがある
+                  if (res.document) {
+                    // console.log(res.document.post_name);
+                    if (res.document.post_name === "管理者")
+                      this.role = "admin";
+                    else if (res.document.post_name === "教員")
+                      this.role = "teacher";
+                    else if (res.document.post_name === "学生")
+                      this.role = "student";
+                  } else {
+                    this.role = null;
+                    // console.log("role is null");
+                  }
+
                   // console.log(this.role);
                 });
               });
