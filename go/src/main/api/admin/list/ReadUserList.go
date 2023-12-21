@@ -19,16 +19,8 @@ func ReadUserList(c *gin.Context) {
 	response := []model.ReadUserListResponse{}
 	errResponse := model.MessageError{}
 
-	//DB接続とエラーハンドリング
-	db := infra.DBInitGorm()
-	if db.Error != nil {
-		errResponse.Message = "データベース接続エラー"
-		c.JSON(http.StatusInternalServerError, errResponse)
-		return
-	}
-
 	// ユーザー一覧を取得
-	err := db.Table("user").
+	err := infra.DB.Table("user").
 		Select("user.user_id,user.user_name,cs.class_abbr").
 		Joins("LEFT OUTER JOIN classification cs ON user.class_id = cs.class_id").
 		Scan(&response).Error

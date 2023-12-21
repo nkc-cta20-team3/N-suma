@@ -26,17 +26,9 @@ func DeleteUser(c *gin.Context) {
 	}
 	log.Println(request)
 
-	//DB接続とエラーハンドリング
-	db := infra.DBInitGorm()
-	if db.Error != nil {
-		errResponse.Message = "データベース接続エラー"
-		c.JSON(http.StatusInternalServerError, errResponse)
-		return
-	}
-
 	// ユーザー情報を削除(ユーザーを凍結処理)
 	userflag := false
-	err := db.Table("user").
+	err := infra.DB.Table("user").
 		Where("user_id = ?", request.TargetUserID).
 		Updates(model.DeleteUserStruct{
 			UserFlag: &userflag }).

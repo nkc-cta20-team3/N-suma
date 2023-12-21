@@ -29,17 +29,9 @@ func SearchUserList(c *gin.Context) {
 	}
 	log.Println(request)
 
-	//DB接続とエラーハンドリング
-	db := infra.DBInitGorm()
-	if db.Error != nil {
-		errResponse.Message = "データベース接続エラー"
-		c.JSON(http.StatusInternalServerError, errResponse)
-		return
-	}
-
 	// ユーザーを検索
 	if(request.UserNumber == ""){
-		err := db.Table("user").
+		err := infra.DB.Table("user").
 			Select("user.user_id,user.user_name,cs.class_abbr").
 			Joins("LEFT OUTER JOIN classification cs ON user.class_id = cs.class_id").
 			Where("post_id = ?", request.PostID).
@@ -59,7 +51,7 @@ func SearchUserList(c *gin.Context) {
 			}
 		}
 	}else{	
-		err := db.Table("user").
+		err := infra.DB.Table("user").
 			Select("user.user_id,user.user_name,cs.class_abbr").
 			Joins("LEFT OUTER JOIN classification cs ON user.class_id = cs.class_id").
 			Where("user_number LIKE ?", "%"+request.UserNumber+"%").

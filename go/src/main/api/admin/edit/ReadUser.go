@@ -30,16 +30,8 @@ func ReadUser(c *gin.Context) {
 	}
 	log.Println(request)
 
-	//DB接続とエラーハンドリング
-	db := infra.DBInitGorm()
-	if db.Error != nil {
-		errResponse.Message = "データベース接続エラー"
-		c.JSON(http.StatusInternalServerError, errResponse)
-		return
-	}
-
 	// ユーザー情報を取得
-	err := db.Table("user").
+	err := infra.DB.Table("user").
 		Select("user.user_uuid,user.mail_address,user.user_name,user.user_number,user.class_id,user.post_id,user.user_flag").
 		Where("user_id = ?", request.TargetUserID).
 		Scan(&response).Error

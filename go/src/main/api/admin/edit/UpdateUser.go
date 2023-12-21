@@ -17,7 +17,7 @@ func UpdateUser(c *gin.Context) {
 	responseWrap.Message = "success"
 	errResponse := model.MessageError{}
 
-		//POSTで受け取った値を格納する
+	//POSTで受け取った値を格納する
 	if err := c.ShouldBindJSON(&request); err != nil {
 		// エラー処理
 		errResponse.Message = err.Error()
@@ -26,16 +26,8 @@ func UpdateUser(c *gin.Context) {
 	}
 	log.Println(request)
 
-	//DB接続とエラーハンドリング
-	db := infra.DBInitGorm()
-	if db.Error != nil {
-		errResponse.Message = "データベース接続エラー"
-		c.JSON(http.StatusInternalServerError, errResponse)
-		return
-	}
-
 	// ユーザー情報を更新
-	err := db.Table("user").
+	err := infra.DB.Table("user").
 		Where("user_id = ?", request.UserID).
 		Updates(model.UpdateUserStruct{
 			UserName:   request.UserName,

@@ -18,17 +18,9 @@ func ReadPrepareInformation(c *gin.Context) {
 	responseWrap.Message = "success"
 	response := []model.ReadPrepareInformationResponse{}
 	errResponse := model.MessageError{}
-
-	//DB接続とエラーハンドリング
-	db := infra.DBInitGorm()
-	if db.Error != nil {
-		errResponse.Message = "データベース接続エラー"
-		c.JSON(http.StatusInternalServerError, errResponse)
-		return
-	}
 	
 	// 役職が未登録ユーザーのid,uuid,emailをリストで一覧取得
-	err := db.Table("user").
+	err := infra.DB.Table("user").
 		Select("user_id, user_uuid, mail_address").
 		Where("post_id IS NULL").
 		Scan(&response).
@@ -50,10 +42,7 @@ func ReadPrepareInformation(c *gin.Context) {
 
 	log.Println(response)
 	responseWrap.Document = response
-
-	// コミットして処理を終了する
-	db.Commit()
-
+	
 	// レスポンスを返す
 	c.JSON(http.StatusOK, responseWrap)
 	return
