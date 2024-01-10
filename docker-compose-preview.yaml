@@ -16,16 +16,6 @@ services:
       - ./preview/go/.go_env
     ports:
       - "8080:8080"
-    depends_on:
-      - db_preview
-  db_preview:
-    container_name: n-suna_db_preview
-    build: ./preview/db
-    volumes:
-      - ./preview/db/initdb.d:/docker-entrypoint-initdb.d
-      - ./preview/db/mysql/:/var/lib/mysql/
-    env_file:
-      - ./preview/db/.env
 networks:
   default:
     name: n-suna-preview
