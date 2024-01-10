@@ -100,7 +100,7 @@ function onItemClick(id) {
     });
   } else if (store.role === "teacher") {
     router.push({
-      name: "teacherForm",
+      name: "auth",
       params: { id: id },
     });
   }
@@ -126,7 +126,7 @@ async function init() {
 
 // 通知を取得する
 function checkAlerm() {
-  console.log("checkAlerm");
+  // console.log("checkAlerm");
 
   // MEMO: 叩くAPIは、学生か教員かで挙動が変わる
   if (store.role === "student") {
@@ -162,14 +162,13 @@ function checkAlerm() {
       if (res.document) {
         // 教員向けの通知の内容を取得する
         APICallonJWT("teacher/alarm/read", {}).then((res) => {
-          console.log(res);
-
+          // console.log(res);
           notification.value = [];
           res.document.forEach((item) => {
             notification.value.push({
               id: item.document_id,
               title: item.request_at,
-              text: "Dummy Text",
+              text: item.class_abbr + "/" + item.user_name,
             });
           });
         });
