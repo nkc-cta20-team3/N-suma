@@ -39,6 +39,7 @@ func CheckAlarm(c *gin.Context) {
 		log.Println("RESUBMIT DOCUMENT EXIST")
 	}
 
+	/*
 	// 認可完了していて、自分が未読の書類があるかどうかを確認
 	count = 0	
 	err = infra.DB.Table("oa").
@@ -59,6 +60,7 @@ func CheckAlarm(c *gin.Context) {
 		responseWrap.Document = true
 		log.Println("UNREAD DOCUMENT EXIST")
 	}
+	*/
 
 	// レスポンスを返す
 	c.JSON(http.StatusOK, responseWrap)
