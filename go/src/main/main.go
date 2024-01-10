@@ -181,6 +181,7 @@ func main() {
 	// 書類再提出画面用APIのルーティング
 	studentReForm := student.Group("/reform")
 	{
+		studentReForm.POST("/read", apiStudentView.ReadDocument)		// 書類詳細取得
 		studentReForm.POST("/update", apiStudentReForm.ReSubmitDocument)	// 書類再提出
 	}
 
