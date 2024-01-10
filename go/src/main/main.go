@@ -2,6 +2,7 @@ package main
 
 import (
 	"time"
+	"os"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -11,11 +12,11 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 
 	// docsのディレクトリを指定
-	_ "main/docs"
+	docs "main/docs"
 
 	// ローカルモジュールのインポート
+	controller "main/controller"
 
-	// "main/api"
 	apiHello "main/api/hello"
 	apiUtils "main/api/utils"
 
@@ -36,7 +37,6 @@ import (
 	apiTeacherView "main/api/teacher/view"
 	
 	apiAuth "main/api/auth"
-	"main/controller"
 )
 
 // @title N-suma-API
@@ -47,8 +47,10 @@ import (
 // @contact email:dev@example
 // @license name:MIT
 // @license url: 'https://opensource.org/licenses/MIT'
-// @host localhost:8080
 func main() {
+
+	// swaggerの設定
+	docs.SwaggerInfo.Host = os.Getenv("MY_HOST")
 
 	g := gin.Default()
 	g.Use(controller.LogMiddleware())
@@ -61,11 +63,13 @@ func main() {
 			"http://localhost",
 			"http://localhost:80",
 			"http://localhost:5173",
-			
+			"http://localhost:8080",
 
 			// awsのデプロイ先
 			"http://n-suma.com",
 			"https://n-suma.com",
+			"http://n-suma.com:8080",
+			"https://n-suma.com:8080",
 
 			// firebaseのデプロイ先
 			"http://n-suma.firebaseapp.com",
@@ -125,18 +129,14 @@ func main() {
 
 	// 認証が必要なAPIのルーティング
 	authRouter := g.Group("/")
-	authRouter.Use(controller.AuthMiddleware())
+	authRouter.Use(controller.AuthMiddleware())	// VerifyTokenの実行
+	authRouter.Use(controller.RoleSetMiddleware()) // DBとの照合、ユーザー情報の取得
 
-
-	// 役職の決まっていないAPIのルーティング
-	noRole := authRouter.Group("/auth")
-	{
-		noRole.POST("/getid", apiAuth.GetID)
-	}
+	authRouter.POST("/auth", apiAuth.GetPost) // ログイン認証用API
 
 	// 管理者用APIのルーティング
 	admin := authRouter.Group("/admin")
-	// admin.Use(controller.RoleMiddleware("Admin"))
+	admin.Use(controller.RoleCheckMiddleware(0))
 	
 	// ユーザー登録画面用APIのルーティング
 	adminAdd := admin.Group("/add")
@@ -160,9 +160,10 @@ func main() {
 		adminEdit.POST("/delete", apiAdminEdit.DeleteUser)	// ユーザー削除
 	}
 	
+	
 	// 学生用のAPIのルーティング
 	student := authRouter.Group("/student")
-	// student.Use(controller.RoleMiddleware("student"))
+	student.Use(controller.RoleCheckMiddleware(1))
 	
 	// 通知関連のAPIのルーティング
 	studentAlarm := student.Group("/alarm")
@@ -180,7 +181,8 @@ func main() {
 	// 書類再提出画面用APIのルーティング
 	studentReForm := student.Group("/reform")
 	{
-		studentReForm.POST("/create", apiStudentReForm.ReSubmitDocument)	// 書類再提出
+		studentReForm.POST("/read", apiStudentView.ReadDocument)		// 書類詳細取得
+		studentReForm.POST("/update", apiStudentReForm.ReSubmitDocument)	// 書類再提出
 	}
 
 	// 提出書類一覧画面用APIのルーティング
@@ -199,7 +201,7 @@ func main() {
 
 	// 教員用のAPIのルーティング
 	teacher := authRouter.Group("/teacher")
-	// teacher.Use(controller.RoleMiddleware("teacher"))
+	student.Use(controller.RoleCheckMiddleware(2))
 	
 	// 通知関連のAPIのルーティング
 	teacherAlarm := teacher.Group("/alarm")
@@ -211,7 +213,7 @@ func main() {
 	// 書類認可画面用APIのルーティング
 	teacherAuth := teacher.Group("/auth")
 	{
-		teacherAuth.POST("/read", apiTeacherAuth.ReadDocument)	// 書類詳細取得
+		teacherAuth.POST("/read", apiTeacherView.ReadDocument)	// 書類詳細取得
 		teacherAuth.POST("/reject", apiTeacherAuth.RejectAuth)	// 書類却下
 		teacherAuth.POST("/update", apiTeacherAuth.UpdateAuth)	// 書類認可
 	}
@@ -225,7 +227,7 @@ func main() {
 	// 書類詳細画面用APIのルーティング
 	teacherView := teacher.Group("/view")
 	{
-		teacherView.POST("/read", apiTeacherView.ReadAllDocument)	// 書類詳細取得
+		teacherView.POST("/read", apiTeacherView.ReadDocument)	// 書類詳細取得
 		teacherView.POST("/next", apiTeacherView.NextAllDocument)	// 書類切り替え
 	}
 	
@@ -233,15 +235,8 @@ func main() {
 	teacherViewList := teacher.Group("/viewlist")
 	{
 		teacherViewList.POST("/read", apiTeacherViewList.ReadAllDocumentList)	// 認可済書類一覧取得
+		teacherViewList.POST("/search", apiTeacherViewList.SearchAllDocumentList)	// 書類一覧検索
 	}
 	
-	/*
-	routes.POST("/cl", api.CheckLogin) //ログイン確認
-	routes.POST("/rup", api.ReadUserPost)
-
-	//調査用
-	routes.POST("/td", api.TestDate)
-	*/
-
 	g.Run(":8080")
 }

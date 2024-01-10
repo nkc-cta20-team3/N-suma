@@ -1,7 +1,7 @@
 package teacher
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 
 	"main/infra"
@@ -25,27 +25,19 @@ func NextAllDocument(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, errResponse)
 		return
 	}
-	fmt.Println(request)
-
-	//DB接続とエラーハンドリング
-	db := infra.DBInitGorm()
-	if db.Error != nil {
-		errResponse.Message = "データベース接続エラー"
-		c.JSON(http.StatusInternalServerError, errResponse)
-		return
-	}
+	log.Println(request)
 
 	documentArray := []model.AllDocumentArrayStruct{}
 
 	//書類ID一覧を取得
-	err := db.Table("oa").
+	err := infra.DB.Table("oa").
 		Select("document_id").
 		Scan(&documentArray).
 		Error
 	if err != nil {
 		//その他のエラーハンドリング
 		errResponse.Message = "OTHER ERROR"
-		fmt.Println(err.Error())
+		log.Println(err.Error())
 		c.JSON(http.StatusInternalServerError, errResponse)
 		return
 	}	
@@ -79,7 +71,7 @@ func NextAllDocument(c *gin.Context) {
 		
 	}
 
-	fmt.Println(response)
+	log.Println(response)
 	responseWrap.Document = response
 
 	// レスポンスを返す

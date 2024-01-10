@@ -22,6 +22,7 @@ type CreateUserStruct struct {
 	UserNumber  *int	`json:"user_number"`
 	PostID      *int    `json:"post_id"`
 	ClassID     *int    `json:"class_id"`
+	UserFlag  	*bool   `json:"user_flag"`
 }
 
 // ReadUserListResponse は、ユーザー一覧を取得する際に使用する構造体

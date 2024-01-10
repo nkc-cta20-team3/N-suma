@@ -3,3 +3,4 @@ TZ=Asia/Tokyo
 GO111MODULE=on
 DB_HOST=root:password@tcp(db:3306)/cta20gr3?charset=utf8mb4&parseTime=true
 GOOGLE_APPLICATION_CREDENTIALS=/.select/n-suma-firebase-admin.secret
+MY_HOST=localhost:8080

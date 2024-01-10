@@ -27,14 +27,6 @@ func CreateUser(c *gin.Context) {
 	}
 	fmt.Println(request)
 	
-	//DB接続とエラーハンドリング
-	db := infra.DBInitGorm()
-	if db.Error != nil {
-		errResponse.Message = "データベース接続エラー"
-		c.JSON(http.StatusInternalServerError, errResponse)
-		return
-	}
-
 	// userNumberというnil許容の数値型を定義し、
 	// user_numberが空文字の場合、nilを格納する
 	var userNumber *int
@@ -52,13 +44,15 @@ func CreateUser(c *gin.Context) {
 	}
 
 	//ユーザ情報をDBに格納
-	err := db.Table("user").
+	UserFlag := true
+	err := infra.DB.Table("user").
 		Where("user_id = ?", request.UserID).
 		Updates(model.CreateUserStruct{
 			UserName:    request.UserName,
 			UserNumber:  userNumber,
 			PostID:      &request.PostID,
 			ClassID:     &request.ClassID,
+			UserFlag:	 &UserFlag,
 		}).
 		Error
 	if err != nil {

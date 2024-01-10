@@ -51,14 +51,13 @@
       <!-- <v-btn @click="consoleDebug">debug</v-btn> -->
 
       <!-- Debug Button changeRole -->
-      <v-btn v-if="store.isLogin" @click="store.changeRole">役職切替</v-btn>
+      <!-- <v-btn v-if="store.isLogin" @click="store.changeRole">役職切替</v-btn> -->
     </v-toolbar-items>
   </v-app-bar>
   <!-- 通知ポップアップ -->
   <v-dialog width="70%" v-model="dialog" scrollable>
     <v-card>
-      <v-card-title v-if="!isNotification">通知はありません</v-card-title>
-      <v-container v-else>
+      <v-container v-if="isNotification">
         <v-row justify="center">
           <v-col cols="12" v-for="item in notification" :key="item.title">
             <RowCard
@@ -69,6 +68,7 @@
           </v-col>
         </v-row>
       </v-container>
+      <v-container v-else>通知はありません</v-container>
     </v-card>
   </v-dialog>
 </template>
@@ -77,23 +77,16 @@
 import { onMounted, ref } from "vue";
 import { mdiBellOutline } from "@mdi/js";
 import RowCard from "@/components/NavigationRowCard.vue";
+import { onBeforeRouteUpdate } from "vue-router";
 import router from "@/router";
 import { useStore } from "@/stores/user";
+import { APICallonJWT } from "@/utils";
 
 const store = useStore();
 
 const dialog = ref(false);
 const isNotification = ref(false);
 const notification = ref([]);
-
-function consoleDebug() {
-  console.log("debug logs");
-  console.log("====================");
-  console.log("isLogin: ", store.isLogin);
-  console.log("role: ", store.role);
-  console.log("user: ", store.user ? store.user.uid : "null");
-  console.log("====================\n");
-}
 
 function onItemClick(id) {
   dialog.value = false;
@@ -107,36 +100,80 @@ function onItemClick(id) {
     });
   } else if (store.role === "teacher") {
     router.push({
-      name: "teacherForm",
+      name: "auth",
       params: { id: id },
     });
   }
 }
 
 onMounted(() => {
-  // TODO: 通知がないかを確認するAPIを叩く処理を記述する
-  isNotification.value = true;
+  init();
+  checkAlerm();
+});
+
+onBeforeRouteUpdate((to, from, next) => {
+  checkAlerm();
+  next();
+});
+
+async function init() {
+  // console.log("init");
+
+  // fetchRoleを呼び出し、roleを取得する
+  await store.fetchRole();
+  // console.log(store.role);
+}
+
+// 通知を取得する
+function checkAlerm() {
+  // console.log("checkAlerm");
 
   // MEMO: 叩くAPIは、学生か教員かで挙動が変わる
-  // TODO: 通知がある場合は、notificationに通知の内容を格納する
-  if (isNotification.value) {
-    notification.value = [
-      {
-        id: 1,
-        title: "通知1",
-        text: "通知1の内容",
-      },
-      {
-        id: 2,
-        title: "通知2",
-        text: "通知2の内容",
-      },
-      {
-        id: 3,
-        title: "通知3",
-        text: "通知3の内容",
-      },
-    ];
+  if (store.role === "student") {
+    // 学生向けの通知がないかを確認するAPIを叩く
+    APICallonJWT("student/alarm/check", {}).then((res) => {
+      // console.log(res);
+
+      // 通知がある場合は、notificationに通知の内容を格納する
+      isNotification.value = res.document;
+      if (res.document) {
+        // 学生向けの通知の内容を取得する
+        APICallonJWT("student/alarm/read", {}).then((res) => {
+          // console.log(res);
+
+          notification.value = [];
+          res.document.forEach((item) => {
+            notification.value.push({
+              id: item.document_id,
+              title: item.request_at,
+              text: "Dummy Text",
+            });
+          });
+        });
+      }
+    });
+  } else if (store.role === "teacher") {
+    // 教員向けの通知がないかを確認するAPIを叩く
+    APICallonJWT("teacher/alarm/check", {}).then((res) => {
+      // console.log(res);
+
+      // 通知がある場合は、notificationに通知の内容を格納する
+      isNotification.value = res.document;
+      if (res.document) {
+        // 教員向けの通知の内容を取得する
+        APICallonJWT("teacher/alarm/read", {}).then((res) => {
+          // console.log(res);
+          notification.value = [];
+          res.document.forEach((item) => {
+            notification.value.push({
+              id: item.document_id,
+              title: item.request_at,
+              text: item.class_abbr + "/" + item.user_name,
+            });
+          });
+        });
+      }
+    });
   }
-});
+}
 </script>

@@ -171,6 +171,7 @@ router.beforeEach(async (to, from, next) => {
     return;
   }
 
+  await store.fetchRole();
   if (
     (requiresAdmin && store.role != "admin") ||
     (requiresStudent && store.role != "student") ||

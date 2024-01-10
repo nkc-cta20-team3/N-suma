@@ -2,7 +2,7 @@ package student
 
 import (
 	"time"
-	"fmt"
+	"log"
 	"net/http"
 
 	"main/infra"
@@ -14,6 +14,7 @@ import (
 
 func CreateDocument(c *gin.Context) {
 
+	UserID := c.MustGet("UserID").(int)
 	request := model.CreateDocumentRequest{}
 	responseWrap := model.ResponseWrap{}
 	responseWrap.Message = "success"
@@ -26,15 +27,7 @@ func CreateDocument(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, errResponse)
 		return
 	}
-	fmt.Println(request)
-
-	//DB接続とエラーハンドリング
-	db := infra.DBInitGorm()
-	if db.Error != nil {
-		errResponse.Message = "データベース接続エラー"
-		c.JSON(http.StatusInternalServerError, errResponse)
-		return
-	}
+	log.Println(request)
 
 	// 現在時刻yyyy-MM-dd HH:mm形式で取得
 	requestAt := time.Now()
@@ -44,9 +37,9 @@ func CreateDocument(c *gin.Context) {
 	endTime := utils.StringToTime2(request.EndTime)
 	
 	// ユーザ情報をDBに格納
-	err := db.Table("oa").
+	err := infra.DB.Table("oa").
 		Create(model.CreateDocumentStruct{
-			UserID:         request.UserID,
+			UserID:         UserID,
 			RequestAt:      &requestAt,
 			StartTime:      &startTime,
 			StartFlame:     0,
@@ -62,7 +55,7 @@ func CreateDocument(c *gin.Context) {
 	if err != nil {
 		//その他のエラーハンドリング
 		errResponse.Message = "OTHER ERROR"
-		fmt.Println(err.Error())
+		log.Println(err.Error())
 		c.JSON(http.StatusInternalServerError, errResponse)
 		return
 	}

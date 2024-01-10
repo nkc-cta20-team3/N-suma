@@ -1,7 +1,7 @@
 package teacher
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 
 	"main/infra"
@@ -11,7 +11,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func ReadAllDocument(c *gin.Context) {
+func ReadDocument(c *gin.Context) {
 
 	request := model.ReadAllDocumentRequest{}
 	responseWrap := model.ResponseWrap{}
@@ -19,7 +19,7 @@ func ReadAllDocument(c *gin.Context) {
 	response := model.ReadAllDocumentResponse{}
 	errResponse := model.MessageError{}
 
-	fmt.Println(request)
+	log.Println(request)
 	//POSTで受け取った値を格納する
 	if err := c.ShouldBindJSON(&request); err != nil {
 		// エラー処理
@@ -28,16 +28,8 @@ func ReadAllDocument(c *gin.Context) {
 		return
 	}
 
-	//DB接続とエラーハンドリング
-	db := infra.DBInitGorm()
-	if db.Error != nil {
-		errResponse.Message = "データベース接続エラー"
-		c.JSON(http.StatusInternalServerError, errResponse)
-		return
-	}
-	
 	// データベースからデータを取得する
-	err := db.Table("oa").
+	err := infra.DB.Table("oa").
 		Select(
 			"oa.request_at",
 			"dv.division_name",
@@ -56,7 +48,7 @@ func ReadAllDocument(c *gin.Context) {
 	if err != nil {
 		//その他のエラーハンドリング
 		errResponse.Message = "OTHER ERROR"
-		fmt.Println(err.Error())
+		log.Println(err.Error())
 		c.JSON(http.StatusInternalServerError, errResponse)
 		return
 	}
@@ -66,7 +58,7 @@ func ReadAllDocument(c *gin.Context) {
 	response.StartTime = utils.StringToTime4(response.StartTime).Format("01-02 15:04")
 	response.EndTime = utils.StringToTime4(response.EndTime).Format("01-02 15:04")
 
-	fmt.Println(response)
+	log.Println(response)
 	responseWrap.Document = response
 
 	// レスポンスを返す

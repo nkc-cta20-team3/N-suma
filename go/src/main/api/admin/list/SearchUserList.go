@@ -2,7 +2,7 @@ package admin
 
 import (
 	"errors"
-	"fmt"
+	"log"
 	"net/http"
 
 	"main/infra"
@@ -27,19 +27,11 @@ func SearchUserList(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, errResponse)
 		return
 	}
-	fmt.Println(request)
+	log.Println(request)
 
-	//DB接続とエラーハンドリング
-	db := infra.DBInitGorm()
-	if db.Error != nil {
-		errResponse.Message = "データベース接続エラー"
-		c.JSON(http.StatusInternalServerError, errResponse)
-		return
-	}
-	
 	// ユーザーを検索
 	if(request.UserNumber == ""){
-		err := db.Table("user").
+		err := infra.DB.Table("user").
 			Select("user.user_id,user.user_name,cs.class_abbr").
 			Joins("LEFT OUTER JOIN classification cs ON user.class_id = cs.class_id").
 			Where("post_id = ?", request.PostID).
@@ -53,13 +45,13 @@ func SearchUserList(c *gin.Context) {
 			} else {
 				//その他のエラーハンドリング
 				errResponse.Message = "OTHER ERROR"
-				fmt.Println(err.Error())
+				log.Println(err.Error())
 				c.JSON(http.StatusInternalServerError, errResponse)
 				return
 			}
 		}
 	}else{	
-		err := db.Table("user").
+		err := infra.DB.Table("user").
 			Select("user.user_id,user.user_name,cs.class_abbr").
 			Joins("LEFT OUTER JOIN classification cs ON user.class_id = cs.class_id").
 			Where("user_number LIKE ?", "%"+request.UserNumber+"%").
@@ -74,14 +66,14 @@ func SearchUserList(c *gin.Context) {
 			} else {
 				//その他のエラーハンドリング
 				errResponse.Message = "OTHER ERROR"
-				fmt.Println(err.Error())
+				log.Println(err.Error())
 				c.JSON(http.StatusInternalServerError, errResponse)
 				return
 			}
 		}
 	}
 	
-	fmt.Println(response)
+	log.Println(response)
 	responseWrap.Document = response
 
 	// レスポンスを返す

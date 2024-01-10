@@ -4,26 +4,37 @@
       <v-col cols="12" sm="10" md="8" lg="6">
         <!-- 提出書類のデータ表示 -->
         <RowCard title="申請日" :text="state.date" />
-        <RowCard title="公欠区分" text="公欠区分" />
-        <RowCard title="申請時間" text="申請時間" />
-        <RowCard title="場所" text="場所" />
-        <RowCard
-          title="学生コメント"
-          text="確認よろしくお願いいたします。aaaaaaaaaaaaaaaaaaaaaaaaaa"
-        />
+        <RowCard title="公欠区分" :text="state.division" />
+        <RowCard title="申請時間" :text="state.dateTime" />
+        <RowCard title="場所" :text="state.location" />
+        <RowCard title="学生コメント" :text="state.studentComment" />
 
         <!-- 教員側入力フォーム -->
         <v-form ref="mainForm">
           <!-- 必要欠席時間 -->
-          <v-text-field
-            v-model="state.absence"
-            label="必要欠席時間"
-            persistent-hint
-            placeholder=""
-            persistent-placeholder
-            :rules="requiredRules"
-            class="mt-4"
-          ></v-text-field>
+          <v-row gutter="0">
+            <v-col cols="6">
+              <v-text-field
+                v-model="state.startAbsence"
+                label="公欠開始時限"
+                persistent-hint
+                placeholder=""
+                persistent-placeholder
+                :rules="requiredRules"
+              >
+              </v-text-field>
+            </v-col>
+            <v-col cols="6">
+              <v-text-field
+                v-model="state.endAbsence"
+                label="公欠終了時限"
+                persistent-hint
+                placeholder=""
+                persistent-placeholder
+                :rules="requiredRules"
+              ></v-text-field>
+            </v-col>
+          </v-row>
 
           <!-- 教員コメント入力 -->
           <v-text-field
@@ -63,7 +74,7 @@
                       @click="
                         () => {
                           isActive.value = false;
-                          onSubmit();
+                          onAuth();
                         }
                       "
                       color="success"
@@ -99,7 +110,7 @@
                       @click="
                         () => {
                           isActive.value = false;
-                          onSubmit();
+                          onReject();
                         }
                       "
                       color="success"
@@ -118,20 +129,30 @@
 
 <script setup>
 import { onMounted, ref } from "vue";
+import { onBeforeRouteUpdate } from "vue-router";
 import RowCard from "@/components/StudentViewRowCard.vue";
 import { requiredRules } from "@/utils";
 import router from "@/router";
+import { APICallonJWT } from "@/utils";
 
 const mainForm = ref(null);
 const state = ref({
   id: "",
   date: "",
+  division: "",
+  startDate: "",
+  endDate: "",
+  dateTime: "",
 
-  absence: "",
+  location: "",
+  studentComment: "",
+
+  startAbsence: "",
+  endAbsence: "",
   comment: "",
 });
 
-async function onSubmit() {
+async function onAuth() {
   // 入力チェック
   const validResult = await mainForm.value.validate();
   if (!validResult.valid) {
@@ -139,18 +160,84 @@ async function onSubmit() {
     return;
   }
 
-  // TODO: データを送信する処理を記述する
-  console.log("提出しました");
+  // undifinedになるので、再度idを取得する
+  // TODO: なぜundifinedになるのか調査する
+  let id = router.currentRoute.value.params.id;
+
+  // 書類を却下する処理
+  APICallonJWT("teacher/auth/update", {
+    document_id: Number(id),
+    start_flame: Number(state.value.startAbsence),
+    end_flame: Number(state.value.endAbsence),
+    teacher_comment: state.value.comment,
+  }).then((res) => {
+    console.log(res);
+    if (res.message == "success") {
+      alert("書類を認可しました");
+      router.push("/app/teacher/unapproval");
+    } else {
+      alert("書類の認可に失敗しました");
+    }
+  });
+}
+
+async function onReject() {
+  // 入力チェック
+  const validResult = await mainForm.value.validate();
+  if (!validResult.valid) {
+    console.log("入力エラー");
+    return;
+  }
+
+  // undifinedになるので、再度idを取得する
+  // TODO: なぜundifinedになるのか調査する
+  let id = router.currentRoute.value.params.id;
+
+  // 書類を却下する処理
+  APICallonJWT("teacher/auth/reject", {
+    document_id: Number(id),
+    start_flame: Number(state.value.startAbsence),
+    end_flame: Number(state.value.endAbsence),
+    teacher_comment: state.value.comment,
+  }).then((res) => {
+    console.log(res);
+    if (res.message == "success") {
+      alert("書類を却下しました");
+      router.push("/app/teacher/unapproval");
+    } else {
+      alert("書類の却下に失敗しました");
+    }
+  });
 }
 
 onMounted(() => {
-  console.log("mounted");
-
   state.value.id = router.currentRoute.value.params.id;
-  console.log(state.value.id);
-
-  state.value.date = state.value.id;
-
-  // TODO: データを取得する処理を記述する
+  init();
 });
+
+onBeforeRouteUpdate((to, from, next) => {
+  state.value.id = to.params.id;
+  init();
+  next();
+});
+
+function init() {
+  // 書類の詳細情報を取得する
+  APICallonJWT("teacher/auth/read", {
+    document_id: Number(router.currentRoute.value.params.id),
+  }).then((res) => {
+    // console.log(res);
+    state.value = {
+      date: res.document.request_at,
+      division: res.document.division_name + "/" + res.document.division_detail,
+      startDate: res.document.start_time,
+      endDate: res.document.end_time,
+      location: res.document.location,
+      studentComment: res.document.student_comment,
+    };
+
+    // 表示用に日付と時間を結合する処理
+    state.value.dateTime = state.value.startDate + " ～ " + state.value.endDate;
+  });
+}
 </script>

@@ -1,7 +1,7 @@
 package student
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 
 	"main/infra"
@@ -13,45 +13,27 @@ import (
 
 func ReadDocsList(c *gin.Context) {
 
-	request := model.ReadDocsListRequest{}
+	UserID := c.MustGet("UserID").(int)
 	responseWrap := model.ResponseWrap{}
 	responseWrap.Message = "success"
 	response := []model.ReadDocsListResponse{}
 	errResponse := model.MessageError{}
 
-	fmt.Println(request)
-	//POSTで受け取った値を格納する
-	if err := c.ShouldBindJSON(&request); err != nil {
-		// エラー処理
-		errResponse.Message = err.Error()
-		c.JSON(http.StatusBadRequest, errResponse)
-		return
-	}
-
-	//DB接続とエラーハンドリング
-	db := infra.DBInitGorm()
-	if db.Error != nil {
-		errResponse.Message = "データベース接続エラー"
-		c.JSON(http.StatusInternalServerError, errResponse)
-		return
-	}
-
-	
 	// 書類一覧を取得
-	err := db.Table("oa").
+	err := infra.DB.Table("oa").
 		Select(
 			"oa.document_id",
 			"oa.request_at",
 			"dv.division_name",
 			"dv.division_detail").
 		Joins("JOIN division AS dv ON oa.division_id = dv.division_id").
-		Where("oa.user_id = ?", request.UserID).
+		Where("oa.user_id = ?", UserID).
 		Scan(&response).
 		Error
 	if err != nil {
 		//その他のエラーハンドリング
 		errResponse.Message = "OTHER ERROR"
-		fmt.Println(err.Error())
+		log.Println(err.Error())
 		c.JSON(http.StatusInternalServerError, errResponse)
 		return
 	}
@@ -61,7 +43,7 @@ func ReadDocsList(c *gin.Context) {
 		response[i].RequestAt = (utils.StringToTime3(response[i].RequestAt)).Format("2006-01-02")
 	}
 
-	fmt.Println(response)
+	log.Println(response)
 	responseWrap.Document = response
 
 	// レスポンスを返す

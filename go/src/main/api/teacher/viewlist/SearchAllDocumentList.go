@@ -1,4 +1,4 @@
-package admin
+package teacher
 
 import (
 	"errors"
@@ -12,18 +12,35 @@ import (
 	"gorm.io/gorm"
 )
 
-func ReadUserList(c *gin.Context) {
+func SearchAllDocumentList(c *gin.Context) {
 
+	request := model.SearchAllDocumentListRequest{}
 	responseWrap := model.ResponseWrap{}
 	responseWrap.Message = "success"
-	response := []model.ReadUserListResponse{}
+	response := []model.SearchAllDocumentListResponse{}
 	errResponse := model.MessageError{}
 
-	// ユーザー一覧を取得
-	err := infra.DB.Table("user").
-		Select("user.user_id,user.user_name,cs.class_abbr").
-		Joins("LEFT OUTER JOIN classification cs ON user.class_id = cs.class_id").
-		Scan(&response).Error
+	//POSTで受け取った値を格納する
+	if err := c.ShouldBindJSON(&request); err != nil {
+		// エラー処理
+		errResponse.Message = err.Error()
+		c.JSON(http.StatusBadRequest, errResponse)
+		return
+	}
+	log.Println(request)
+
+	// 書類を検索
+	err := infra.DB.Table("oa").
+		Select(
+			"oa.document_id",
+			"dv.division_name",
+			"dv.division_detail",
+			"user.user_name").
+		Joins("JOIN user ON oa.user_id = user.user_id").
+		Joins("JOIN division AS dv ON oa.division_id = dv.division_id").
+		Where("user_number LIKE ?", "%"+request.UserNumber+"%").
+		Scan(&response).
+		Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			// 行が見つからなかった場合の処理

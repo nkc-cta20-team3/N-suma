@@ -1,7 +1,7 @@
 package teacher
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 
 	"main/infra"
@@ -17,16 +17,8 @@ func ReadUnAuthList(c *gin.Context) {
 	response := []model.ReadAllDocumentListResponse{}
 	errResponse := model.MessageError{}
 
-	//DB接続とエラーハンドリング
-	db := infra.DBInitGorm()
-	if db.Error != nil {
-		errResponse.Message = "データベース接続エラー"
-		c.JSON(http.StatusInternalServerError, errResponse)
-		return
-	}
-
 	// 未認可書類一覧を取得
-	err := db.Table("oa").
+	err := infra.DB.Table("oa").
 		Select(
 			"oa.document_id",
 			"dv.division_name",
@@ -40,12 +32,12 @@ func ReadUnAuthList(c *gin.Context) {
 	if err != nil {
 		//その他のエラーハンドリング
 		errResponse.Message = "OTHER ERROR"
-		fmt.Println(err.Error())
+		log.Println(err.Error())
 		c.JSON(http.StatusInternalServerError, errResponse)
 		return
 	}
 
-	fmt.Println(response)
+	log.Println(response)
 	responseWrap.Document = response
 
 	// レスポンスを返す

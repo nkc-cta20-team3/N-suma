@@ -1,9 +1,11 @@
 # build environment
 FROM golang:1.19.1-alpine as build-stage
-RUN apk update 
+RUN apk update && go install github.com/swaggo/swag/cmd/swag@latest 
+
 COPY ./go/src/main /go/src/main
 COPY ./preview/go/n-suma-firebase-admin.secret /.select/n-suma-firebase-admin.secret
 WORKDIR /go/src/main
+RUN swag init
 RUN GOOS=linux go build -o ./build/main ./main.go
 
 # production environment
@@ -12,5 +14,3 @@ COPY ./preview/go/n-suma-firebase-admin.secret /.select/n-suma-firebase-admin.se
 COPY --from=build-stage /go/src/main/build/main /app/main
 EXPOSE 8080
 CMD ["/app/main"]
-
-

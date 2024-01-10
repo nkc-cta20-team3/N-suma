@@ -28,16 +28,8 @@ func ReadDivision(c *gin.Context) {
 	response := []model.ReadDivisionResponse{}
 	errResponse := model.MessageError{}
 
-	//DB接続とエラーハンドリング
-	db := infra.DBInitGorm()
-	if db.Error != nil {
-		errResponse.Message = "データベース接続エラー"
-		c.JSON(http.StatusInternalServerError, errResponse)
-		return
-	}
-
 	// 区分一覧を取得
-	err := db.Table("division").Select("division_id,division_name,division_detail").Find(&response).Error
+	err := infra.DB.Table("division").Select("division_id,division_name,division_detail").Find(&response).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			// 行が見つからなかった場合の処理

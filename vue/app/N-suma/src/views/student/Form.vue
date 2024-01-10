@@ -139,7 +139,7 @@ async function onSubmit() {
   state.value.endDate = date.value[1];
 
   // データを送信する処理を記述する
-  console.log(state.value);
+  // console.log(state.value);
   APICallonJWT("student/form/create", {
     user_id: store.id,
     start_time: state.value.startDate,

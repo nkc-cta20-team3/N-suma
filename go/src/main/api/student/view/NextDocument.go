@@ -1,7 +1,7 @@
 package student
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 
 	"main/infra"
@@ -10,9 +10,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-
 func NextDocument(c *gin.Context) {
 
+	UserID := c.MustGet("UserID").(int)
 	request := model.NextDocumentRequest{}
 	responseWrap := model.ResponseWrap{}
 	responseWrap.Message = "success"
@@ -26,28 +26,20 @@ func NextDocument(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, errResponse)
 		return
 	}
-	fmt.Println(request)
-
-	//DB接続とエラーハンドリング
-	db := infra.DBInitGorm()
-	if db.Error != nil {
-		errResponse.Message = "データベース接続エラー"
-		c.JSON(http.StatusInternalServerError, errResponse)
-		return
-	}
+	log.Println(request)
 
 	documentArray := []model.DocumentArrayStruct{}
 
 	//書類ID一覧を取得
-	err := db.Table("oa").
+	err := infra.DB.Table("oa").
 		Select("document_id").
-		Where("user_id = ?", request.UserID).
+		Where("user_id = ?", UserID).
 		Scan(&documentArray).
 		Error
 	if err != nil {
 		//その他のエラーハンドリング
 		errResponse.Message = "OTHER ERROR"
-		fmt.Println(err.Error())
+		log.Println(err.Error())
 		c.JSON(http.StatusInternalServerError, errResponse)
 		return
 	}		
@@ -81,7 +73,7 @@ func NextDocument(c *gin.Context) {
 		
 	}
 
-	fmt.Println(response)
+	log.Println(response)
 	responseWrap.Document = response
 
 	// レスポンスを返す

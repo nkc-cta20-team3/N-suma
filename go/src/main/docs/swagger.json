@@ -6,7 +6,6 @@
         "contact": {},
         "version": "1.0.0"
     },
-    "host": "localhost:8080",
     "paths": {
         "/hello/get": {
             "get": {
