@@ -125,42 +125,57 @@ onBeforeRouteUpdate((to, from, next) => {
 });
 
 function init() {
+  console.log("init");
+
+  // TODO: 呼び出しのタイミングがおかしいので、原因を調査する
+
   // MEMO: 叩くAPIは、学生か教員かで挙動が変わる
   if (store.role === "student") {
     // 学生向けの通知がないかを確認するAPIを叩く
     APICallonJWT("student/alarm/check", {}).then((res) => {
       // console.log(res);
+
+      // 通知がある場合は、notificationに通知の内容を格納する
       isNotification.value = res.document;
+      if (res.document) {
+        // 学生向けの通知の内容を取得する
+        APICallonJWT("student/alarm/read", {}).then((res) => {
+          console.log(res);
+
+          notification.value = [];
+          res.document.forEach((item) => {
+            notification.value.push({
+              id: item.document_id,
+              title: item.request_at,
+              text: "Dummy Text",
+            });
+          });
+        });
+      }
     });
   } else if (store.role === "teacher") {
     // 教員向けの通知がないかを確認するAPIを叩く
     APICallonJWT("teacher/alarm/check", {}).then((res) => {
       // console.log(res);
+
+      // 通知がある場合は、notificationに通知の内容を格納する
       isNotification.value = res.document;
+      if (res.document) {
+        // 教員向けの通知の内容を取得する
+        APICallonJWT("teacher/alarm/read", {}).then((res) => {
+          console.log(res);
+
+          notification.value = [];
+          res.document.forEach((item) => {
+            notification.value.push({
+              id: item.document_id,
+              title: item.request_at,
+              text: "Dummy Text",
+            });
+          });
+        });
+      }
     });
-  }
-
-  // console.log(isNotification.value);
-
-  // TODO: 通知がある場合は、notificationに通知の内容を格納する
-  if (isNotification) {
-    notification.value = [
-      {
-        id: 1,
-        title: "通知1",
-        text: "通知1の内容",
-      },
-      {
-        id: 2,
-        title: "通知2",
-        text: "通知2の内容",
-      },
-      {
-        id: 3,
-        title: "通知3",
-        text: "通知3の内容",
-      },
-    ];
   }
 }
 </script>
