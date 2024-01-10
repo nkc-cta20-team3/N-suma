@@ -30,11 +30,13 @@ func ReSubmitDocument(c *gin.Context) {
 	log.Println(request)
 
 	//再提出の書類と提出者の整合性確認SQLを発行
+	var count int64
 	err := infra.DB.Table("oa").
 		Select("document_id").
 		Where("user_id = ?", UserID).
 		Where("document_id = ?", request.DocumentID).
-		Where("status = -1")
+		Where("status = -1").
+		Count(&count)
 	if err.Error != nil {
 		// その他のエラーハンドリング
 		errResponse.Message = "OTHER ERROR"
@@ -42,9 +44,14 @@ func ReSubmitDocument(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, errResponse)
 		return
 	}
-	if err.RowsAffected == 0 {
-		//再提出する書類と提出者が一致しない、または再提出する書類のステータスが-1でない場合
-		errResponse.Message = "DOCUMENT ERROR"
+
+	// 取得した行数をカウントする
+	log.Println(count)
+	
+	// 書類が存在するかを確認する
+	if count == 0 {
+		// 書類が存在しない、もしくは再提出する書類と提出者が一致しない、または再提出する書類のステータスが-1でない場合
+		errResponse.Message = "DOCUMENT NOT FOUND"
 		log.Println(errResponse.Message)
 		c.JSON(http.StatusBadRequest, errResponse)
 		return
