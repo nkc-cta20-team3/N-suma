@@ -11,7 +11,7 @@ services:
     container_name: n-suna_back_preview
     build:
       context: .
-      dockerfile: ./preview/Go/Dockerfile
+      dockerfile: ./preview/go/Dockerfile
     env_file:
       - ./preview/go/.go_env
     ports:
