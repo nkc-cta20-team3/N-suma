@@ -103,7 +103,6 @@ onBeforeRouteUpdate((to, from, next) => {
 function init() {
   // 書類の詳細情報を取得する
   APICallonJWT("student/view/read", {
-    user_id: Number(store.id),
     document_id: Number(state.value.id),
   }).then((res) => {
     // console.log(res);
@@ -128,7 +127,6 @@ function init() {
   // 現在の書類の前後の書類IDを取得し、stateに格納する
   // 書類一覧を取得する処理
   APICallonJWT("student/view/next", {
-    user_id: Number(store.id),
     document_id: Number(state.value.id),
   }).then((res) => {
     // console.log(res);
