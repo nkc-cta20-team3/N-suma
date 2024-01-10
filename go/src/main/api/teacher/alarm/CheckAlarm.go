@@ -31,7 +31,7 @@ func CheckAlarm(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, errResponse)
 		return
 	}
-	if count > 0 {
+	if count != 0 {
 		//再提出の書類がある
 		responseWrap.Document = true
 		log.Println("RESUBMIT DOCUMENT EXIST")
