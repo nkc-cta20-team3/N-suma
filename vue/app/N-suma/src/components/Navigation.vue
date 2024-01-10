@@ -108,6 +108,12 @@ function onItemClick(id) {
 
 onMounted(() => {
   init();
+  checkAlerm();
+});
+
+onBeforeRouteUpdate((to, from, next) => {
+  checkAlerm();
+  next();
 });
 
 async function init() {
@@ -116,6 +122,11 @@ async function init() {
   // fetchRoleを呼び出し、roleを取得する
   await store.fetchRole();
   // console.log(store.role);
+}
+
+// 通知を取得する
+function checkAlerm() {
+  console.log("checkAlerm");
 
   // MEMO: 叩くAPIは、学生か教員かで挙動が変わる
   if (store.role === "student") {
@@ -128,7 +139,7 @@ async function init() {
       if (res.document) {
         // 学生向けの通知の内容を取得する
         APICallonJWT("student/alarm/read", {}).then((res) => {
-          console.log(res);
+          // console.log(res);
 
           notification.value = [];
           res.document.forEach((item) => {
