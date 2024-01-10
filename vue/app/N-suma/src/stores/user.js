@@ -31,6 +31,24 @@ export const useStore = defineStore("user", {
     getToken: (state) => state.token,
   },
   actions: {
+    // 非同期で役職を取得する
+    async fetchRole() {
+      const res = await APICallonJWT("auth", {});
+      // console.log(res);
+
+      // documentはnullになることがある
+      if (res.document) {
+        // console.log(res.document.post_name);
+        if (res.document.post_name === "管理者") this.role = "admin";
+        else if (res.document.post_name === "教員") this.role = "teacher";
+        else if (res.document.post_name === "学生") this.role = "student";
+      } else {
+        this.role = null;
+        // console.log("role is null");
+      }
+
+      // console.log(this.role);
+    },
     // ログインする
     async login() {
       await signInWithRedirect(auth, provider);
@@ -54,27 +72,6 @@ export const useStore = defineStore("user", {
               u.getIdToken().then((token) => {
                 this.token = token;
                 // console.log("token is " + token);
-
-                // 役職名を取得する
-                APICallonJWT("auth", {}).then((res) => {
-                  // console.log(res);
-
-                  // documentはnullになることがある
-                  if (res.document) {
-                    // console.log(res.document.post_name);
-                    if (res.document.post_name === "管理者")
-                      this.role = "admin";
-                    else if (res.document.post_name === "教員")
-                      this.role = "teacher";
-                    else if (res.document.post_name === "学生")
-                      this.role = "student";
-                  } else {
-                    this.role = null;
-                    // console.log("role is null");
-                  }
-
-                  // console.log(this.role);
-                });
               });
 
               resolve(true);
