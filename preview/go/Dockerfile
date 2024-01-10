@@ -1,6 +1,7 @@
 # build environment
 FROM golang:1.19.1-alpine as build-stage
-RUN apk update 
+RUN apk update && go install github.com/swaggo/swag/cmd/swag@latest 
+
 COPY ./go/src/main /go/src/main
 COPY ./preview/go/n-suma-firebase-admin.secret /.select/n-suma-firebase-admin.secret
 WORKDIR /go/src/main
