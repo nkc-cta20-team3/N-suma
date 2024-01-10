@@ -115,7 +115,7 @@ import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 import { onBeforeRouteUpdate } from "vue-router";
 import router from "@/router";
-import { requiredRules, divisions } from "@/utils";
+import { requiredRules, APICallonGET, APICallonJWT } from "@/utils";
 
 const format = "yyyy-MM-dd HH:mm";
 
@@ -131,9 +131,11 @@ const state = ref({
 });
 const date = ref(null);
 
-async function onSubmit() {
-  console.log(state.value);
+// 区分一覧を格納する変数
+var divisions = ref([]);
+var divisionids = [];
 
+async function onSubmit() {
   // 日付の入力チェック
   if (!date.value || !date.value[0] || !date.value[1]) {
     console.log("日付入力不足");
@@ -149,34 +151,67 @@ async function onSubmit() {
   state.value.startDate = date.value[0];
   state.value.endDate = date.value[1];
 
-  // TODO:書類を提出する処理を記述する
-  console.log("提出しました");
+  // undifinedになるので、再度idを取得する
+  // TODO: なぜundifinedになるのか調査する
+  let id = router.currentRoute.value.params.id;
+  console.log(id);
 
-  // 画面遷移
-  router.push("/student/list");
+  // データを送信する処理を記述する
+  console.log(state.value);
+  APICallonJWT("student/reform/update", {
+    document_id: Number(id),
+    start_time: state.value.startDate,
+    end_time: state.value.endDate,
+    location: state.value.location,
+    student_comment: state.value.studentComment,
+    division_id: divisionids[divisions.value.indexOf(state.value.division)],
+  }).then((res) => {
+    console.log(res);
+    if (res.message == "success") {
+      alert("書類を再提出しました");
+      router.push("/student/list");
+    } else {
+      alert("書類の再提出に失敗しました");
+    }
+  });
 }
 
 onMounted(() => {
-  console.log("mounted");
-  // TODO: routerのpropsから書類のidを取得し、stateに設定する
+  // console.log("mounted");
   state.value.id = router.currentRoute.value.params.id;
   init();
 });
 
-// TODO: 画面遷移時に呼ばれる処理を記述する
 onBeforeRouteUpdate((to, from, next) => {
-  console.log("beforeRouteUpdate");
-  // TODO: 画面更新時に呼び出されるため、to.params.idをもとにstateを初期化する
+  // console.log("beforeRouteUpdate");
   state.value.id = to.params.id;
   init();
   next();
 });
 
 function init() {
-  // TODO: 書類のidをもとに、APIを叩いて詳細な情報を取得し設定する
-  state.value.division = "国家試験";
-  state.value.location = "愛知県名古屋市熱田区神宮";
-  state.value.studentComment = "確認よろしくお願いいたします。";
-  state.value.teacherComment = "確認しました。";
+  // 区分一覧を取得する
+  APICallonGET("utils/read/division").then((res) => {
+    // console.log(res);
+    res.document.forEach((division_) => {
+      divisions.value.push(
+        division_.division_name + "/" + division_.division_detail
+      );
+      divisionids.push(division_.division_id);
+    });
+  });
+
+  // 書類の詳細情報を取得する
+  APICallonJWT("student/reform/read", {
+    document_id: Number(state.value.id),
+  }).then((res) => {
+    // console.log(res);
+    state.value = {
+      division: res.document.division_name + "/" + res.document.division_detail,
+      location: res.document.location,
+      studentComment: res.document.student_comment,
+      teacherComment: res.document.teacher_comment,
+    };
+  });
 }
 </script>
