@@ -6,6 +6,7 @@ import (
 
 	"main/infra"
 	"main/model"
+	"main/utils"
 	
 	"github.com/gin-gonic/gin"
 )
@@ -20,6 +21,7 @@ func ReadAlarm(c *gin.Context) {
 	err := infra.DB.Table("oa").
 		Select(
 			"oa.document_id",
+			"oa.request_at",
 			"user.user_name",
 			"cs.class_abbr").
 		Joins("JOIN user ON oa.user_id = user.user_id").
@@ -33,6 +35,11 @@ func ReadAlarm(c *gin.Context) {
 		log.Println(err.Error())
 		c.JSON(http.StatusInternalServerError, errResponse)
 		return
+	}
+	
+	for i := 0; i < len(response); i++ {
+		// 時刻の形式を変換
+		response[i].RequestAt = utils.StringToTime3(response[i].RequestAt).Format("2006-01-02")
 	}
 
 	log.Println(response)

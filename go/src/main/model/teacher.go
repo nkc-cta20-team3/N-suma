@@ -59,6 +59,7 @@ type ReadAllDocumentResponse struct {
 // TeacherReadAlarmResponse は、通知の内容を取得する際に、データを保持するのに使用する構造体
 type TeacherReadAlarmResponse struct {
 	DocumentID int    `json:"document_id"`
+	RequestAt  string `json:"request_at"`
 	UserName   string `json:"user_name"`
 	ClassAbbr  string `json:"class_abbr"`
 }
