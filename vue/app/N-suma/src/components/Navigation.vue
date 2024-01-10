@@ -88,15 +88,6 @@ const dialog = ref(false);
 const isNotification = ref(false);
 const notification = ref([]);
 
-function consoleDebug() {
-  console.log("debug logs");
-  console.log("====================");
-  console.log("isLogin: ", store.isLogin);
-  console.log("role: ", store.role);
-  console.log("token: ", store.token);
-  console.log("====================\n");
-}
-
 function onItemClick(id) {
   dialog.value = false;
   // console.log(props.id);
@@ -119,15 +110,12 @@ onMounted(() => {
   init();
 });
 
-onBeforeRouteUpdate((to, from, next) => {
-  init();
-  next();
-});
+async function init() {
+  // console.log("init");
 
-function init() {
-  console.log("init");
-
-  // TODO: 呼び出しのタイミングがおかしいので、原因を調査する
+  // fetchRoleを呼び出し、roleを取得する
+  await store.fetchRole();
+  // console.log(store.role);
 
   // MEMO: 叩くAPIは、学生か教員かで挙動が変わる
   if (store.role === "student") {
