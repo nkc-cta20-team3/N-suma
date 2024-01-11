@@ -2,7 +2,7 @@
   <!-- キービジュアルを置く -->
   <v-container>
     <v-row justify="center">
-      <v-col cols="12" sm="10" md="8" lg="6">
+      <v-col cols="10">
         <p
           class="display-1 text-center"
           v-if="store.getIsLogin && !store.getRole"
