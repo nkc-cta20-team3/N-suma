@@ -164,7 +164,7 @@ async function onSubmit() {
   APICallonJWT("admin/add/create", {
     user_id: state.value.id,
     user_name: state.value.name,
-    user_number: state.role.value != "学生" ? "" : state.value.number,
+    user_number: state.value.role != "学生" ? "" : state.value.number,
     post_id: roleids[roles.indexOf(state.value.role)],
     class_id: claseids[clases.indexOf(state.value.class)],
   }).then((res) => {

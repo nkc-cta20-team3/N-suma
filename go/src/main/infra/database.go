@@ -17,7 +17,14 @@ func init() {
 
 	var err error
 
-	path := os.Getenv("DB_HOST")	// 接続文字列の取得
+	// path := os.Getenv("DB_DSN")	// 接続文字列の取得
+	// 接続文字列を作成する
+	path := os.Getenv("DB_USER") + ":" + os.Getenv("DB_PASSWORD") + "@tcp(" + os.Getenv("DB_HOST") + ":3306)/" + os.Getenv("DB_NAME") + "?charset=utf8mb4&parseTime=true"
+	
+	// 接続文字列を確認する
+	// log.Println(os.Getenv("DB_DSN"))
+	log.Println(path)
+	
 	dialector := mysql.Open(path)	// 接続文字列をdialectorに渡す
 	// データベース接続
 	DB, err = gorm.Open(dialector, &gorm.Config{
