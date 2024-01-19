@@ -1,16 +1,9 @@
-import { createApp } from 'vue'
-import App from './App.vue'
-import router from './router'
-import store from './store'
-import { getAuth,onAuthStateChanged } from 'firebase/auth'
+// Plugins
+import { registerPlugins } from "@/plugins";
 
-const app = createApp(App)
+import { createApp } from "vue";
+import App from "@/App.vue";
 
-// Firebaseのログイン状態を監視し、VuexストアにユーザーIDを保存する
-onAuthStateChanged(getAuth(), (user) => {
-  if (user) {
-    store.dispatch('updateUserId', user.uid)
-  }
-})
-
-app.use(router).use(store).mount('#app')
+const app = createApp(App);
+registerPlugins(app);
+app.mount("#app");

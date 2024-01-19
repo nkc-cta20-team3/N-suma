@@ -4,20 +4,29 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "dev": "vite --mode dev",
+    "build": "vite build --mode prod",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@mdi/js": "^7.3.67",
+    "@vuepic/vue-datepicker": "^7.3.0",
     "bulma": "^0.9.4",
     "firebase": "^9.22.1",
     "firebase-tools": "^12.2.1",
+    "pinia": "^2.1.7",
+    "vite-plugin-vuetify": "^1.0.2",
     "vue": "^3.2.47",
     "vue-router": "4",
-    "vuex": "^4.1.0"
+    "vuetify": "^3.3.23"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.1.0",
+    "@vue/eslint-config-prettier": "^8.0.0",
+    "eslint": "^8.53.0",
+    "eslint-plugin-html": "^7.1.0",
+    "eslint-plugin-vue": "^9.18.1",
+    "prettier": "^3.0.3",
     "vite": "^4.3.9"
   }
 }

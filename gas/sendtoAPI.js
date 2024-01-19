@@ -1,5 +1,5 @@
 function sendDataToLambda() {
-  // mainマージ時更新
+  // 2023/6/29 1回目更新
   // スプレッドシートを取得
   //現在1番アクティブなスプレットシートを取得するため
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();

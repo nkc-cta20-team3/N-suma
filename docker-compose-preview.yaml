@@ -1,0 +1,22 @@
+version: "3"
+services:
+  vue-preview:
+    container_name: n-suna_front_preview
+    build:
+      context: .
+      dockerfile: ./preview/vue/Dockerfile
+    ports:
+      - "80:80"
+  go-preview:
+    container_name: n-suna_back_preview
+    build:
+      context: .
+      dockerfile: ./preview/go/Dockerfile
+    env_file:
+      - ./preview/go/.go_env
+      - ./preview/go/.go_dsn.secret
+    ports:
+      - "8080:8080"
+networks:
+  default:
+    name: n-suna-preview
